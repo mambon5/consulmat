@@ -101,6 +101,7 @@ int main()
                 1 }),
 
     // es surt la mateixa quantitat de cops que s'entra en cada pàrquing
+        //  (parking 0)
     LINE("eq2", { 1, 1, 1, 1, 
                 -1, 0, 0,0,
                 -1, 0, 0,0,
@@ -108,13 +109,15 @@ int main()
                 -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-    LINE("eq3", {-1, 0,0,0, 
-                -1, 0, 0,0,
+        //  (parking 1)
+    LINE("eq3", {-1, 0,0,0,                 
                  1, 1, 1, 1, 
+                -1, 0, 0,0,
                 -1, 0, 0,0,
                 -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
+        //  (parking 2)
      LINE("eq4", {-1, 0,0,0, 
                 -1, 0, 0,0,
                  1, 1, 1, 1, 
@@ -122,6 +125,7 @@ int main()
                 -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
+        //  (parking 3)
      LINE("eq5", {-1, 0,0,0, 
                 -1, 0, 0,0,
                 -1, 0, 0,0,
@@ -129,11 +133,12 @@ int main()
                 -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
+        //  (parking 4)
      LINE("eq6", {-1, 0,0,0, 
                 -1, 0, 0,0,
                 -1, 0, 0,0,
-                 1, 1, 1, 1, 
                 -1, 0, 0,0, 
+                 1, 1, 1, 1,                
                 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
 

@@ -6,7 +6,7 @@
 using namespace std;
 
 // compile by the command: 
-// g++ SimplexCPP/include/fraction.cpp  src/dates.cpp src/textProcess.cpp neteja_parquings_4_domicilis.cpp -o neteja_4_parquings
+// g++ SimplexCPP/include/fraction.cpp  src/dates.cpp src/textProcess.cpp neteja_parquings_4_domicilis_eq_com2_ineq.cpp -o neteja_4_parquings
 
 
 /*
@@ -36,22 +36,22 @@ int main()
     // Un conjunt de 20 variables booleans xij, i 7 variables d'amortiguament per les inequacions.
     MATRIX problem = {
         // que sumin tots els temps de viatge pel seu temps de neteja, menys de 6h30'
-	LINE("w1", { d[0][0]*t[1], d[0][1]*t[2], d[0][2]*t[3], d[0][3]*t[4], 
-                d[1][0]*t[0], d[1][1]*t[2], d[1][2]*t[3], d[1][3]*t[4],
-                d[2][0]*t[0],d[2][1]*t[1], d[2][2]*t[3], d[2][3]*t[4], 
-                d[3][0]*t[0],d[3][1]*t[1], d[3][2]*t[2], d[3][3]*t[4],
-                d[4][0]*t[0],d[4][1]*t[1], d[4][2]*t[2], d[4][3]*t[3],
-                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
-                 390 // valor de la equació o inequació 
+	LINE("w1", { d[0][0]+t[1], d[0][1]+t[2], d[0][2]+t[3], d[0][3]+t[4], 
+                d[1][0]+t[0], d[1][1]+t[2], d[1][2]+t[3], d[1][3]+t[4],
+                d[2][0]+t[0],d[2][1]+t[1], d[2][2]+t[3], d[2][3]+t[4], 
+                d[3][0]+t[0],d[3][1]+t[1], d[3][2]+t[2], d[3][3]+t[4],
+                d[4][0]+t[0],d[4][1]+t[1], d[4][2]+t[2], d[4][3]+t[3],
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                 480 // valor de la equació o inequació 
                  }),
                 // que sumin tots els temps de viatge pel seu temps de neteja, més de 5h'
-	LINE("w2", { -d[0][0]*t[1], -d[0][1]*t[2], -d[0][2]*t[3], -d[0][3]*t[4], 
-                -d[1][0]*t[0], -d[1][1]*t[2], -d[1][2]*t[3],- d[1][3]*t[4],
-                -d[2][0]*t[0], -d[2][1]*t[1], -d[2][2]*t[3], -d[2][3]*t[4], 
-                -d[3][0]*t[0], -d[3][1]*t[1], -d[3][2]*t[2], -d[3][3]*t[4],
-                -d[4][0]*t[0], -d[4][1]*t[1], -d[4][2]*t[2], -d[4][3]*t[3], 
-                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
-                -300 // valor de la equació o inequació 
+	LINE("w2", { -d[0][0]-t[1], -d[0][1]-t[2], -d[0][2]-t[3], -d[0][3]-t[4], 
+                -d[1][0]-t[0], -d[1][1]-t[2], -d[1][2]-t[3],- d[1][3]-t[4],
+                -d[2][0]-t[0], -d[2][1]-t[1], -d[2][2]-t[3], -d[2][3]-t[4], 
+                -d[3][0]-t[0], -d[3][1]-t[1], -d[3][2]-t[2], -d[3][3]-t[4],
+                -d[4][0]-t[0], -d[4][1]-t[1], -d[4][2]-t[2], -d[4][3]-t[3], 
+                 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                -180 // valor de la equació o inequació 
                 }),
     
     // es surt 1 cop de la base (parquing 0)
@@ -60,7 +60,7 @@ int main()
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0, 
-                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
 
     LINE("w4", { -1, -1, -1, -1, 
@@ -68,88 +68,124 @@ int main()
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0, 
-                0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 -1 }),
-     // cada pàrquing es surt com a molt 1 cop
+     // de cada pàrquing es surt com a molt 1 cop (parking 0)
     LINE("w5", { 1, 1, 1, 1, 
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0, 
-                0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
+    //  (parking 1)
     LINE("w6", { 0, 0, 0,0,
                 1, 1, 1, 1, 
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0, 
-                0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
+    //  (parking 2)
     LINE("w7", { 0, 0, 0,0,
                 0, 0, 0,0,
                 1, 1, 1, 1, 
                 0, 0, 0,0,
                 0, 0, 0,0, 
-                0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, // variables d'amortiguament
+                0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
+    //  (parking 3)
     LINE("w8", { 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0,
                 1, 1, 1, 1, 
                 0, 0, 0,0, 
-                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, // variables d'amortiguament
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
+    //  (parking 4)
     LINE("w9", { 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0,
                 1, 1, 1, 1, 
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, // variables d'amortiguament
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
 
     // es surt la mateixa quantitat de cops que s'entra en cada pàrquing
+        //  (parking 0)
     LINE("w10", { 1, 1, 1, 1, 
                 -1, 0, 0,0,
                 -1, 0, 0,0,
                 -1, 0, 0,0,
                 -1, 0, 0,0, 
-                0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, // variables d'amortiguament
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
      LINE("w11", { -1, -1, -1, -1, 
                 1, 0, 0,0,
                 1, 0, 0,0,
                 1, 0, 0,0,
                 1, 0, 0,0, 
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, // variables d'amortiguament
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0,  // variables d'amortiguament
                 0 }),
-
-    LINE("eq3", {-1, 0,0,0, 
+        //  (parking 1)
+    LINE("w12", {-1, 0,0,0, 
+                1, 1, 1, 1, 
+                -1, 0, 0,0,
+                -1, 0, 0,0,
+                -1, 0, 0,0, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0 }),
+    LINE("w13", { 1, 0,0,0, 
+                -1,-1,-1,-1, 
+                 1, 0, 0,0,
+                 1, 0, 0,0,
+                 1, 0, 0,0, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                0 }),
+        //  (parking 2)
+     LINE("w14", {-1, 0,0,0, 
                 -1, 0, 0,0,
                  1, 1, 1, 1, 
                 -1, 0, 0,0,
                 -1, 0, 0,0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-     LINE("eq4", {-1, 0,0,0, 
-                -1, 0, 0,0,
-                 1, 1, 1, 1, 
-                -1, 0, 0,0,
-                -1, 0, 0,0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+    LINE("w15", { 1, 0,0,0, 
+                 1, 0, 0,0,
+                -1,-1,-1,-1, 
+                 1, 0, 0,0,
+                 1, 0, 0,0, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-     LINE("eq5", {-1, 0,0,0, 
-                -1, 0, 0,0,
-                -1, 0, 0,0,
-                 1, 1, 1, 1, 
-                -1, 0, 0,0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
-                0 }),
-     LINE("eq6", {-1, 0,0,0, 
+        //  (parking 3)
+     LINE("w16", {-1, 0,0,0, 
                 -1, 0, 0,0,
                 -1, 0, 0,0,
                  1, 1, 1, 1, 
                 -1, 0, 0,0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,// variables d'amortiguament
+                0 }),
+    LINE("w17", { 1, 0,0,0, 
+                 1, 0, 0,0,
+                 1, 0, 0,0,
+                -1,-1,-1,-1, 
+                 1, 0, 0,0, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, // variables d'amortiguament
+                0 }),
+        //  (parking 4)
+     LINE("w18", {-1, 0,0,0, 
+                -1, 0, 0,0,
+                -1, 0, 0,0,
+                -1, 0, 0,0, 
+                1, 1, 1, 1, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,// variables d'amortiguament
+                0 }),
+    LINE("w19", { 1, 0,0,0, 
+                 1, 0, 0,0,
+                 1, 0, 0,0,
+                 1, 0, 0,0, 
+                -1,-1,-1,-1, 
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1,// variables d'amortiguament
                 0 }),
 
    
@@ -158,7 +194,7 @@ int main()
                 d[2][0], d[2][1], d[2][2], d[2][3], 
                 d[3][0], d[3][1], d[3][2], d[3][3],
                 d[4][0], d[4][1], d[4][2], d[4][3],
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament 
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament 
                 0 // constant
                 })
     };
@@ -193,6 +229,8 @@ int main()
 
     cout << "matriu d:" << endl;
     Output2DVectorInt(d);
+
+    cout << "hola" << endl;
 
     return 0;
 }
