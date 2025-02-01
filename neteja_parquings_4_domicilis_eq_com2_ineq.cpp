@@ -45,13 +45,13 @@ int main()
                  480 // valor de la equació o inequació 
                  }),
                 // que sumin tots els temps de viatge pel seu temps de neteja, més de 5h'
-	LINE("w2", { -d[0][0]-t[1], -d[0][1]-t[2], -d[0][2]-t[3], -d[0][3]-t[4], 
-                -d[1][0]-t[0], -d[1][1]-t[2], -d[1][2]-t[3],- d[1][3]-t[4],
-                -d[2][0]-t[0], -d[2][1]-t[1], -d[2][2]-t[3], -d[2][3]-t[4], 
-                -d[3][0]-t[0], -d[3][1]-t[1], -d[3][2]-t[2], -d[3][3]-t[4],
-                -d[4][0]-t[0], -d[4][1]-t[1], -d[4][2]-t[2], -d[4][3]-t[3], 
+	LINE("w2", { d[0][0]+t[1], d[0][1]+t[2], d[0][2]+t[3], d[0][3]+t[4], 
+                d[1][0]+t[0], d[1][1]+t[2], d[1][2]+t[3], d[1][3]+t[4],
+                d[2][0]+t[0],d[2][1]+t[1], d[2][2]+t[3], d[2][3]+t[4], 
+                d[3][0]+t[0],d[3][1]+t[1], d[3][2]+t[2], d[3][3]+t[4],
+                d[4][0]+t[0],d[4][1]+t[1], d[4][2]+t[2], d[4][3]+t[3],
                  0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
-                -180 // valor de la equació o inequació 
+                180 // valor de la equació o inequació 
                 }),
     
     // es surt 1 cop de la base (parquing 0)
@@ -63,13 +63,13 @@ int main()
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 1 }),
 
-    LINE("w4", { -1, -1, -1, -1, 
+    LINE("w4", {1, 1, 1, 1, 
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0,
                 0, 0, 0,0, 
                 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
-                -1 }),
+                 1 }),
      // de cada pàrquing es surt com a molt 1 cop (parking 0)
     LINE("w5", { 1, 1, 1, 1, 
                 0, 0, 0,0,
@@ -120,71 +120,71 @@ int main()
                 -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-     LINE("w11", { -1, -1, -1, -1, 
-                1, 0, 0,0,
-                1, 0, 0,0,
-                1, 0, 0,0,
-                1, 0, 0,0, 
+     LINE("w11", {  1, 1, 1, 1, 
+                -1, 0, 0,0,
+                -1, 0, 0,0,
+                -1, 0, 0,0,
+                -1, 0, 0,0, 
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0,  // variables d'amortiguament
                 0 }),
         //  (parking 1)
-    LINE("w12", {-1, 0,0,0, 
-                1, 1, 1, 1, 
-                -1, 0, 0,0,
-                -1, 0, 0,0,
-                -1, 0, 0,0, 
+    LINE("w12", {-1,0, 0, 0, 
+                 1, 1, 1, 1, 
+                 0,-1, 0,0,
+                 0,-1, 0,0,
+                 0,-1, 0,0, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-    LINE("w13", { 1, 0,0,0, 
-                -1,-1,-1,-1, 
-                 1, 0, 0,0,
-                 1, 0, 0,0,
-                 1, 0, 0,0, 
+    LINE("w13", { -1,0, 0, 0, 
+                 1, 1, 1, 1, 
+                 0,-1, 0,0,
+                 0,-1, 0,0,
+                 0,-1, 0,0, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
         //  (parking 2)
-     LINE("w14", {-1, 0,0,0, 
-                -1, 0, 0,0,
-                 1, 1, 1, 1, 
-                -1, 0, 0,0,
-                -1, 0, 0,0, 
+     LINE("w14", {0,-1, 0, 0, 
+                  0,-1, 0,0,
+                  1, 1, 1, 1, 
+                  0, 0,-1,0,
+                  0, 0,-1,0, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
-    LINE("w15", { 1, 0,0,0, 
-                 1, 0, 0,0,
-                -1,-1,-1,-1, 
-                 1, 0, 0,0,
-                 1, 0, 0,0, 
+    LINE("w15", {0,-1, 0, 0, 
+                  0,-1, 0,0,
+                  1, 1, 1, 1, 
+                  0, 0,-1,0,
+                  0, 0,-1,0,  
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, // variables d'amortiguament
                 0 }),
         //  (parking 3)
-     LINE("w16", {-1, 0,0,0, 
-                -1, 0, 0,0,
-                -1, 0, 0,0,
+     LINE("w16",{0, 0,-1, 0,  
+                 0, 0,-1, 0, 
+                 0, 0,-1, 0, 
                  1, 1, 1, 1, 
-                -1, 0, 0,0, 
+                 0, 0, 0,-1, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,// variables d'amortiguament
                 0 }),
-    LINE("w17", { 1, 0,0,0, 
-                 1, 0, 0,0,
-                 1, 0, 0,0,
-                -1,-1,-1,-1, 
-                 1, 0, 0,0, 
+    LINE("w17", { 0, 0,-1, 0,  
+                 0, 0,-1, 0, 
+                 0, 0,-1, 0, 
+                 1, 1, 1, 1, 
+                 0, 0, 0,-1,  
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, // variables d'amortiguament
                 0 }),
         //  (parking 4)
-     LINE("w18", {-1, 0,0,0, 
-                -1, 0, 0,0,
-                -1, 0, 0,0,
-                -1, 0, 0,0, 
-                1, 1, 1, 1, 
+     LINE("w18", {0, 0, 0,-1,  
+                 0, 0, 0, -1, 
+                 0, 0, 0, -1, 
+                 0, 0, 0, -1, 
+                 1, 1, 1, 1, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,// variables d'amortiguament
                 0 }),
-    LINE("w19", { 1, 0,0,0, 
-                 1, 0, 0,0,
-                 1, 0, 0,0,
-                 1, 0, 0,0, 
-                -1,-1,-1,-1, 
+    LINE("w19", { 0, 0, 0,-1,  
+                 0, 0, 0, -1, 
+                 0, 0, 0, -1, 
+                 0, 0, 0, -1, 
+                 1, 1, 1, 1, 
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1,// variables d'amortiguament
                 0 }),
 
@@ -226,6 +226,18 @@ int main()
     cout << "rest5: " << result.GetValue("w5") << endl; // 33
     cout << "rest6: " << result.GetValue("w6") << endl; // 33
     cout << "rest7: " << result.GetValue("w7") << endl; // 33
+    cout << "rest8: " << result.GetValue("w8") << endl; // 33
+    cout << "rest9: " << result.GetValue("w9") << endl; // 33
+    cout << "rest10: " << result.GetValue("w10") << endl; // 33
+    cout << "rest11: " << result.GetValue("w11") << endl; // 33
+    cout << "rest12: " << result.GetValue("w12") << endl; // 33
+    cout << "rest13: " << result.GetValue("w13") << endl; // 33
+    cout << "rest14: " << result.GetValue("w14") << endl; // 33
+    cout << "rest15: " << result.GetValue("w15") << endl; // 33
+    cout << "rest16: " << result.GetValue("w16") << endl; // 33
+    cout << "rest17: " << result.GetValue("w17") << endl; // 33
+    cout << "rest18: " << result.GetValue("w18") << endl; // 33
+    cout << "rest19: " << result.GetValue("w19") << endl; // 33
 
     cout << "matriu d:" << endl;
     Output2DVectorInt(d);
