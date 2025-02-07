@@ -50,7 +50,7 @@ int LenghtOfVectorInt(const vector<int>& tickers);
 int LenghtOfVectorDoub(const vector<double>& tickers);
 
 void OutputVector(const vector<std::string>& tickers);
-void OutputVectorInt(const vector<int>& tickers);
+void OutputVectorInt(const vector<int>& tickers,const vector<string>& labels={});
 void OutputVectorDouble(const vector<double>& tickers);
 void Output2DVectorDouble(const vector<vector<double>>& matrix);
 void Output2DVectorInt(const vector<vector<int>>& matrix);

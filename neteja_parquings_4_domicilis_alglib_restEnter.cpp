@@ -108,7 +108,7 @@ void fesOpti()
      vector<int> dist = flattenMatrix(d);
 
     cout << "vector distàncies:  " << endl;
-    Output2DVectorInt(d);
+    OutputVectorInt(dist);
     int n = 5;
     // temps en netejar el pàrquing "i", ti en minuts:
     vector<int> t = {30, 120, 180, 60, 240};
@@ -373,108 +373,130 @@ void fesOpti()
                  // variables d'ordre; ui amb i€{1,..,n-1}
                   1, 1, 1, 1};
 
-        // s'han de visitat totes les ciutats 1 cop:
-        // x0
+        // forcem uj - ui >= xij (per a que la diferència sigui almenys 1) on (n-1)>=i,j>0
+        // hi haurà 12 opcions
+        //x12
         vector<int> res27 =  {
-                 1, 1, 1,  1,  
-                 0, 0, 0,  0, 
-                 0, 0, 0,  0, 
-                 0, 0, 0,  0, 
-                 0, 0, 0,  0,
-                 // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x1
-        vector<int> res28 =  {
                  0, 0, 0,  0,  
-                 1, 1, 1,  1, 
+                 0,-1, 0,  0, 
                  0, 0, 0,  0, 
                  0, 0, 0,  0, 
                  0, 0, 0,  0,
                  // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x2
-        vector<int> res29 =  {
+                -1, 1, 0, 0};
+        //x13
+         vector<int> res28 =  {
                  0, 0, 0,  0,  
+                 0, 0,-1,  0, 
                  0, 0, 0,  0, 
-                 1, 1, 1,  1, 
                  0, 0, 0,  0, 
                  0, 0, 0,  0,
                  // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x3
+                -1, 0, 1, 0};
+        //x14
+         vector<int> res29 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0, -1, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                -1, 0, 0, 1};
+
+        //x21
         vector<int> res30 =  {
                  0, 0, 0,  0,  
                  0, 0, 0,  0, 
+                 0,-1, 0,  0, 
                  0, 0, 0,  0, 
-                 1, 1, 1,  1, 
                  0, 0, 0,  0,
                  // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x4
-        vector<int> res31 =  {
+                 1,-1, 0, 0};
+        //x23
+         vector<int> res31 =  {
                  0, 0, 0,  0,  
                  0, 0, 0,  0, 
+                 0, 0,-1,  0, 
                  0, 0, 0,  0, 
-                 0, 0, 0,  0, 
-                 1, 1, 1,  1,
+                 0, 0, 0,  0,
                  // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
+                 0,-1, 1, 0};
+        //x24
+         vector<int> res32 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0, -1, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 0,-1, 0, 1};
 
-        // s'han de visitat totes les ciutats 1 cop:
-        // x0
-        vector<int> res32 =  {
-                 0, 0, 0,  0,  
-                 1, 0, 0,  0, 
-                 1, 0, 0,  0, 
-                 1, 0, 0,  0, 
-                 1, 0, 0,  0,
-                 // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x1
+        //x31
         vector<int> res33 =  {
-                 1, 0, 0,  0,  
+                 0, 0, 0,  0,  
                  0, 0, 0,  0, 
-                 0, 1, 0,  0, 
-                 0, 1, 0,  0, 
-                 0, 1, 0,  0,
-                 // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x2
-        vector<int> res34 =  {
-                 0, 1, 0,  0,  
-                 0, 1, 0,  0, 
                  0, 0, 0,  0, 
-                 0, 0, 1,  0, 
-                 0, 0, 1,  0,
-                 // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x3
-        vector<int> res35 =  {
-                 0, 0, 1,  0,  
-                 0, 0, 1,  0, 
-                 0, 0, 1,  0, 
-                 0, 0, 0,  0, 
-                 0, 0, 0,  1,
-                 // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
-        // x4
-        vector<int> res36 =  {
-                 0, 0, 0,  1,  
-                 0, 0, 0,  1, 
-                 0, 0, 0,  1, 
-                 0, 0, 0,  1, 
+                 0, -1, 0, 0, 
                  0, 0, 0,  0,
                  // variables d'ordre; ui amb i€{1,..,n-1}
-                  0, 0, 0, 0};
+                 1, 0,-1, 0};
+        //x32
+         vector<int> res34 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0,-1,  0, 
+                 0, 0, 0,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 0, 1,-1, 0};
+        //x34
+         vector<int> res35 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0, -1, 
+                 0, 0, 0,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 0, 0,-1, 1};
+
+         //x41
+        vector<int> res36 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0,-1, 0,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 1, 0, 0,-1};
+        //x42
+         vector<int> res37 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0,-1,  0,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 0, 1, 0,-1};
+        //x43
+         vector<int> res38 =  {
+                 0, 0, 0,  0,  
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0,  0, 
+                 0, 0, 0, -1,
+                 // variables d'ordre; ui amb i€{1,..,n-1}
+                 0, 0, 1,-1};
+
         
+
         
         vector<vector<int>> res = {res1,res2,res3,res4,res5,res6,res7,res8,
         res9,res10,res11,res12,res13,res14,res15,res16,res17,res18,res19,res20,
-        res21,res22,res23,res24,res25, res26, res27,res28,res29, res30, res31,
-        res32,res33,res34, res35, res36};
+        res21,res22,res23,res24,res25,  res27,res28,res29,res30,res31,res32,res33,res34,
+        res35,res36,res37,res38};
         real_2d_array a =  convertMatToALGLIBFormat(res).c_str();
-        real_1d_array al = "[-inf,180,1,0,0,0,0,0,0,0,0,0,0, -inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf, 10, 1,1,1,1,1, 1,1,1,1,1]";
-        real_1d_array au = "[480,+inf,1,1,1,1,1,1,0,0,0,0,0, 4,4,4,4,4,4,4,4,4,4,4,4, 10, 1,1,1,1,1, 1,1,1,1,1]";
+        real_1d_array al = "[-inf,180,1,0,0,0,0,0,0,0,0,0,0, -inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf,-inf, 0,0,0,0,0,0,0,0,0,0,0,0]";
+        real_1d_array au = "[480,+inf,1,1,1,1,1,1,0,0,0,0,0, 4,4,4,4,4,4,4,4,4,4,4,4, +inf,+inf,+inf,+inf,+inf,+inf,+inf,+inf,+inf,+inf,+inf,+inf]";
         real_1d_array c = convertVecToALGLIBFormat(dist).c_str();
         real_1d_array s =       "[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1]"; // escala de cada variable
         real_1d_array bndl =    "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 1,1,1,1]";
@@ -507,8 +529,7 @@ void fesOpti()
         //
         minlpsetcost(state, c);
         minlpsetbc(state, bndl, bndu);
-        minlpsetlc2dense(state, a, al, au, 36);
-        
+        minlpsetlc2dense(state, a, al, au, 37);
 
         //f força algunes variables a tenir valors enters:
 
@@ -533,18 +554,10 @@ void fesOpti()
         //
         minlpsetalgoipm(state);
         minlpoptimize(state);
-         double f;  // Valor de la funció objectiu òptima
         minlpresults(state, x, rep);
         // printf("%s\n", x.tostring(3).c_str()); // EXPECTED: [0,1]
           printArrayInRows(x, 4);
          printf("%s\n", au.tostring(3).c_str()); // EXPECTED: [0,1]
-
-         // Obtenim el resultat de la funció objectiu final
-       
-
-        // Mostrem el valor de la funció objectiu òptima
-        cout << "Valor de la funció objectiu òptima: " << rep.f << endl;
-
     }
     catch(alglib::ap_error alglib_exception)
     {

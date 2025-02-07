@@ -118,9 +118,16 @@ void OutputVector( const vector<std::string>& tickers) {
 
 }
 
-void OutputVectorInt( const vector<int>& tickers) {
-    for(int str : tickers) {
-        cout << str << " - ";
+void OutputVectorInt( const vector<int>& tickers, const vector<string>& labels) {
+     for (size_t i = 0; i < tickers.size(); ++i) {
+       
+        
+        // Si hi ha etiquetes i la mida coincideix amb tickers, les mostra
+        if (!labels.empty() && i < labels.size()) {
+            cout  << labels[i] << ":";
+        }
+         cout << tickers[i] << " "; 
+        
     }
     cout << endl;
 }
