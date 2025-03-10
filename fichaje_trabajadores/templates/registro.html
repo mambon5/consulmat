@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar  9 00:21:01 2025
+
+@author: ruthv
+"""
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar {{ tipo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Registrar {{ tipo }}</h1>
+    <form method="POST">
+        {% if tipo == 'Entrada' %}
+            <label for="nombre">Nombre del trabajador:</label>
+            <input type="text" name="nombre" required>
+        {% endif %}
+        
+        <button type="submit">Registrar {{ tipo }}</button>
+    </form>
+    <a href="{{ url_for('index') }}">Volver al inicio</a>
+</body>
+</html>

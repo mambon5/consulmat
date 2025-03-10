@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar  9 00:15:52 2025
+
+@author: ruthv
+"""
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichaje de Trabajadores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Fichaje de Trabajadores</h1>
+    <a href="{{ url_for('entrada') }}">Registrar Entrada</a>
+    <h2>Registros</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Hora de Entrada</th>
+                <th>Hora de Salida</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
+                <tr>
+                    <td>{{ registro[1] }}</td>
+                    <td>{{ registro[2] }}</td>
+                    <td>{{ registro[3] if registro[3] else 'Pendiente' }}</td>
+                    <td>
+                        {% if not registro[3] %}
+                            <a href="{{ url_for('salida', id=registro[0]) }}">Registrar Salida</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
