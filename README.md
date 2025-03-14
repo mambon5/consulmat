@@ -1,6 +1,6 @@
 # Projecte organitzacio neteja QMAxilim
 
-# Organització del codi
+## Organització del codi
 
 Bones, hi ha diferents arxius i projeces en aquest repositori:
 
@@ -8,3 +8,11 @@ Bones, hi ha diferents arxius i projeces en aquest repositori:
 - La carpeta `neteja_comunitats` amb tota la merda que està fent el romà per organitzar el tema neteja de comunitats
 - La carpeta `TSP Clean` amb tot el que està fent la Root-Rut respecte la neteja de comuntiats
 - La carpeta `Fichaje treballadores` amb tot el que estem fent (la rut) respecte fitxatxe de treballadors.
+
+## Fitxatge treballadors
+
+## Neteja comunitats
+
+## Neteja pàrquings
+
+## TSP Clean
