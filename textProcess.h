@@ -85,7 +85,7 @@ int getLastFileNumber();
 vector<double> extractNthColumnFromString(const string& text, const int& columna);
 vector<string> extractNthColumnFromCsvString(const string& filename, const int& columna, const char sep = ',', bool deleteFirstRow=false);
 vector<vector<string>> readCsvToMatrix(const string& filename, const int& columns);
-vector<vector<string>> readCsvToMatrixFree(const string& filename, const int& inici);
+vector<vector<string>> readCsvToMatrixFree(const string& filename, const int& inici=0);
 string readFile(const std::string& filename);
 vector<std::string> readCsv(const std::string& filename);
 string GetFirstLineOfFile(const std::string& inputFile, bool printall=false);

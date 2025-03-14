@@ -619,7 +619,7 @@ vector<vector<string>> readCsvToMatrixFree(const string& filename, const int & i
        
         
         vector<string> liniaVec;
-        if(index >= inici) { // comencem a llegir a partir de la fila inici
+        if(index >= inici && line != "") { // comencem a llegir a partir de la fila inici
             
             while(getline(lineStream,cell, ','))
             {
