@@ -65,6 +65,8 @@ void OutputVector(const vector<std::string>& tickers, string sep="\n");
 void OutputVectorInt(const vector<int>& tickers);
 void OutputVectorDouble(const vector<double>& tickers);
 void Output2DVectorDouble(const vector<vector<double>>& matrix);
+void Output2DVectorInt(const vector<vector<int>>& matrix);
+
 void Output2DVectorString( const vector<vector<string>>& matrix);
 void Output2Dvector_custom1(const vector<vector<double>>& matrix, const vector<string>& strings);
 void Output2Dvector_firstFew(const vector<vector<double>>& matrix, const vector<string>& strings, int show=5);

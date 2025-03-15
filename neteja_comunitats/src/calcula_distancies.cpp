@@ -75,7 +75,7 @@ double getTravelTime(const string& origin, const string& destination) {
             if (Json::parseFromStream(reader, stream, &jsonData, &errors)) {
                 if (!jsonData["routes"].empty()) {
                     int duration = jsonData["routes"][0]["duration"].asInt();
-                    cout << "Temps de viatge: " << duration / 60 << " minuts" << endl;
+                    // cout << "Temps de viatge: " << duration / 60 << " minuts" << endl;
                     return duration / 60;
                 } else {
                     cerr << "No s'han trobat rutes." << endl;
@@ -131,8 +131,8 @@ std::vector<int> extractTravelTimes_aux1(const std::string& html) {
     return travelTimes;
 }
 
-void superRegex(const string & html) {
-    cout << "fent superregex" << endl;
+void superRegex(const string & html, bool print = false) {
+    // cout << "fent superregex" << endl;
     std::regex time_regex(R"(\[\[\[\d\],\d+,\[\d+,\\\"(\d+) min\\\"\]\],\[\[\d\],\d+,\[\d+,\\\"(\d+) h(?: y (\d+))?\\\"\]\],\[\[\d\],\d+,\[\d+,\\\"(\d+) h\\\"\]\],\[\[\d\],\d+,\[\d+,\\\"(\d+) h(?: y (\d+))?\\\"\]\]\])");
    
 
@@ -148,9 +148,12 @@ void superRegex(const string & html) {
     }
 
     // Mostra els resultats trobats
-    for (size_t i = 0; i < travelTimes.size(); ++i) {
-        std::cout << "T" << (i + 1) << ": " << travelTimes[i] << std::endl;
+    if(print) {
+        for (size_t i = 0; i < travelTimes.size(); ++i) {
+            std::cout << "T" << (i + 1) << ": " << travelTimes[i] << std::endl;
+        }
     }
+   
 
 }
 
@@ -163,9 +166,9 @@ vector<int> extractTravelTimes(const std::string& html) {
     std::smatch match;
     std::string::const_iterator searchStart(html.cbegin());
 
-    cout << "comptant els cops que apareixen les expressiosn" << endl;
+    // cout << "comptant els cops que apareixen les expressiosn" << endl;
     while (std::regex_search(searchStart, html.cend(), match, time_regex)) {
-        cout <<"mathc 1: " <<stoi(match[1]) << endl;
+        // cout <<"mathc 1: " <<stoi(match[1]) << endl;
         times.push_back(std::stoi(match[1]));
         searchStart = match.suffix().first;
     }
@@ -178,24 +181,35 @@ vector<int> extractTravelTimes(const std::string& html) {
 
 
 
-    if (times.size() == 4) {
-         // Agafem les 4 últimes aparicions
-        car_time = times[times.size() - 4];
-        public_transport_time = times[times.size() - 3];
-        walking_time = times[times.size() - 2];
-        bici_time = times[times.size() - 1];
+//     if (times.size() == 4) {
+//          // Agafem les 4 últimes aparicions
+//         car_time = times[times.size() - 4];
+//         public_transport_time = times[times.size() - 3];
+//         walking_time = times[times.size() - 2];
+//         bici_time = times[times.size() - 1];
+//     }
+//     else if (times.size() == 3) {
+//         // Agafem les 3 últimes aparicions
+//        car_time = times[times.size() - 3];
+//        walking_time = times[times.size() - 2];
+//        bici_time = times[times.size() - 1];
+//    }
+//    else {
+    // cout << "el codi font no mostra el temps només en minuts. Provant extracció avançada..."<< endl;
+    vector<int> times2= extractTravelTimes_aux1(html);
+    if(times2.size() == 3) {
+        car_time = times2[0];
+        walking_time = times2[1];
+        bici_time= times2[2];
     }
-    else if (times.size() == 3) {
-        // Agafem les 3 últimes aparicions
-       car_time = times[times.size() - 3];
-       walking_time = times[times.size() - 2];
-       bici_time = times[times.size() - 1];
-   }
-   else {
-    cout << "el codi font no mostra el temps només en minuts. Provant extracció avançada..."<< endl;
-    return extractTravelTimes_aux1(html);
+    else {
+        car_time = times2[0];
+        public_transport_time = times2[1];
+        walking_time = times2[2];
+        bici_time= times2[3];
+    }
     
-   }
+//    }
 
    
 
@@ -209,58 +223,13 @@ vector<int> extractTravelTimes(const std::string& html) {
     return vector<int> {car_time, public_transport_time, walking_time, bici_time};
 }
 
-
-// void extractTravelTimes(const std::string& html) {
-//     std::regex time_regex(R"((\d+)\s*h(?:\s*y\s*(\d+))?\s*|\b(\d+)\s*min\b)");
-//     std::vector<int> times;
-//     std::smatch match;
-//     std::string::const_iterator searchStart(html.cbegin());
-
-//     while (std::regex_search(searchStart, html.cend(), match, time_regex)) {
-//         int total_minutes = 0;
-
-//         try {
-//             if (match[1].matched) {  // Si té hores
-//                 total_minutes += std::stoi(match[1]) * 60;
-//                 if (match[2].matched) {  // Si també té minuts
-//                     total_minutes += std::stoi(match[2]);
-//                 }
-//             } else if (match[3].matched) {  // Si només té minuts
-//                 total_minutes = std::stoi(match[3]);
-//             }
-//         } catch (const std::invalid_argument& e) {
-//             std::cerr << "Error: No s'ha pogut convertir el temps!" << std::endl;
-//             continue;
-//         }
-
-//         times.push_back(total_minutes);
-//         searchStart = match.suffix().first;
-//     }
-
-//     if (times.size() < 4) {
-//         std::cerr << "No s'han trobat prou dades!" << std::endl;
-//         return;
-//     }
-
-//     int car_time = times[times.size() - 4];
-//     int public_transport_time = times[times.size() - 3];
-//     int walking_time = times[times.size() - 2];
-//     int metro_time = times[times.size() - 1];
-
-//     std::cout << "Temps en cotxe: " << car_time << " min" << std::endl;
-//     std::cout << "Temps en transport públic: " << public_transport_time << " min" << std::endl;
-//     std::cout << "Temps a peu: " << walking_time << " min" << std::endl;
-//     std::cout << "Temps en metro: " << metro_time << " min" << std::endl;
-// }
-
-
 // Funció per obtenir el temps de viatge entre dues coordenades amb OSRM
-double getTravelTimeGmaps(const string& origin, const string& destination) {
+vector<int> getTravelTimeGmaps(const string& origin, const string& destination, bool printOutput = false) {
     CURL* curl;
     CURLcode res;
     string readBuffer;
-    string coutGmaps = "output/GmapsDistance.out";
-
+    string coutGmaps = "../output/GmapsDistance.out";
+    vector<int> temps(4,-1);
     // amb cotxe
     // string url = "http://router.project-osrm.org/routed-foot/route/v1/driving/" + origin + ";" + destination + "?overview=false";
 
@@ -269,7 +238,7 @@ double getTravelTimeGmaps(const string& origin, const string& destination) {
     string url = "https://www.google.es/maps/dir/'"+origin+"'/'"+destination+"'";
     // string url = "https://routing.openstreetmap.de/routed-foot/route/v1/driving/" + origin + ";" + destination + "?overview=false";
     
-    cout << url << endl;
+    if(printOutput) cout << url << endl;
     curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -285,29 +254,40 @@ double getTravelTimeGmaps(const string& origin, const string& destination) {
         // cout <<"resposta Gmaps: " << endl << readBuffer << endl;
         WriteToFileOver(readBuffer, coutGmaps);
         cout << "extracting travel times" << endl;
-        vector<int> temps = extractTravelTimes(readBuffer);
+        temps = extractTravelTimes(readBuffer);
 
         if (res != CURLE_OK) {
             cerr << "Error en la petició: " << curl_easy_strerror(res) << endl;
-            return -1;
-        } else {
+            
+        } else if(printOutput){
             cout << "temps de viatge: " << endl;
             OutputVectorInt(temps);
         }
         curl_easy_cleanup(curl);
     }
-    return -2;
+    return temps;
 }
 
-vector<vector<double>> DistanceMatrix(const vector<vector<string>>& locations, bool symmetric=true) {
+void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro, 
+    vector<vector<int>>& peu, vector<vector<int>>& bici,
+    const vector<vector<string>>& locations, bool symmetric=true) {
     int n = locations.size();
-    vector<vector<double>> matrix(n, vector<double>(n, 0.0));
+    
+    // vector<vector<int>> cotxe(n, vector<int>(n, 0.0)); // matriu distancia temps en cotxe
+    // vector<vector<int>> metro(n, vector<int>(n, 0.0));// matriu distancia temps en metrobus
+    // vector<vector<int>> peu(n, vector<int>(n, 0.0));
+    // vector<vector<int>> bici(n, vector<int>(n, 0.0));
+    
+    vector<int> temps;
     
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (i == j) continue; // La distància a si mateix és 0
             if(symmetric && i>j) {
-                matrix[i][j] = matrix[j][i]; // no perdre temps tornant a calcular valors simètrics
+                cotxe[i][j] = cotxe[j][i]; // no perdre temps tornant a calcular valors simètrics
+                metro[i][j] = metro[j][i];
+                peu[i][j] = peu[j][i];
+                bici[i][j] = bici[j][i];
                 continue;
             }
             string origen = locations[i][2] + "," +  locations[i][3];
@@ -315,19 +295,23 @@ vector<vector<double>> DistanceMatrix(const vector<vector<string>>& locations, b
 
             cout << "punt1 (" + origen + ") punt2: (" + desti + ")" << endl;  
             
-            matrix[i][j] = getTravelTimeGmaps(origen, desti); // Aquesta funció hauria d'omplir el resultat
+            temps = getTravelTimeGmaps(origen, desti); // Aquesta funció hauria d'omplir el resultat
+            cotxe[i][j] = temps[0];
+            metro[i][j] = temps[1];
+            peu[i][j] = temps[2];
+            bici[i][j] = temps[3];
             // Suposant que podem modificar getTravelTime perquè retorni el valor:
             // matrix[i][j] = getTravelTime(origin, destination);
         }
     }
     
-    return matrix;
+    // return {cotxe, metro, peu, bici};
 }
 
 int main() {
-    string inputfile="input/Comunidades_coords.csv";
-    string outputDistances="output/Comunidades_distancies.csv";
-    string outputPerdudes="output/Comunidades_dist_perdudes.csv";
+    string inputfile="../input/Comunidades_coords.csv";
+    string outputDistances="../output/Comunidades_distancies.csv";
+    string outputPerdudes="../output/Comunidades_dist_perdudes.csv";
     
     // vector<string> adreces = readCsv(fitxer);
     vector<vector<string>> coords = readCsvToMatrixFree(inputfile);// id, adreça, lat, lon
@@ -335,16 +319,20 @@ int main() {
     string adreces_amb_coords= "";
     string adreces_perdudes= "";
 
+    int n = 6;
+
+    vector<vector<int>> cotxe, peu, metro, bici;
     // buida els fitxers:
     WriteToFileOver("", outputDistances);
     WriteToFileOver("", outputPerdudes);
 
     
-    int num_punts = 6;
-    vector<vector<string>> sub_v(coords.begin(), coords.begin() + num_punts);
+    vector<vector<string>> sub_v(coords.begin(), coords.begin() + n);
     Output2DVectorString(sub_v);
 
-    // vector<vector<double>> dismat = DistanceMatrix(sub_v);
+    DistanceMatrixes(cotxe, metro, peu, bici, sub_v);
+
+    Output2DVectorInt(cotxe);
 
     // for(int i=0; i<num_punts; ++i) {
     //     for(int j=0; j<num_punts; ++j) {
@@ -352,7 +340,7 @@ int main() {
     //         double time = getTravelTimeGmaps(sub_v[i][2]+","+sub_v[i][3],sub_v[j][2]+","+sub_v[j][3]);
     //     }        
     // }
-            double time = getTravelTimeGmaps("41.364960,2.118542","41.606921,2.285211");
+            // double time = getTravelTimeGmaps("41.364960,2.118542","41.606921,2.285211");
 
     // vector<vector<double>> matDistancies = DistanceMatrix(sub_v);
     // cout << "matriu de distàncies: " << endl;

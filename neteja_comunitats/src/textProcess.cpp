@@ -257,6 +257,18 @@ void Output2DVectorDouble( const vector<vector<double>>& matrix) {
     }
 }
 
+void Output2DVectorInt( const vector<vector<int>>& matrix) {
+    bool first = true;
+    for (vector<int> vect : matrix) {
+        for(int str : vect) {
+            if(first) cout << str;
+            else  cout << " -" << str;
+    }
+        first = true;
+        cout << endl;
+    }
+}
+
 void Output2DVectorString( const vector<vector<string>>& matrix) {
     int i = 0;
     for (vector<string> vect : matrix) {
