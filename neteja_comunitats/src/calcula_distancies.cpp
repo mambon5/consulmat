@@ -354,6 +354,7 @@ void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro,
             // Suposant que podem modificar getTravelTime perquè retorni el valor:
             // matrix[i][j] = getTravelTime(origin, destination);
         }
+        j0 = 0;
     }
     
     // return {cotxe, metro, peu, bici};
