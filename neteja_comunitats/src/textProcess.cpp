@@ -260,9 +260,12 @@ void Output2DVectorDouble( const vector<vector<double>>& matrix) {
 void Output2DVectorInt( const vector<vector<int>>& matrix) {
     bool first = true;
     for (vector<int> vect : matrix) {
-        for(int str : vect) {
-            if(first) cout << str;
-            else  cout << " -" << str;
+        for(int ele : vect) {
+            if(first) { 
+                cout << ele;
+                first = false;
+            }
+            else  cout << " - " << ele;
     }
         first = true;
         cout << endl;
@@ -311,6 +314,31 @@ const std::string& outputFile, int show){
     }
     outFile.close();
 }
+
+void Write2DvectorInt(const vector<vector<int>>& matrix, 
+    const std::string& outputFile, string delim){
+        ofstream outFile;
+        outFile.open(outputFile, ios_base::trunc); // append instead of overwrite
+        if (!outFile.is_open()) {
+            cerr << "Failed to open the output file: " << outputFile << endl;
+            return;
+        }
+        int rows = matrix.size();
+    int cols = matrix[0].size();
+
+    // Escriu la matriu a CSV
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            outFile << matrix[i][j];
+            if (j < cols - 1) {
+                outFile << delim; // Afegir coma entre els valors
+            }
+        }
+        outFile << "\n"; // Nova línia per a cada fila
+    }
+
+        outFile.close();
+    }
 
 void WriteToFileSimple( const std::string& output, const std::string& outputFile, bool printall) {
     ofstream outFile;
@@ -688,6 +716,80 @@ vector<std::string> readCsv(const std::string& filename)
     return result;
 }
 
+std::vector<std::vector<std::string>> readCsvProperly(const std::string& filename) {
+    std::vector<std::vector<std::string>> data;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "No s'ha pogut obrir el fitxer: " << filename << std::endl;
+        return data;
+    }
+
+    std::string line;
+    while (getline(file, line)) {
+        std::vector<std::string> row;
+        std::stringstream ss(line);
+        std::string cell;
+        bool insideQuotes = false;
+        std::string tempCell;
+
+        while (getline(ss, cell, ',')) {
+            if (!insideQuotes) {
+                if (!cell.empty() && cell.front() == '"') {
+                    // Comença un camp entre cometes
+                    insideQuotes = true;
+                    tempCell = cell.substr(1); // Treu la primera cometa
+                } else {
+                    // Substitueix guionets per espais
+                    std::replace(cell.begin(), cell.end(), '-', ' ');
+                    row.push_back(cell);
+                }
+            } else {
+                // Estem dins d'un camp entre cometes
+                if (!cell.empty() && cell.back() == '"') {
+                    insideQuotes = false;
+                    tempCell += " " + cell.substr(0, cell.length() - 1); // Treu l'última cometa i afegeix espai
+                    tempCell.erase(std::remove(tempCell.begin(), tempCell.end(), ','), tempCell.end()); // Elimina les comes internes
+
+                    // Substitueix guionets per espais
+                    std::replace(tempCell.begin(), tempCell.end(), '-', ' ');
+
+                    // Elimina espais duplicats
+                    tempCell.erase(std::unique(tempCell.begin(), tempCell.end(), [](char a, char b) {
+                        return a == ' ' && b == ' ';
+                    }), tempCell.end());
+
+                    row.push_back(tempCell);
+                    tempCell.clear();
+                } else {
+                    tempCell += " " + cell;  // Ajunta amb espai
+                }
+            }
+        }
+
+        if (!tempCell.empty()) {
+            tempCell.erase(std::remove(tempCell.begin(), tempCell.end(), ','), tempCell.end()); // Elimina comes finals si queden
+
+            // Substitueix guionets per espais
+            std::replace(tempCell.begin(), tempCell.end(), '-', ' ');
+
+            // Elimina espais duplicats
+            tempCell.erase(std::unique(tempCell.begin(), tempCell.end(), [](char a, char b) {
+                return a == ' ' && b == ' ';
+            }), tempCell.end());
+
+            row.push_back(tempCell);
+        }
+
+        data.push_back(row);
+    }
+
+    file.close();
+    return data;
+}
+
+
+
 string GetFirstLineOfFile(const std::string& inputFile, bool printall) {
     // obten la primera linia del fitxer.
     std::ifstream archivo(inputFile); // Abrir el archivo para lectura
@@ -703,6 +805,47 @@ string GetFirstLineOfFile(const std::string& inputFile, bool printall) {
         std::cerr << "No se pudo abrir el archivo." << std::endl;
     }
     return primeraLinea;
+}
+
+void llegirUltimaLiniaCSV(const string& nomFitxer, string& valor1, string& valor2) {
+    ifstream fitxer(nomFitxer);
+    if (!fitxer.is_open()) {
+        cerr << "Error obrint el fitxer: " << nomFitxer << endl;
+        return;
+    }
+
+    string linia, ultimaLinia;
+    
+    // Llegeix tot el fitxer línia per línia per trobar l'última
+    while (getline(fitxer, linia)) {
+        if (!linia.empty()) {
+            ultimaLinia = linia;
+        }
+    }
+
+    fitxer.close();
+
+    if (ultimaLinia.empty()) {
+        cerr << "El fitxer està buit o no té línies vàlides." << endl;
+        return;
+    }
+
+    // Separar la línia per comes
+    stringstream ss(ultimaLinia);
+    vector<string> valors;
+    string valor;
+    
+    while (getline(ss, valor, ',')) {
+        valors.push_back(valor);
+    }
+
+    // Assegurar-se que hi ha almenys dos valors
+    if (valors.size() >= 2) {
+        valor1 = valors[0];
+        valor2 = valors[1];
+    } else {
+        cerr << "No hi ha prou valors a l'última línia." << endl;
+    }
 }
 
 vector<std::string> readPartialCsvFromCertainLine(const std::string& filename, 

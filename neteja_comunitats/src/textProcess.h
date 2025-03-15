@@ -72,6 +72,8 @@ void Output2Dvector_custom1(const vector<vector<double>>& matrix, const vector<s
 void Output2Dvector_firstFew(const vector<vector<double>>& matrix, const vector<string>& strings, int show=5);
 
 void Write2Dvector_firstFew(const vector<vector<double>>& matrix, const vector<string>& strings, const std::string& outputFile, int show=5);
+void Write2DvectorInt(const vector<vector<int>>& matrix, 
+  const std::string& outputFile, string delim =",");
 void WriteToFileSimple(const std::string& output, const std::string& outputFile, bool printall=false);
 void WriteToFileOver(const std::string& output, const std::string& outputFile, bool printall=false);
 void WriteToFile(const vector<std::string>& tickers, const std::string& outputFile, bool showVector=false);
@@ -90,7 +92,9 @@ vector<vector<string>> readCsvToMatrix(const string& filename, const int& column
 vector<vector<string>> readCsvToMatrixFree(const string& filename, const int& inici=0);
 string readFile(const std::string& filename);
 vector<std::string> readCsv(const std::string& filename);
+vector<vector<std::string>> readCsvProperly(const std::string& filename) ;
 string GetFirstLineOfFile(const std::string& inputFile, bool printall=false);
+void llegirUltimaLiniaCSV(const string& nomFitxer, string& valor1, string& valor2);
 
 
 vector<std::string> readPartialCsvFromCertainLine(const std::string& filename, 

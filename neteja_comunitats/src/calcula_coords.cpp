@@ -32,19 +32,34 @@ string obtenirGoogleMapsURL(const string& adreca) {
     CURL* curl;
     CURLcode res;
     string readBuffer;
-    string outFile = "output/gmapsout.out" ;
+    string outFile = "../output/gmapsout.out" ;
     
     curl = curl_easy_init();
     if (curl) {
         string url = "https://www.google.com/maps/search/?q=" + urlencode(adreca);
         // string url = "https://www.google.com/search?q=" + urlencode(adreca);
         
+        // proxy:
+        // curl_easy_setopt(curl, CURLOPT_PROXY, "http://8.211.133.213:3389");  // Substitueix amb el teu proxy
+
+
+        //capçaleres:
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        headers = curl_slist_append(headers, "Accept-Language: en-US,en;q=0.5");
+        headers = curl_slist_append(headers, "Connection: keep-alive");
+
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
         cout << "url google usada: " << url << endl;
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         // Afegeix un User-Agent per simular un navegador
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+        // curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.77 Mobile Safari/537.36");
+         // afegim un user-agent més senzill per maximitzar la probabilitat de trobar
+        // la lat i lon de cada adreça
 
         // Permet redireccions (seguiment de 302)
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -53,7 +68,7 @@ string obtenirGoogleMapsURL(const string& adreca) {
         curl_easy_cleanup(curl);
 
         // resposta de google maps;
-        WriteToFileSimple(readBuffer,outFile);
+        // WriteToFileOver(readBuffer,outFile);
         
 
         if (res != CURLE_OK) {
@@ -77,15 +92,29 @@ string obtenirGoogleMapsURL(const string& adreca) {
     return "No trobada";
 }
 
-vector<string> extractAddresses(const vector<vector<string>>& matrix) {
+vector<string> extractAddresses1(const vector<vector<string>>& matrix) {
     vector<string> addresses;
     
     for (const auto& row : matrix) {
         if (row.size() >= 5) { // Comprovar que té prou columnes
             // string fullAddress = trim(row[5]) + " " + trim(row[6]) + " " + trim(row[2]) + 
                                 " " + trim(row[3])  + " " + trim(row[4]); 
-              string fullAddress = trim(row[4]) + " " + trim(row[2]) + " " + trim(row[1]) + 
+              string fullAddress = trim(row[4]) + " " + trim(row[1]) + " " + trim(row[2]) + 
                                 " " + trim(row[3]); 
+            addresses.push_back(fullAddress);
+        }
+    }
+    return addresses;
+}
+
+vector<string> extractAddresses2(const vector<vector<string>>& matrix) {
+    vector<string> addresses;
+    
+    for (const auto& row : matrix) {
+        if (row.size() >= 5) { // Comprovar que té prou columnes
+            // string fullAddress = trim(row[5]) + " " + trim(row[6]) + " " + trim(row[2]) + 
+                                " " + trim(row[3])  + " " + trim(row[4]); 
+              string fullAddress = trim(row[4]) + " " + trim(row[2]); 
             addresses.push_back(fullAddress);
         }
     }
@@ -118,16 +147,19 @@ string getCoordinates(const string& adreca) {
 
 int main() {
    
-    string inputfile="input/Comunidades_11_03_2025.csv";
-    string outputCoords="output/Comunidades_coords.csv";
-    string outputPerdudes="output/Comunidades_perdudes.csv";
+    string currentDate = getCurrentDate();
+    string inputfile="../input/Comunidades_11_03_2025.csv";
+    string outputCoords="../output/Comunidades_coords_"+currentDate+".csv";
+    string outputPerdudes="../output/Comunidades_perdudes_"+currentDate+".csv";
     
     // vector<string> adreces = readCsv(fitxer);
-    vector<vector<string>> adreces2 = readCsvToMatrixFree(inputfile, 1);
+    vector<vector<string>> adrecesorig = readCsvProperly(inputfile);
 
-
-    vector<string> addresses = extractAddresses(adreces2);
-    vector<string> ids = extractIDs(adreces2);
+    cout << "vector adreces 2:" << endl;
+    Output2DVectorString(adrecesorig);
+    vector<string> addresses1 = extractAddresses1(adrecesorig);
+    vector<string> addresses2 = extractAddresses2(adrecesorig);
+    vector<string> ids = extractIDs(adrecesorig);
     
 
     string adreces_amb_coords= "";
@@ -138,7 +170,7 @@ int main() {
     WriteToFileOver("", outputPerdudes);
 
     int i = 0;
-    for(string adreça : addresses) {
+    for(string adreça : addresses1) {
        
         if(i <0) break; // defineix si volem que llegeixi un nombre maxim d'adreces 
         // Obtenir coordenades per les adreces
@@ -156,12 +188,18 @@ int main() {
                 break;  // Si s'han trobat les coordenades, sortim del bucle
             } else {
                 cout << "No s'han trobat coordenades per: " << adreça << ". Reintentant..." << endl;
+                if(retries == 1) {
+                    adreça = addresses2[i]; // busca sense codi postal ni provincia
+                }
+                if(retries == 2) {
+                    adreça = "Carrer de " + adreça_orig; // afegeix la "Carrer de" per buscar la adreça millor.
+                }
                 if(retries == 3) {
-                    adreça = "Carrer de " + adreça; // afegeix la C per buscar la adreça millor.
+                    adreça = "Carrer de " + addresses2[i]; // afegeix la "Carrer de" per buscar la adreça millor.
                 }
                 
                 else {
-                    this_thread::sleep_for(chrono::seconds(10));    // Espera 10 segons abans de reintentar
+                    this_thread::sleep_for(chrono::seconds(3));    // Espera 10 segons abans de reintentar
                 }
                 
                 retries--;
