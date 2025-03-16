@@ -336,8 +336,9 @@ void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro,
 
                 cout << "punt"<< i << ": (" + origen + ") punt"<< j <<": (" + desti + ")" << endl;  
                 
-                temps = getTravelTimeGmaps(origen, desti, debug); // Aquesta funció hauria d'omplir el resultat
-
+                if(origen != desti) {  
+                    temps = getTravelTimeGmaps(origen, desti, debug); // Aquesta funció hauria d'omplir el resultat
+                }
                 cotxe[i][j] = temps[0];
                 metro[i][j] = temps[1];
                 peu[i][j] = temps[2];
