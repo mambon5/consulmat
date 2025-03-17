@@ -15,7 +15,8 @@
 using namespace std;
 
 // fitxer d'accés global
-string currentDate = getCurrentDate();
+// string currentDate = getCurrentDate();
+string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
 string inputfile="../input/Comunidades_coords.csv";
 string outputDistCotxe="../output/DistCotxe_"+currentDate+".csv";
 string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
@@ -280,7 +281,7 @@ vector<int> getTravelTimeGmaps(const string& origin, const string& destination,
         
         res = curl_easy_perform(curl);
         // cout <<"resposta Gmaps: " << endl << readBuffer << endl;
-        WriteToFileOver(readBuffer, coutGmaps);
+        // WriteToFileOver(readBuffer, coutGmaps);
         cout << "extracting travel times" << endl;
         temps = extractTravelTimes(readBuffer, debug);
 
@@ -363,6 +364,8 @@ void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro,
 
 int main() {
 
+
+   
     string MatriuDCotxe="../output/MatriuDCotxe_"+currentDate+".csv";
     string MatriuDMetro="../output/MatriuDMetro_"+currentDate+".csv";
     string MatriuDPeu="../output/MatriuDPeu_"+currentDate+".csv";
@@ -397,25 +400,25 @@ int main() {
     DistanceMatrixes(cotxe, metro, peu, bici, sub_v, ultimOrig, ultDest, true, true);
 
         // aqui guardem les matrius de distancies al final, en fitxers diferents
-    cout << "matriu distancia cotxes:" << endl;
-    Output2DVectorInt(cotxe);
-    cout << "guardant matriu cotxes...:" << endl;
-    Write2DvectorInt(cotxe, MatriuDCotxe);
+    // cout << "matriu distancia cotxes:" << endl;
+    // Output2DVectorInt(cotxe);
+    // cout << "guardant matriu cotxes...:" << endl;
+    // Write2DvectorInt(cotxe, MatriuDCotxe);
 
-    cout << "matriu distancia metro:" << endl;
-    Output2DVectorInt(metro);
-    cout << "guardant matriu metro...:" << endl;
-    Write2DvectorInt(metro, MatriuDMetro);
+    // cout << "matriu distancia metro:" << endl;
+    // Output2DVectorInt(metro);
+    // cout << "guardant matriu metro...:" << endl;
+    // Write2DvectorInt(metro, MatriuDMetro);
 
-    cout << "matriu distancia peu:" << endl;
-    Output2DVectorInt(peu);
-    cout << "guardant matriu peu...:" << endl;
-    Write2DvectorInt(peu, MatriuDPeu);
+    // cout << "matriu distancia peu:" << endl;
+    // Output2DVectorInt(peu);
+    // cout << "guardant matriu peu...:" << endl;
+    // Write2DvectorInt(peu, MatriuDPeu);
 
-    cout << "matriu distancia bici:" << endl;
-    Output2DVectorInt(bici);
-    cout << "guardant matriu bici...:" << endl;
-    Write2DvectorInt(bici, MatriuDBici);
+    // cout << "matriu distancia bici:" << endl;
+    // Output2DVectorInt(bici);
+    // cout << "guardant matriu bici...:" << endl;
+    // Write2DvectorInt(bici, MatriuDBici);
 
     // for(int i=0; i<num_punts; ++i) {
     //     for(int j=0; j<num_punts; ++j) {
