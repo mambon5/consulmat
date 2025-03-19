@@ -23,21 +23,7 @@ string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
 string outputDistPeu="../output/DistPeu_"+currentDate+".csv";
 string outputDistBici="../output/DistBici_"+currentDate+".csv";
 
-// extreu les coordenades a partir de la URL de google maps:
-string extractCoordinates(const string& url) {
-    regex regexPattern(R"(@([-+]?\d*\.\d+),([-+]?\d*\.\d+))");
-    smatch match;
 
-    if (regex_search(url, match, regexPattern) && match.size() >= 3) {
-        double latitude = stod(match[1].str());
-        double longitude = stod(match[2].str());
-        return  to_string(latitude) +"," + to_string(longitude) ;
-    } else {
-        cout << "ERROR en extractCoordinates(): No s'han trobat coordenades a la URL." << endl;
-        return "";
-    };
-    
-}
 
 
 size_t WriteCallback2(void* contents, size_t size, size_t nmemb, string* output) {
@@ -47,58 +33,6 @@ size_t WriteCallback2(void* contents, size_t size, size_t nmemb, string* output)
 }
 
 
-
-// Funció per obtenir el temps de viatge entre dues coordenades amb OSRM
-double getTravelTime(const string& origin, const string& destination) {
-    CURL* curl;
-    CURLcode res;
-    string readBuffer;
-
-    // amb cotxe
-    std::string url = "http://router.project-osrm.org/route/v1/driving/" + origin + ";" + destination + "?overview=false";
-
-    // a peu
-    // string url = "https://routing.openstreetmap.de/routed-foot/route/v1/driving/" + origin + ";" + destination + "?overview=false";
-    
-    cout << url << endl;
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            cerr << "Error en la petició: " << curl_easy_strerror(res) << endl;
-            return -1;
-        } else {
-            
-            // cout <<"resposta osrm: " << endl << readBuffer << endl;
-
-            // Analitzar la resposta JSON
-            Json::CharReaderBuilder reader;
-            Json::Value jsonData;
-            string errors;
-
-            istringstream stream(readBuffer);
-            if (Json::parseFromStream(reader, stream, &jsonData, &errors)) {
-                if (!jsonData["routes"].empty()) {
-                    int duration = jsonData["routes"][0]["duration"].asInt();
-                    // cout << "Temps de viatge: " << duration / 60 << " minuts" << endl;
-                    return duration / 60;
-                } else {
-                    cerr << "No s'han trobat rutes." << endl;
-                    return -1;
-                }
-            } else {
-                cerr << "Error en l'anàlisi del JSON: " << errors << endl;
-                return -1;
-            }
-        }
-        curl_easy_cleanup(curl);
-    }
-    return -2;
-}
 
 
 std::vector<int> extractTravelTimes_aux1(const std::string& html, bool debug = false) {
