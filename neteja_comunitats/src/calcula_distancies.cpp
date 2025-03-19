@@ -15,8 +15,8 @@
 using namespace std;
 
 // fitxer d'accés global
-// string currentDate = getCurrentDate();
-string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
+string currentDate = getCurrentDate();
+// string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
 string inputfile="../input/Comunidades_coords.csv";
 string outputDistCotxe="../output/DistCotxe_"+currentDate+".csv";
 string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
