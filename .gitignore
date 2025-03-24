@@ -1,0 +1,5 @@
+# Fitxers generats de LaTeX
+*.aux
+*.out
+*.log
+*.pdf
