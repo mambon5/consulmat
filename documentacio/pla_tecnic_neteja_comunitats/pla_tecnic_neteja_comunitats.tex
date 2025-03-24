@@ -1,0 +1,131 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\usepackage{fancyhdr}
+\fancyhead{}
+\fancyfoot{}
+
+\usepackage{color}
+
+\usepackage[hidelinks,pdfauthor={Anamàs},pdftitle={Pla tècnic neteja comunitats}]{hyperref}
+
+\usepackage{anysize}
+\marginsize{3cm}{2.7cm}{2.7cm}{2.7cm}
+
+\title{Pla tècnic}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Càlcul de coordenades}
+
+Molt ràpid.
+El programa en CPP tarda al voltant de minuts en calcular les coordenades lat i lon de les 400 comunitats.
+
+\section{Càlcul de distàncies}
+
+Lent.
+El programa en CPP calcula al voltant de 14-42 distàncies de parells de punts (origen, destí) en 1 minut.
+Com que s'han de calcular 66.000 valors o distàncies entre les 400 comunitats (assumim una matriu simètrica, pel que no calculem $d(2,1)$ si ja hem calculat $d(1,2)$, ja que assumim que són iguals).
+
+Es tarden 66.000/(14*60) = 79h = 3 dies i 7h en calcular tots els parells de distàncies a peu, metro, cotxe i bici entre tots els punts com a mínim.
+Si la velocitat és màxima (42 distàncies per minut) es tardaria 1 dia i 2h en calcular-les totes.
+
+\section{Descripció}
+
+\subsection{Plantejament del problema}
+
+Necessitem fer assignacions de treballadors amb comunitats i hores del dia.
+Dit d'una altra manera, per a cada treballador volem calcular un itinerari durant cadascun dels dies de la setmana, i amb unes hores aproximades que minimitzin el temps de trajecte global en cadascun dels dies.
+
+En concret, el nostre objectiu és minimitzar el temps de trajecte total, amb les següents limitacions:
+
+\begin{enumerate}
+	\item Cadascuna de les comunitats s'ha de netejar un nombre determinat de dies a la setmana, entre $1$ i $6$:
+		\begin{enumerate}
+			\item Si la comunitat es neteja $6$, $5$, o $3$ dies a la setmana, ha de ser en uns dies concrets (dl-ds, dl-dv, i dl,dc,dv respectivament), i per tant el nostre model no ha de prendre cap decisió al respecte.
+			\item Si la comunitat es neteja $1$ dia a la setmana, aquest dia pot ser qualsevol feiner (dl, dt, dc, dj, dv) (i el nostre model haurà de decidir quin dia i hora assignar-li).
+			\item Similarment, si la comunitat es neteja $4$ dies a la setmana, aquests hauran de ser feiners, i el model haurà d'assignar hores per cadascun dels 5 dies que triï.
+			\item \label{item:2diessetmana} Si la comunitat es neteja $2$ dies a la setmana, només hi ha dues combinacions de dies que acceptem: o bé (dl,dj) o bé (dt,dv) (amb la corresponent tria d'horaris).
+		\end{enumerate}
+
+	\item Les claus de cadascuna de les comunitats es donaran a un únic treballador.
+		És a dir, cada comunitat tindrà un treballador concret que la visitarà en tots els horaris que el model li assigni per netejar-la.
+	\item Cada treballador pot treballar un màxim de 7h i 30m cada dia, incloent els desplaçaments.
+	\item Cada treballador pot treballar un màxim de 37h i 30m cada setmana, incloent els desplaçaments.
+	\item Festius? $\rightarrow$ TODO
+\end{enumerate}
+
+Les variables a optimitzar són les següents:
+
+\begin{itemize}
+	\item El temps de desplaçament total (de tots els treballadors en tots els dies).
+	\item El nombre de treballadors necessaris per a cobrir totes les comunitats.
+\end{itemize}
+
+\subsection{Enfocament del problema}
+
+La nostra modelització mirarà d'atacar el problema dividint-lo en tres parts principals:
+
+\begin{enumerate}
+	\item Distribuïm les comunitats en dies de la setmana de tal manera que es minimitzin tots els trajectes possibles en cada dia donat.
+		Dit d'una altra manera, distribuïm les comunitats en clústers geogràfics en cadascun dels dies.
+	\item Assignem un trajecte òptim a cada dia que cobreixi totes les comunitats cada dia en un clúster donat, i el dividim en parts de menys de 7h30m.
+	\item Assignem treballadors a cada comunitat i trajecte per a cada dia.
+\end{enumerate}
+
+Havent completat aquests passos incorporarem altres consideracions (què fem amb els festius? Com podria adaptar-se el model a incidències i a baixes imprevistes?).
+
+\section{Modelització: Assignació de comunitats per dia de la setmana}
+
+Modelitzem aquesta part del problema amb un model d'optimització lineal.
+
+Les variables del problema seran binàries (prendran els valors $0$ o $1$), i seran:
+
+\begin{itemize}
+	\item $x_{d,c}$: aquesta variable valdrà $1$ si la comunitat $c \in \{1,...,N\}$ es visita el dia $d \in \{1,...,6\}$ o $0$ altrament.
+	\item $y_{d,c_1,c_2}$: aquesta variable equival a $x_{d,c_1} \wedge x_{d,c_2}$.
+		Això vol dir que la variable $y_{d,c_1,c_2}$ val $1$ si en el dia $d$ es visiten tant $c_1$ com $c_2$, i $0$ altrament.
+\end{itemize}
+
+A més, tenim diversos paràmetres.
+Denotem amb $D$ la matriu de distàncies òptimes entre comunitats, amb components $d_{c_1,c_2}$ (assumint que és simètrica).
+
+Amb això, la funció objectiu és
+\[F = \sum_{1 \leq c_1 \leq N} \sum_{c_1 < c_2 \leq N} d_{c_1,c_2} \sum_{d = 1}^6 y_{d,c_1,c_2} .\]
+
+A més, caldrà aplicar les següents restriccions al sistema:
+
+\begin{enumerate}
+	\item $y_{d,c_1,c_2} = x_{d,c_1} \wedge x_{d, c_2}$.
+		Per tal d'expressar-ho de forma lineal, ho hem de fer amb aquest conjunt de desigualtats per a cada $d,c_1,c_2$:
+		\begin{align*}
+			y_{d,c_1,c_2} &\geq x_{d,c_1} + x_{d,c_2} - 1, \\
+			y_{d,c_1,c_2} &\leq x_{d,c_1}, \\
+			y_{d,c_1,c_2} &\leq x_{d,c_2}.
+		\end{align*}
+
+	\item Si la comunitat $c$ es visita $n_c$ cops per setmana, llavors
+		\[\sum_{d=1}^6 x_{d,c} = n_c .\]
+
+	\item Si $n_c \neq 6$, $x_{6,c} = 0$.
+
+	\item Si la comunitat $c$ es visita 3, 5 o 6 cops per setmana llavors els valors $x_{d,c}$ estan determinats (per exemple, $x_{1,c} = x_{3,c} = x_{5,c} = 1$ i $x_{2,c} = x_{4,c} = x_{6,c} = 0$ si la comunitat $c$ es visita 3 cops per setmana).
+
+	\item Si $n_c = 2$, cal afegir les condicions
+		\begin{align*}
+			x_{3,c} = 0, \\
+			x_{1,c} = x_{4,c}, \\
+			x_{2,c} = x_{5,c},
+		\end{align*}
+		per tal de garantir la distribució de dies de (\ref{item:2diessetmana}).
+\end{enumerate}
+
+\section{Model: Assignació de rutes per dia}
+
+\section{Model: Assignació de treballadors per rutes}
+
+\end{document}
