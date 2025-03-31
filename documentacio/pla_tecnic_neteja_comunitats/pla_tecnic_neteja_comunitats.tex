@@ -80,6 +80,7 @@ La nostra modelització mirarà d'atacar el problema dividint-lo en tres parts p
 Havent completat aquests passos incorporarem altres consideracions (què fem amb els festius? Com podria adaptar-se el model a incidències i a baixes imprevistes?).
 
 \section{Modelització: Assignació de comunitats per dia de la setmana}
+\label{sec:dia_setmana}
 
 Modelitzem aquesta part del problema amb un model d'optimització lineal.
 
@@ -124,8 +125,30 @@ A més, caldrà aplicar les següents restriccions al sistema:
 		per tal de garantir la distribució de dies de (\ref{item:2diessetmana}).
 \end{enumerate}
 
-\section{Model: Assignació de rutes per dia}
+\section{Model: Classificació de les comunitats en clústers}
 
-\section{Model: Assignació de treballadors per rutes}
+Farem servir una tècnica d'arbres de classificació i regressió (vegeu CART \cite{cart}).
 
+El nostre espai de comunitats vindrà donat per les coordenades $A = (\mathrm{lat}, \mathrm{lon}, a_1, \dots, a_6)$, on $(\mathrm{lat}, \mathrm{lon})$ denoten la latitud i longitud on es troba la comunitat, i $a_i$ és una variable binària que indica si la comunitat és visitada en el dia $i$ (1) o no (0).
+Fent servir la notació de la secció \ref{sec:dia_setmana}, $a_i = x_{i, A}$, que ens vindrà donada per la solució del pas anterior.
+Les coordenades s'hauran de normalitzar (dividint per la desviació típica estàndard de cada magnitud).
+
+A partir d'aquí hem de seleccionar la mètrica que ens funcioni millor pel nostre model, amb el criteri que
+
+\begin{enumerate}
+	\item Volem que dues comunitats siguin més properes si coincideixen en més dies (és a dir, volem que tendeixin a coincidir en el mateix clúster).
+	\item Si dues comunitats no coincideixen en \textbf{cap} dia, llavors no ens importa la distància entre elles\footnote{Això és perquè si dues comunitats no coincideixen en cap dia, llavors el desplaçament entre l'una i l'altra no es produeix en hores de feina si les acaba fent el mateix treballador, i per tant no afecta al nostre model.}.
+		Per tant, dues comunitats que no coincideixin en cap dia, en principi, poden acabar en el mateix clúster sense afegir cap cost addicional.
+\end{enumerate}
+
+Si $A = (\mathrm{lat}_A, \mathrm{lon}_A, a_1, \dots, a_6)$ i $B = (\mathrm{lat}_B, \mathrm{lon}_B, b_1, \dots, b_6)$, anomenem $\mathrm{coin}(A,B) = 6 - |a_1 - b_1| - \cdots - |a_6 - b_6|$.
+
+La possible distància que estem considerant ara mateix seria:
+\[\mathrm{discoin}(A,B) = \begin{cases} k \|(\mathrm{lat}_A, \mathrm{lon}_A) - (\mathrm{lat}_B, \mathrm{lon}_B)\| + |a_1 - b_1| + \cdots + |a_6 - b_6| & \text{si } \mathrm{coin}(A,B) > 0, \\ 0 & \text{si } \mathrm{coin}(A,B) = 0, \end{cases}\]
+
+	on $k > 0$ és un pes que associem a la distància geogràfica i ens permetria calibrar quanta importància li volem donar en el nostre model. 
+
+\begin{thebibliography}{9}
+	\bibitem{cart} Breiman, L., Friedman, J., Olshen, R. A., Stone, C. J. Classification and regression trees. Routledge, 1984.
+\end{thebibliography}
 \end{document}
