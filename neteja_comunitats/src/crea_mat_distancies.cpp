@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const int N = 351; // Nombre de comunitats
+const int N = 355; // Nombre de comunitats
 const int INF = numeric_limits<int>::max();
 
 vector<vector<int>> llegir_csv(const string &nom_fitxer) {

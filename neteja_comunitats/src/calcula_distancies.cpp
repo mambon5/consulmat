@@ -15,8 +15,8 @@
 using namespace std;
 
 // fitxer d'accés global
-string currentDate = getCurrentDate();
-// string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
+// string currentDate = getCurrentDate();
+string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
 string inputfile="../input/Comunidades_coords.csv";
 string outputDistCotxe="../output/DistCotxe_"+currentDate+".csv";
 string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
@@ -36,7 +36,7 @@ size_t WriteCallback2(void* contents, size_t size, size_t nmemb, string* output)
 
 
 std::vector<int> extractTravelTimes_aux1(const std::string& html, bool debug = false) {
-    std::regex time_regex(R"((\d+) min\\\"]])"); // Coincideix amb "X min"]]
+    std::regex time_regex(R"((\d+) min\\\"]])"); // Coincideix amb "X min\"]]
     std::regex hours_regex(R"(\"(\d+) h(?: y (\d+))?\\\"]\])"); // Coincideix amb "X h"] o "X h y Y min"
     
     std::vector<std::pair<size_t, int>> orderedTimes; // Guarda {posició, minuts}
