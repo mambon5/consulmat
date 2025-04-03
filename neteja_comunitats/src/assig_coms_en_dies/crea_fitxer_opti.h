@@ -12,25 +12,38 @@ using namespace std;
 // scip -f example.lp  > lp.out
 
 vector<string> creaVars(int n) {
-    vector<vector<string>> vars(n, vector<string>(n));
+    vector<vector<vector<string>>> vars_y(6, vector<vector<string>>(n,vector<string>(n)));
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            vars[i][j] = 'x' + to_string(i) + to_string(j);
-        }
+    for (int k = 0; k < 6; ++k) {
+      for (int i = 0; i < n; ++i) {
+          for (int j = 0; j < n; ++j) {
+            vars_y[k][i][j] = "y" + to_string(k) + ","+ to_string(i) + ","+ to_string(j);
+          }
+      }
     }
-    vector<string> variables = flattenMatrixString(vars);
-    vector<string> var_ordre = {"u1", "u2", "u3", "u4"};
-    variables.insert( variables.end(), var_ordre.begin(), var_ordre.end() );
+
+    vector<vector<string>> vars_x(6,vector<string>(n));
+    for (int k = 0; k < 6; ++k) {
+      for (int j = 0; j < n; ++j) {
+          vars_x[k][j] = "x"+ to_string(k) + ","+ to_string(j);
+      }
+    }
+
+    vector<string> ap_y = flattenMatrix_ndim_str(vars_y);
+    vector<string> ap_x = flattenMatrix_ndim_str(vars_x);
+
+    // Afegim els elements de v2 al final de v1
+    ap_y.insert(ap_y.end(), ap_x.begin(), ap_x.end());
+    
      
-    return variables;
+    return ap_y;
 }
 
 void write_lp(const vector<string> & variables, const vector<int> & objective_coeffs,
   const vector<vector<int>> & constraints, const vector<double> & au, const vector<double> & al,
   const vector<double> & bndl, const vector<double> & bndu) {
     // Crear i escriure el fitxer LP
-    string nom_fitxer = "problem.lp"; 
+    string nom_fitxer = "ass_coms_en_dies.lp"; 
     ofstream lp_file(nom_fitxer);
 
     lp_file << "Minimize\n obj: ";
