@@ -70,3 +70,55 @@ vector<string> flattenMatrixString(const vector<vector<string>>& matrix) {
 
     return result;
 }
+
+vector<vector<int>> submatriu_superior_esquerra(const vector<vector<int>>& matriu, int m) {
+    int n = matriu.size();
+
+    if (m > n) {
+        throw invalid_argument("m ha de ser menor o igual a n");
+    }
+
+    vector<vector<int>> submatriu(m, vector<int>(m));
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < m; ++j) {
+            submatriu[i][j] = matriu[i][j];
+        }
+    }
+
+    return submatriu;
+}
+
+
+std::vector<int> suma_vectors(const std::vector<int>& a, const std::vector<int>& b) {
+    if (a.size() != b.size()) {
+        throw std::invalid_argument("Els vectors han de tenir la mateixa mida.");
+    }
+
+    std::vector<int> resultat(a.size());
+
+    for (size_t i = 0; i < a.size(); ++i) {
+        resultat[i] = a[i] + b[i];
+    }
+
+    return resultat;
+}
+
+void llegir_dos_vectors(const string& nom_fitxer, vector<int>& col1, vector<int>& col2) {
+    ifstream fitxer(nom_fitxer);
+    if (!fitxer.is_open()) {
+        throw runtime_error("No s'ha pogut obrir el fitxer");
+    }
+
+    string linia;
+    while (getline(fitxer, linia)) {
+        stringstream ss(linia);
+        int val1, val2;
+        if (ss >> val1 >> val2) {
+            col1.push_back(val1);
+            col2.push_back(val2);
+        }
+    }
+
+    fitxer.close();
+}

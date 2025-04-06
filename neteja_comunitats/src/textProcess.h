@@ -88,6 +88,7 @@ int getLastFileNumber();
 
 vector<double> extractNthColumnFromString(const string& text, const int& columna);
 vector<string> extractNthColumnFromCsvString(const string& filename, const int& columna, const char sep = ',', bool deleteFirstRow=false);
+vector<vector<int>> read_csv_to_matrix_int(const string& nom_fitxer);
 vector<vector<string>> readCsvToMatrix(const string& filename, const int& columns);
 vector<vector<string>> readCsvToMatrixFree(const string& filename, const int& inici=0);
 string readFile(const std::string& filename);
@@ -101,7 +102,7 @@ vector<std::string> readPartialCsvFromCertainLine(const std::string& filename,
                 const int& elems, const string firstTick, bool printOutput=false) ;
 
 vector<std::string> readPartialCsv(const std::string& filename, const int& elems, bool printOutput=false) ;
-
+void llegir_lat_lon(const string& nom_fitxer, vector<double>& latituds, vector<double>& longituds);
 vector<string> StringToStringArray(const std::string& csvText);
 
 string FindArrayFromJson(const std::string& json, const string& label, bool printOutput=false) ;

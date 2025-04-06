@@ -612,6 +612,31 @@ const char sep, bool deleteFirstRow) {
     return columnData;
 }
 
+vector<vector<int>> read_csv_to_matrix_int(const string& nom_fitxer) {
+    vector<vector<int>> matriu;
+    ifstream fitxer(nom_fitxer);
+
+    string linia;
+    while (getline(fitxer, linia)) {
+        vector<int> fila;
+        stringstream ss(linia);
+        string valor;
+
+        while (getline(ss, valor, ',')) {
+            int num = stoi(valor);
+            fila.push_back(num);
+        }
+
+        // Si vols replicar la lògica de copiar els últims valors
+        // fila[fila.size() - 1] = fila[5];
+        // fila[fila.size() - 2] = fila[5];
+
+        matriu.push_back(fila);
+    }
+
+    return matriu;
+}
+
 vector<vector<string>> readCsvToMatrix(const string& filename, const int & columns )
 {
     //aquesta funció te un truc per no guardar linies que no tenen exactament "columns" number of elements ;)
@@ -715,6 +740,8 @@ vector<std::string> readCsv(const std::string& filename)
     }
     return result;
 }
+
+
 
 std::vector<std::vector<std::string>> readCsvProperly(const std::string& filename) {
     std::vector<std::vector<std::string>> data;
@@ -900,6 +927,40 @@ vector<std::string> readPartialCsv(const std::string& filename, const int& elems
     fitxer.close();
     return(elements);
 }
+
+
+void llegir_lat_lon(const string& nom_fitxer, vector<double>& latituds, vector<double>& longituds) {
+    ifstream fitxer(nom_fitxer);
+    if (!fitxer.is_open()) {
+        cerr << "No s'ha pogut obrir el fitxer: " << nom_fitxer << endl;
+        return;
+    }
+
+    string linia;
+    while (getline(fitxer, linia)) {
+        stringstream ss(linia);
+        string part;
+        int columnes = 0;
+        double lat, lon;
+
+        while (getline(ss, part, ',')) {
+            if (columnes == 2) {
+                lat = stod(part);
+            } else if (columnes == 3) {
+                lon = stod(part);
+            }
+            columnes++;
+        }
+
+        if (columnes >= 4) {
+            latituds.push_back(lat);
+            longituds.push_back(lon);
+        }
+    }
+
+    fitxer.close();
+}
+
 
 vector<string> StringToStringArray(const std::string& csvText) {
     // we get a string with string elements separated by commas, 
