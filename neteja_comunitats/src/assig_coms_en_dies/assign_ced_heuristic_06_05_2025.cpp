@@ -49,12 +49,13 @@ double var_diaria_2(vector<int> comunitats, const vector<double>& lats, const ve
 }
 
 // Funció per calcular la suma de variància de cada dia junt
-double var_setmana(const vector<vector<double>>& lats_dia, const vector<vector<double>>& lons_dia) {
+double var_setmana(const vector<vector<double>>& lats_dia, const vector<vector<double>>& lons_dia, bool print = false) {
     double var = 0;
     for(int i = 0; i<5; ++i) {
         vector<double> lat = lats_dia[i];
         vector<double> lon = lons_dia[i];
         var += var_diaria(lat, lon); 
+        if(print) cout << "variança dia " << i << " : " << var_diaria(lat, lon) << endl;
 
     }
     
@@ -280,7 +281,7 @@ vector<vector<int>> distribueix_ced(int n) {
             lons_per_dia[millor_dia].push_back(longitud[i]);
         }
     }
-    cout << endl << "variança total: " << var_setmana(lats_per_dia, lons_per_dia)<< endl;
+    cout << endl << "variança total: " << var_setmana(lats_per_dia, lons_per_dia, true)<< endl;
 
 
     return comunitats_per_dia;
