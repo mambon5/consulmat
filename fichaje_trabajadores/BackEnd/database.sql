@@ -180,5 +180,13 @@ CREATE TABLE comunitat_treballador(
     id_treballador INT NOT NULL,
     id_comunitat INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id_treballador, id_comunitat) 
+    PRIMARY KEY (id_treballador, id_comunitat),
+    
+    FOREIGN KEY (id_treballador) REFERENCES treballadors(id_treballador)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_comunitat) REFERENCES comunitats(id_comunitat)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+
 )
