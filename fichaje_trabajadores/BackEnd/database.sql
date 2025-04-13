@@ -25,10 +25,7 @@ CREATE TABLE treballadors (
     departament ENUM('parkings', 'comunitats', 'oficines') NOT NULL,
     correu VARCHAR(255) NOT NULL UNIQUE,
     contrasenya VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_comunitat) REFERENCES comunitats(id_comunitat)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 4. Admins (no referencia a nadie)
@@ -177,3 +174,11 @@ CREATE TABLE setmana (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+-- 16. Assignació treballador comunitat
+CREATE TABLE comunitat_treballador(
+    id_treballador INT NOT NULL,
+    id_comunitat INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_treballador, id_comunitat) 
+)
