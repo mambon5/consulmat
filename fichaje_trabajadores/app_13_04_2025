@@ -1,34 +1,34 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
-# Crear una instància de Flask
 app = Flask(__name__)
 
-# Configurar la base de dades MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuari:contrasenya@localhost:3306/nom_base_dades'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Evitar warnings
+# Configura la connexió a la base de dades MySQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuari:contrasenya@localhost/nom_base_dades'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Crear una instància de SQLAlchemy
 db = SQLAlchemy(app)
 
-# Crear un model de taula
-class Alumne(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nom = db.Column(db.String(100), nullable=False)
-    edat = db.Column(db.Integer, nullable=False)
+# Model de la taula treballadors
+class Treballador(db.Model):
+    __tablename__ = 'treballadors'
+    
+    id_treballador = db.Column(db.Integer, primary_key=True)
+    nom_i_cognom = db.Column(db.String(255), nullable=False)
+    departament = db.Column(db.Enum('parkings', 'comunitats', 'oficines'), nullable=False)
+    correu = db.Column(db.String(255), nullable=False, unique=True)
+    contrasenya = db.Column(db.String(255), nullable=False)
 
-    def __repr__(self):
-        return f'<Alumne {self.nom}>'
+    def to_dict(self):
+        return {
+            'id_treballador': self.id_treballador,
+            'nom_i_cognom': self.nom_i_cognom,
+            'departament': self.departament,
+            'correu': self.correu,
+            # Per seguretat, no exposem la contrasenya
+        }
 
-# Crear la taula a la base de dades (només cal fer-ho una vegada)
-# db.create_all()
-
-@app.route('/alumnes', methods=['GET'])
-def obtenir_alumnes():
-    alumnes = Alumne.query.all()  # Obtenir tots els alumnes
-    alumnes_list = [{"id": alumne.id, "nom": alumne.nom, "edat": alumne.edat} for alumne in alumnes]
-    return jsonify(alumnes_list)
-
-# Iniciar el servidor de Flask
-if __name__ == '__main__':
-    app.run(debug=True)
+# Ruta per obtenir tots els treballadors
+@app.route('/treballadors', methods=['GET'])
+def obtenir_treballadors():
+    treballadors = Treballador.query.all()
