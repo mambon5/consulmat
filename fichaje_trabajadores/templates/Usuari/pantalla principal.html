@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Fichaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .btn-fichaje {
+            margin: 10px 0;
+            width: 100%;
+            padding: 15px;
+        }
+        .incidencia-form {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        #mapContainer {
+            height: 300px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Sistema de Fichaje</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link" id="userInfo"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Panel de Fichaje</h2>
+                <div class="mb-4" id="userDepartment"></div>
+            </div>
+        </div>
+
+        <!-- Botones de Fichaje -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <button id="selectCommunityBtn" class="btn btn-info btn-fichaje">Seleccionar Comunidad</button>
+                <select id="communitySelect" class="form-select mt-2 d-none">
+                    <option value="">Seleccione una comunidad</option>
+                    <option value="A">Comunidad A</option>
+                    <option value="B">Comunidad B</option>
+                    <option value="C">Comunidad C</option>
+                    <option value="D">Comunidad D</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button id="startTimeBtn" class="btn btn-success btn-fichaje">Registrar Hora Inicio</button>
+            </div>
+            <div class="col-md-4">
+                <button id="endTimeBtn" class="btn btn-danger btn-fichaje" disabled>Registrar Hora Final</button>
+            </div>
+        </div>
+
+        <!-- Mapa para visualizar ubicación -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Tu ubicación actual</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="mapContainer"></div>
+                        <p id="locationStatus" class="text-muted mt-2">Esperando permisos de ubicación...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Incidencias -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Registrar Incidencia</h5>
+            </div>
+            <div class="card-body">
+                <form id="incidenciaForm">
+                    <div class="mb-3">
+                        <label for="tipoIncidencia" class="form-label">Tipo de incidencia</label>
+                        <select class="form-select" id="tipoIncidencia" required>
+                            <option value="">Seleccione tipo de incidencia</option>
+                            <option value="vessament">Vessament d'oli</option>
+                            <option value="fluorescent">Canviar fluorescent</option>
+                            <option value="inundat">Parquing inundat</option>
+                            <option value="cotxe">Cotxe que no s'ha tret</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fotoIncidencia" class="form-label">Foto de la incidencia</label>
+                        <input type="file" class="form-control" id="fotoIncidencia" accept="image/*" capture="camera">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcionIncidencia" class="form-label">Descripción adicional</label>
+                        <textarea class="form-control" id="descripcionIncidencia" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Registrar Incidencia</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla de Registros -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Tus Registros</h5>
+                <button id="downloadBtn" class="btn btn-outline-primary">Descargar CSV</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Trabajador</th>
+                                <th>Comunidad</th>
+                                <th>Hora Inicio</th>
+                                <th>Hora Fin</th>
+                                <th>Localización Inicial</th>
+                                <th>Localización Final</th>
+                                <th>Duración</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registrosTable">
+                            <!-- Aquí se cargarán los registros dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let currentPosition = null;
+        let currentCommunity = null;
+        let currentRegistroId = null;
+        let watchId = null;
+
+        // Función para cargar datos del usuario
+        const loadUserData = async () => {
+            try {
+                const response = await fetch('/api/user');
+                const userData = await response.json();
+                
+                currentUser = userData;
+                document.getElementById('userInfo').textContent = `${userData.name} - ${userData.department}`;
+                document.getElementById('userDepartment').textContent = `Departamento: ${userData.department}`;
+            } catch (error) {
+                console.error('Error al cargar datos del usuario:', error);
+            }
+        };
+
+        // Geolocalización
+        const initGeolocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        currentPosition = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        document.getElementById('locationStatus').textContent = 
+                            `Ubicación actual: Lat ${currentPosition.lat.toFixed(6)}, Lng ${currentPosition.lng.toFixed(6)}`;
+                        
+                        // Aquí se integraría un mapa real
+                        document.getElementById('mapContainer').innerHTML = 
+                            `<div class="p-5 bg-light text-center">
+                                <p class="mb-0">Mapa mostrando ubicación en:</p>
+                                <strong>Latitud: ${currentPosition.lat.toFixed(6)}</strong><br>
+                                <strong>Longitud: ${currentPosition.lng.toFixed(6)}</strong>
+                             </div>`;
+                        
+                        // Seguimiento continuo de la posición
+                        watchPosition();
+                    },
+                    (error) => {
+                        document.getElementById('locationStatus').textContent = 
+                            `Error al obtener ubicación: ${error.message}`;
+                    }
+                );
+            } else {
+                document.getElementById('locationStatus').textContent = 
+                    'Tu navegador no soporta geolocalización';
+            }
+        };
+        
+        const watchPosition = () =>
