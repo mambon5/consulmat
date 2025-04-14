@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Fichaje</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .btn-fichaje {
+            margin: 10px 0;
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .incidencia-form {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        #mapContainer {
+            height: 300px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="login-container">
+        <h2 class="text-center mb-4">Acceso al Sistema de Fichaje</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="dni" class="form-label">DNI</label>
+                <input type="text" class="form-control" id="dni" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+        </form>
+    </div>
+
+    <!-- Pantalla Principal (oculta inicialmente) -->
+    <div id="mainScreen" class="main-container d-none">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Sistema de Fichaje <small class="text-muted" id="userName"></small></h2>
+                <div class="mb-4" id="userDepartment"></div>
+            </div>
+            <div class="col-md-4 text-end">
+                <button id="logoutBtn" class="btn btn-outline-secondary">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <!-- Botones de Fichaje -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <button id="selectCommunityBtn" class="btn btn-info btn-fichaje">Seleccionar Comunidad</button>
+                <select id="communitySelect" class="form-select mt-2 d-none">
+                    <option value="">Seleccione una comunidad</option>
+                    <option value="A">Comunidad A</option>
+                    <option value="B">Comunidad B</option>
+                    <option value="C">Comunidad C</option>
+                    <option value="D">Comunidad D</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button id="startTimeBtn" class="btn btn-success btn-fichaje">Registrar Hora Inicio</button>
+            </div>
+            <div class="col-md-4">
+                <button id="endTimeBtn" class="btn btn-danger btn-fichaje">Registrar Hora Final</button>
+            </div>
+        </div>
+
+        <!-- Mapa para visualizar ubicación -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4>Tu ubicación actual</h4>
+                <div id="mapContainer"></div>
+                <p id="locationStatus" class="text-muted">Esperando permisos de ubicación...</p>
+            </div>
+        </div>
+
+        <!-- Formulario de Incidencias -->
+        <div class="incidencia-form">
+            <h4>Registrar Incidencia</h4>
+            <form id="incidenciaForm">
+                <div class="mb-3">
+                    <label for="tipoIncidencia" class="form-label">Tipo de incidencia</label>
+                    <select class="form-select" id="tipoIncidencia" required>
+                        <option value="">Seleccione tipo de incidencia</option>
+                        <option value="vessament">Vessament d'oli</option>
+                        <option value="fluorescent">Canviar fluorescent</option>
+                        <option value="inundat">Parquing inundat</option>
+                        <option value="cotxe">Cotxe que no s'ha tret</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="fotoIncidencia" class="form-label">Foto de la incidencia</label>
+                    <input type="file" class="form-control" id="fotoIncidencia" accept="image/*" capture="camera">
+                </div>
+                <div class="mb-3">
+                    <label for="descripcionIncidencia" class="form-label">Descripción adicional</label>
+                    <textarea class="form-control" id="descripcionIncidencia" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Registrar Incidencia</button>
+            </form>
+        </div>
+
+        <!-- Tabla de Registros -->
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Tus Registros</h3>
+                <button id="downloadBtn" class="btn btn-outline-primary">Descargar Registros</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Trabajador</th>
+                            <th>Comunidad</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Localización Inicial</th>
+                            <th>Localización Final</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrosTable">
+                        <!-- Aquí se cargarán los registros dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para comunidades -->
+    <div class="modal fade" id="communityModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Seleccionar Comunidad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <button class="list-group-item list-group-item-action" data-community="A">Comunidad A</button>
+                        <button class="list-group-item list-group-item-action" data-community="B">Comunidad B</button>
+                        <button class="list-group-item list-group-item-action" data-community="C">Comunidad C</button>
+                        <button class="list-group-item list-group-item-action" data-community="D">Comunidad D</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    
+    <script>
+        // Simular bases de datos con localStorage
+        const initDatabase = () => {
+            if (!localStorage.getItem('usuarios')) {
+                // Crear usuarios de prueba
+                const usuarios = [
+                    { nombre: 'Maximilian', apellido: 'Smith', correo: 'admin1@example.com', dni: '12345678A', tipo: 'admin', departamento: 'Administración' },
+                    { nombre: 'Lupita', apellido: 'García', correo: 'admin2@example.com', dni: '87654321B', tipo: 'admin', departamento: 'Administración' },
+                    { nombre: 'Juan', apellido: 'Pérez', correo: 'juan@example.com', dni: '11111111C', tipo: 'trabajador', departamento: 'Parking' },
+                    { nombre: 'María', apellido: 'López', correo: 'maria@example.com', dni: '22222222D', tipo: 'trabajador', departamento: 'Comunidad' }
+                ];
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            }
+            
+            if (!localStorage.getItem('registros')) {
+                localStorage.setItem('registros', JSON.stringify([]));
+            }
+            
+            if (!localStorage.getItem('incidencias')) {
+                localStorage.setItem('incidencias', JSON.stringify([]));
+            }
+        };
+        
+        // Variables globales
+        let currentUser = null;
+        let currentPosition = null;
+        let currentCommunity = null;
+        let startTimeRecord = null;
+        
+        // Función para autenticar usuario
+        const loginUser = (email, dni) => {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios'));
+            const user = usuarios.find(u => u.correo === email && u.dni === dni);
+            
+            if (user) {
+                currentUser = user;
+                document.getElementById('userName').textContent = `- ${user.nombre} ${user.apellido}`;
+                document.getElementById('userDepartment').textContent = `Departamento: ${user.departamento}`;
+                document.getElementById('loginScreen').classList.add('d-none');
+                document.getElementById('mainScreen').classList.remove('d-none');
+                loadRegistros();
+                initGeolocation();
+                return true;
+            }
+            
+            return false;
+        };
+        
+        // Geolocalización
+        const initGeolocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        currentPosition = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        document.getElementById('locationStatus').textContent = 
+                            `Ubicación actual: Lat ${currentPosition.lat.toFixed(6)}, Lng ${currentPosition.lng.toFixed(6)}`;
+                        
+                        // Aquí se integraría un mapa real
+                        document.getElementById('mapContainer').innerHTML = 
+                            `<div class="p-5 bg-light text-center">
+                                <p class="mb-0">Mapa mostrando ubicación en:</p>
+                                <strong>Latitud: ${currentPosition.lat.toFixed(6)}</strong><br>
+                                <strong>Longitud: ${currentPosition.lng.toFixed(6)}</strong>
+                             </div>`;
+                        
+                        // Seguimiento continuo de la posición
+                        watchPosition();
+                    },
+                    (error) => {
+                        document.getElementById('locationStatus').textContent = 
+                            `Error al obtener ubicación: ${error.message}`;
+                    }
+                );
+            } else {
+                document.getElementById('locationStatus').textContent = 
+                    'Tu navegador no soporta geolocalización';
+            }
+        };
+        
+        const watchPosition = () => {
+            if (navigator.geolocation) {
+                const watchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        currentPosition = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        document.getElementById('locationStatus').textContent = 
+                            `Ubicación actual: Lat ${currentPosition.lat.toFixed(6)}, Lng ${currentPosition.lng.toFixed(6)}`;
+                            
+                        // Guardar posición en histórico (esto podría enviarse a un servidor)
+                        const positionHistory = JSON.parse(localStorage.getItem('positionHistory') || '[]');
+                        positionHistory.push({
+                            timestamp: new Date().toISOString(),
+                            position: currentPosition,
+                            usuario: currentUser.nombre
+                        });
+                        
+                        // Solo guardamos un día de datos
+                        const oneDayAgo = new Date();
+                        oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+                        const filteredHistory = positionHistory.filter(p => 
+                            new Date(p.timestamp) > oneDayAgo);
+                            
+                        localStorage.setItem('positionHistory', JSON.stringify(filteredHistory));
+                    },
+                    (error) => {
+                        console.error("Error en seguimiento:", error);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+                
+                // Guardar watchId para poder detenerlo más tarde si es necesario
+                localStorage.setItem('watchId', watchId);
+            }
+        };
+        
+        // Funciones para el fichaje
+        const registerStartTime = () => {
+            if (!currentCommunity) {
+                alert('Primero debe seleccionar una comunidad');
+                return;
+            }
+            
+            if (!currentPosition) {
+                alert('Esperando obtener su ubicación...');
+                return;
+            }
+            
+            const now = new Date();
+            startTimeRecord = {
+                trabajador: `${currentUser.nombre} ${currentUser.apellido}`,
+                comunidad: currentCommunity,
+                horaInicio: now.toLocaleTimeString(),
+                fechaInicio: now.toLocaleDateString(),
+                localizacionInicial: `${currentPosition.lat.toFixed(6)}, ${currentPosition.lng.toFixed(6)}`,
+                timestamp: now.getTime()
+            };
+            
+            alert(`Fichaje de entrada registrado a las ${startTimeRecord.horaInicio}`);
+            document.getElementById('startTimeBtn').disabled = true;
+            document.getElementById('endTimeBtn').disabled = false;
+        };
+        
+        const registerEndTime = () => {
+            if (!startTimeRecord) {
+                alert('Primero debe registrar la hora de inicio');
+                return;
+            }
+            
+            if (!currentPosition) {
+                alert('Esperando obtener su ubicación...');
+                return

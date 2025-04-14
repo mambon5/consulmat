@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Trabajador</title>
+</head>
+<body>
+    <h1>Registrar Trabajador</h1>
+
+    <!-- Mensajes de flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="correo">Correo:</label>
+        <input type="email" name="correo" required>
+        
+        <label for="contrasenya">Contraseña:</label>
+        <input type="password" name="contrasenya" required>
+
+        <label for="nom_i_cognom">Nombre y Apellidos:</label>
+        <input type="text" name="nom_i_cognom" required>
+
+        <label for="departament">Departamento:</label>
+        <select name="departament">
+            <option value="parkings">Parkings</option>
+            <option value="comunitats">Comunitats</option>
+            <option value="oficines">Oficines</option>
+        </select>
+
+        <label for="tipus_permis">Permiso:</label>
+        <select name="tipus_permis">
+            <option value="baix">Bajo</option>
+            <option value="mitja">Medio</option>
+            <option value="alt">Alto</option>
+        </select>
+
+        <button type="submit">Registrar</button>
+    </form>
+</body>
+</html>
