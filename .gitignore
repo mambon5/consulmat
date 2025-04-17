@@ -1,1 +1,3 @@
 fichaje_trabajadores/venv/
+**/target
+**/Cargo.lock
