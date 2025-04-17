@@ -1,0 +1,114 @@
+/*
+* Filosofia general:
+* Bucle:
+*   Mentre faltin comunitats per assignar:
+*       Afegim un treballador (amb un itinerari)
+*           Mentre el treballador tingui hores per completar (en un dia? En una setmana?)
+*           INTENTEM afegir-li comunitats a netejar.
+*           TODO: 1) Quina comunitat afegim al treballador que estiguem considerant? 2) Com la
+*           inserim a l'itinerari del treballador en consideració?
+*/
+
+use std::fs;
+use std::error::Error;
+use std::collections::HashMap;
+
+/// Nombre màxim de minuts que un treballador pot treballar en un dia (7h30m)
+const MAX_MINUTS_DIA: u32 = 450;
+/// Nombre màxim de minuts que un treballador pot treballar en una setmana (40h)
+const MAX_MINUTS_SETMANA: u32 = 2400;
+
+/// Un Treballador es modela amb un conjunt de parelles d'itinerari i minuts ocupats, un per a cada
+/// dia de la setmana. El dissabte hi és opcionalment.
+#[derive(Debug,Clone)]
+struct Treballador {
+    /// Per a cada dia de la setmana tenim un itinerari
+    feiners: [(Vec<usize>, u32); 5],
+    /// Dissabte pot contenir (o no) un itinerari
+    dissabte: Option<(Vec<usize>, u32)>,
+}
+
+impl Treballador {
+    /// Constructor
+    fn nou() -> Self {
+        Self {
+            feiners: [(vec![], 0), (vec![], 0), (vec![], 0), (vec![], 0), (vec![], 0)],
+            dissabte: None,
+        }
+    }
+
+    /// Llegeix els minuts ocupats en cada dia de la setmana
+    fn llegeix_minuts(&self) -> [u32; 6] {
+        let diss = match self.dissabte {
+            Some((_, m)) => m,
+            None => 0,
+        };
+        [ self.feiners[0].1, self.feiners[1].1, self.feiners[2].1, self.feiners[3].1, self.feiners[4].1, diss ]
+    }
+
+    /// Valida que aquest [`Treballador`] mai fa més hores que [`MAX_MINUTS_DIA`] en cada dia de la setmana, i
+    /// que tampoc fa més que [`MAX_MINUTS_SETMANA`] en total
+    /// Retorna `true` si les condicions són certes, `false` altrament
+    fn valida(&self) -> bool {
+        let mins = self.llegeix_minuts();
+        (mins.iter().all(|&m| m <= MAX_MINUTS_DIA)) && (mins.iter().sum::<u32>() <= MAX_MINUTS_SETMANA)
+    }
+}
+
+/// Estructura auxiliar per llegir, desar i consultar una matriu de distàncies
+struct Triangular {
+    interior: Vec<Vec<u32>>,
+}
+
+impl Triangular {
+    /// Llegeix la matriu a partir d'un fitxer tipus `.csv`.
+    /// El format ha de ser el d'un conjunt de files, on cada fila és una successió de números
+    /// separats per comes.
+    /// Aquesta funció únicament llegirà el triangle inferior de la matriu, per estalviar espai
+    ///
+    /// # Errors
+    ///
+    /// Aquesta funció pot retornar un [`std::io::Error`] en cridar [`std::fs::read_to_string`] o
+    /// un [`std::str::FromStr::Err`] en cridar [`str::parse`].
+    fn llegeix_matriu(filepath: &str) -> Result<Self, Box<dyn Error>> {
+        let continguts = fs::read_to_string(filepath)?;
+        let mut interior = vec![];
+        for (i, line) in continguts.lines().enumerate() {
+            let mut fila = vec![];
+            for (_, snum) in line.split(',').enumerate().take_while(|&(j, _)| j < i) {
+                let num: u32 = snum.parse()?;
+                fila.push(num);
+            }
+            interior.push(fila);
+        }
+        Ok(Self{ interior })
+    }
+
+    /// Llegeix la distància entre les comunitats `com1` i `com2` a la matriu de distàncies.
+    /// Si `com1 == com2`, llavors retorna `0` sense llegir.
+    /// Altrament, ordena els índexos per llegir la distància
+    ///
+    /// # Panic
+    ///
+    /// Aquesta funció dóna un panic si `com1` o `com2` se surten del rang d'índexos de la matriu
+
+    fn dist(&self, com1: usize, com2: usize) -> u32 {
+        if com1 >= self.interior.len() {
+            panic!("L'índex {com1} es troba fora del rang de la matriu, que és {}", self.interior.len());
+        }
+        if com2 >= self.interior.len() {
+            panic!("L'índex {com2} es troba fora del rang de la matriu, que és {}", self.interior.len());
+        }
+        if com1 == com2 {
+            0
+        } else if com1 < com2 {
+            self.interior[com2][com1]
+        } else {
+            self.interior[com1][com2]
+        }
+    }
+}
+
+fn main() {
+    println!("Hello, world!");
+}
