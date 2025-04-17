@@ -1,3 +1,9 @@
+# Fitxers generats de LaTeX
+*.aux
+*.out
+*.log
+*.pdf
+*.toc
 fichaje_trabajadores/venv/
 **/target
 **/Cargo.lock
