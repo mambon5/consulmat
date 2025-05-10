@@ -27,21 +27,6 @@ string extractCoordinates(const string& url) {
     };
 }
 
-string extractCoordinates2(const std::string& url) {
-    std::regex regexCoordenades("@([-0-9.]+),([-0-9.]+)");
-    std::smatch match;
-
-    if (std::regex_search(url, match, regexCoordenades)) {
-        if (match.size() == 3) {
-            std::string latitud = match[1].str();
-            std::string longitud = match[2].str();
-            return  latitud +"," + longitud ;
-        }
-    }
-
-    return ""; // Si no troba res
-}
-
 string get_url_from_adress(const string& adreca, int which_url){
     string url1 = "https://www.google.com/maps/search/?q=" + urlencode(adreca);
     string url2 = "https://www.google.es/maps/place/" + substituirEspais(adreca);
@@ -58,11 +43,11 @@ string get_url_from_adress(const string& adreca, int which_url){
 }
 
 
-vector<string> obtenirGoogleMapsURL(const string& url) {
+string obtenirGoogleMapsURL(const string& url) {
     CURL* curl;
     CURLcode res;
     string readBuffer;
-    
+    string outFile = "../output/gmapsout.out" ;
     
     curl = curl_easy_init();
     char* final_url = nullptr;
@@ -97,7 +82,7 @@ vector<string> obtenirGoogleMapsURL(const string& url) {
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
         res = curl_easy_perform(curl);
-        
+        curl_easy_cleanup(curl);
 
         // resposta de google maps;
         // WriteToFileOver(readBuffer,outFile);
@@ -105,10 +90,9 @@ vector<string> obtenirGoogleMapsURL(const string& url) {
 
         if (res != CURLE_OK) {
             cerr << "Error HTTP: " << curl_easy_strerror(res) << endl;
-            return {"",""};
+            return "";
         }
-        else {           
-
+        else {
             // Obté la URL final després de redireccions
             curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &final_url);
 
@@ -117,38 +101,25 @@ vector<string> obtenirGoogleMapsURL(const string& url) {
             }
         }
     }
-    curl_easy_cleanup(curl);
-
-    return { readBuffer,string(final_url)};
-}
 
 
 
 
-string tornaCoordis(const string& readBuffer, const string & final_url) {
+
 
     // Buscar la primera URL de Google Maps dins l’HTML
     regex mapsRegex(R"(https:\/\/www\.google\.com\/maps\/preview\/place\/[^"]+)");
     smatch match;
-    string latLon;
-    latLon = extractCoordinates2(final_url);
-    if(latLon != "" ) {        
-        return latLon;
-    }
     if (regex_search(readBuffer, match, mapsRegex)) {
         // mostra la resposta de la curl requests, si no es poden trobar les coordenades
         if(extractCoordinates(match.str(0)).empty()) {
-            cout << "resposta buida " << endl;
             cout << "response buffer: " << endl;
             cout << readBuffer << endl;
         }
-        return extractCoordinates(match.str(0)); // Retorna la primera coincidència
+        return match.str(0); // Retorna la primera coincidència
     }
-    cout << "no s'han pogut extreure les coordenades a tornaCoordis() :( " << endl;
-    return "";
-    
 
-   
+    return "No trobada";
 }
 
 vector<string> extractAddresses1(const vector<vector<string>>& matrix) {
@@ -199,18 +170,17 @@ size_t WriteCallback2(void* contents, size_t size, size_t nmemb, string* output)
 }
 
 // Funció per obtenir coordenades a partir d'una adreça mitjançant Google Maps sense API key
-vector<string> getCoordinates(const string& url) { 
-    vector<string> mapsURL = obtenirGoogleMapsURL(url);
-    return {tornaCoordis(mapsURL[0], mapsURL[1]),mapsURL[0]};
+string getCoordinates(const string& url) {
+    string mapsURL = obtenirGoogleMapsURL(url);
+    return  extractCoordinates(mapsURL);
 }
 
 int main() {
    
     string currentDate = getCurrentDate();
-    string inputfile="../input/Comunidades_10_05_2025.csv";
+    string inputfile="../input/Comunidades_11_03_2025.csv";
     string outputCoords="../output/Comunidades_coords_"+currentDate+".csv";
     string outputPerdudes="../output/Comunidades_perdudes_"+currentDate+".csv";
-    string outFile = "../output/gmapsout.out" ;
     
     // vector<string> adreces = readCsv(fitxer);
     vector<vector<string>> adrecesorig = readCsvProperly(inputfile);
@@ -238,17 +208,13 @@ int main() {
         this_thread::sleep_for(chrono::milliseconds(500));  
         int retries = 4;  // Nombre màxim d'intents
         string originCoords;
-        string responseBuffer;
-        vector<string> cordis_response;
         string adreça_orig = adreça;
         string url;
         int which_url = 1;
   
         while (retries >= 0) { //si no es troba l'adreça, reintenta
             url = get_url_from_adress(adreça, which_url);
-            cordis_response = getCoordinates(url);
-            originCoords = cordis_response[0];
-            responseBuffer = cordis_response[1];
+            originCoords = getCoordinates(url);
 
             if (!originCoords.empty()) {                
                 adreces_amb_coords = ids[i] + ", " + adreça + "," + originCoords;
@@ -272,7 +238,7 @@ int main() {
                 }
                 
                 else {
-                    this_thread::sleep_for(chrono::seconds(1));    // Espera 10 segons abans de reintentar
+                    this_thread::sleep_for(chrono::seconds(3));    // Espera 10 segons abans de reintentar
                 }
                 
                 retries--;
@@ -280,11 +246,7 @@ int main() {
         }
 
         if (originCoords.empty()) {
-            // escrivim quelcom que representi latitud i langitud erronees, com un "200"
-            WriteToFileSimple(ids[i]  + ", " + adreça_orig + ",200,200", outputCoords);
             WriteToFileSimple(ids[i]  + ", " + adreça_orig, outputPerdudes);
-            // resposta de google maps;
-            WriteToFileOver(responseBuffer,outFile);
         }
         
 

@@ -30,6 +30,17 @@ string urlencode(const std::string &value) {// codifica caràcters extranys
     return encoded.str();
 }
 
+std::string substituirEspais(const std::string& entrada, char simbol) {
+    std::string resultat = entrada;
+    for (char& c : resultat) {
+        if (c == ' ' || c == '-' || c == '_' || c == '.' || c == '~') {
+            c = simbol;
+        }
+    }
+    return resultat;
+}
+
+
 // Funció per eliminar els elements que siguin 'not_found' o continguin el substring "nt":
 void removeInvalidStrings(std::vector<std::string>& arr) {
     arr.erase(std::remove_if(arr.begin(), arr.end(), [](const std::string& s) {

@@ -43,6 +43,8 @@ class sort_indices
 string removeNulls(const std::string& input);
 void removeQuotes(std::vector<std::string>& arr);
 string urlencode(const std::string &value);
+string substituirEspais(const std::string& entrada, char simbol='+'); 
+
 void removeInvalidStrings(std::vector<std::string>& arr);
 void printCharCodes(const string& str);
 std::string removeTextAfterParenthesis(const std::string& input);

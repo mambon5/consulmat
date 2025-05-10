@@ -4,6 +4,10 @@
 *.log
 *.pdf
 *.toc
+# entorn virtual de python:
 fichaje_trabajadores/venv/
 **/target
 **/Cargo.lock
+# buffer de la resposta de google maps amb mil merdes:
+/neteja_comunitats/output/GmapsDistance.out
+/neteja_comunitats/output/gmapsout.out
