@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Llistat d'usuaris registrats</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nom complet</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Data d'alta</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in usuaris %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.consent_date.strftime('%d/%m/%Y %H:%M') if user.consent_date else '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
