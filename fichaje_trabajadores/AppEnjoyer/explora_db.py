@@ -13,11 +13,13 @@ for t in taules:
 
 # Exemple: Mostrar les primeres files d'una taula concreta
 taula = taules[1][0]  # Agafa la primera taula (canvia-ho si vols)
-print(f"\nMostrant dades de la taula '{taula}':")
-cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
-files = cursor.fetchall()
-for fila in files:
-    print(fila)
+for t in taules:
+    taula = t[0]
+    print(f"\nMostrant dades de la taula '{taula}':")
+    cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
+    files = cursor.fetchall()
+    for fila in files:
+        print(fila)
 
 # Tanca la connexió
 conn.close()
