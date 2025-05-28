@@ -15,9 +15,9 @@
 using namespace std;
 
 // fitxer d'accés global
-// string currentDate = getCurrentDate();
-string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
-string inputfile="../input/Comunidades_coords.csv";
+string currentDate = getCurrentDate();
+// string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
+string inputfile="../input/Comunidades_coords_2025_05_10.csv";
 string outputDistCotxe="../output/DistCotxe_"+currentDate+".csv";
 string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
 string outputDistPeu="../output/DistPeu_"+currentDate+".csv";
@@ -297,9 +297,6 @@ void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro,
 }
 
 int main() {
-
-
-   
     string MatriuDCotxe="../output/MatriuDCotxe_"+currentDate+".csv";
     string MatriuDMetro="../output/MatriuDMetro_"+currentDate+".csv";
     string MatriuDPeu="../output/MatriuDPeu_"+currentDate+".csv";
@@ -316,10 +313,13 @@ int main() {
     vector<vector<int>> cotxe(n, vector<int>(n, 0.0)), peu(n, vector<int>(n, 0.0)), metro(n, vector<int>(n, 0.0)), bici(n, vector<int>(n, 0.0));
 
     // buida els fitxers on escriuren tot el rato linies:
-    // WriteToFileOver("",outputDistCotxe);
-    // WriteToFileOver("",outputDistMetro);
-    // WriteToFileOver("",outputDistPeu);
-    // WriteToFileOver("",outputDistBici);
+    if(!file_exists(outputDistCotxe)) {
+        WriteToFileOver("",outputDistCotxe);
+        WriteToFileOver("",outputDistMetro);
+        WriteToFileOver("",outputDistPeu);
+        WriteToFileOver("",outputDistBici);
+    }
+
 
     
     vector<vector<string>> sub_v(coords.begin(), coords.begin() + n);
