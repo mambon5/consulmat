@@ -378,6 +378,52 @@ def create_admin():
     
     return render_template('create_admin.html')
 
+@app.route('/create_empleat', methods=['GET', 'POST'])
+@login_required
+def create_empleat():
+    # Verificar si el usuario actual es admin
+    if not current_user.role == 'admin':
+        flash('No tienes permisos para crear empleados.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        
+        # Verificar si el usuario ya existe
+        if User.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe.', 'danger')
+            return redirect(url_for('create_empleat'))
+        
+        # Crear nuevo usuario admin
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_admin = User(
+            username=username,
+            password=hashed_password,
+            name=name,
+            email=email,
+            role='employee',
+            data_consent=True,
+            consent_date=datetime.utcnow(),
+            data_retention_days=365
+        )
+        
+        db.session.add(new_admin)
+        try:
+            db.session.commit()
+            flash('Empleado creado exitosamente.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al crear el empleado.', 'danger')
+            return redirect(url_for('create_empleat'))
+    
+    return render_template('create_empleat.html')
+
+
+
 @app.context_processor
 def utility_processor():
     return {'now': datetime.now()}
