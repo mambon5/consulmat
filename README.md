@@ -9,7 +9,27 @@ Bones, hi ha diferents arxius i projeces en aquest repositori:
 - La carpeta `TSP Clean` amb tot el que està fent la Root-Rut respecte la neteja de comuntiats
 - La carpeta `Fichaje treballadores` amb tot el que estem fent (la rut) respecte fitxatxe de treballadors.
 
-## Fitxatge treballadors
+## Fitxatge treballadors: INICIAR APP FLASK
+### Primer cop activar App
+cd "C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer"
+
+conda create --name env_app_Enjoyer python=3.10
+
+pip install -r C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer\requirements.txt
+
+python init_db.py (això només el primer cop: inicialitza base de dades i crea usuari admin ; contra: admin123 i crea usuari_treballador empleado1; contra: empleado123)
+
+flask --app app.py run
+
+### Quan ja s'ha clonat la App i s'ha inicialitzat la db: 
+Accedir ubi on están els arxius App, activar environment de conda i Iniciar Flask
+
+cd "C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer"
+
+conda activate env_app_Enjoyer
+
+flask --app app.py run
+
 
 ## Neteja comunitats
 
