@@ -11,7 +11,9 @@ Bones, hi ha diferents arxius i projeces en aquest repositori:
 
 ## Fitxatge treballadors: INICIAR APP FLASK
 ### Primer cop activar App
-cd C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer\
+cd "C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer"
+
+conda create --name env_app_Enjoyer python=3.10
 
 pip install -r C:\Users\ruthv\Documents\PROJECTES\Maximiliam_APP\consulmat\fichaje_trabajadores\AppEnjoyer\requirements.txt
 
