@@ -1,5 +1,8 @@
 from app import app, db, User, bcrypt, Comunidad
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
 
 def create_admin_user():
     with app.app_context():
@@ -44,7 +47,7 @@ def create_employee():
             password=hashed_password,
             role='employee',
             data_consent=True,
-            consent_date=datetime.utcnow(),
+            consent_date = datetime.now(ZoneInfo("Europe/Madrid"))
             data_retention_days=365
         )
 

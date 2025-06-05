@@ -93,7 +93,7 @@ flask run
     just després d'on diu DocumentRoot.
 
 6. Eliminar les bases de dades prèvies que pugui haver-hi, usant `sudo rm -r instances`.
-7. Instalar les bases de dades per la app, activant primer l'entorn virtual i després usant `python init_db.py`
+7. Instalar les bases de dades per la app, activant primer l'entorn virtual usant `python source env/bin/activate` (o similar) i després usant `python init_db.py`
 8. Donar permisos. Donar permisos al servei apache `www-data` perquè pugui escriure a la base de dades, usant les comandes:
     ```
     sudo chown -R usuari_qualsevol:www-data /var/www/consulmat/fichaje_trabajadores/AppEnjoyer
