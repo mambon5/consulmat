@@ -1,5 +1,5 @@
 from app import db, app
-from create_user import create_admin_user,create_employee
+from create_dades import create_admin_user,create_employee, create_comunitat
 
 def init_database():
     with app.app_context():
@@ -14,6 +14,9 @@ def init_database():
 
             # Crear usuario pobre inicial
             create_employee()
+
+            # Create comunitat
+            create_comunitat()
             
             print("Inicialización de la base de datos completada.")
         except Exception as e:

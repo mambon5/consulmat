@@ -1,4 +1,4 @@
-from app import app, db, User, bcrypt
+from app import app, db, User, bcrypt, Comunidad
 from datetime import datetime
 
 def create_admin_user():
@@ -56,6 +56,35 @@ def create_employee():
         except Exception as e:
             db.session.rollback()
             print(f"Error al crear empleado: {e}")
+
+def create_comunitat():
+    with app.app_context():
+        # Verificar si el comunitat ya existe
+        if Comunidad.query.filter_by(nif='H99983').first():
+            print("La comunitat 'H99983' ya existe.")
+            return
+
+        # Convertim el string a un objecte datetime.date
+        data_alta = datetime.strptime('12/04/2025', '%d/%m/%Y').date()
+
+        # Crear nuevo comunitat
+        nova_comu = Comunidad(
+            nombre='Portal Rosello amb passeig de gràcia',
+            nif='H99983',
+            ciudad='Barcelona',
+            provincia='Barcelona',
+            direccion='Rosello, 651',
+            fecha_alta=data_alta  # <-- ara és un date object
+        )
+
+        # Añadir y confirmar en la base de datos
+        db.session.add(nova_comu)
+        try:
+            db.session.commit()
+            print("Comunitat afegida exitosament.")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al crear comunitat: {e}")
 
 if __name__ == '__main__':
     create_admin_user()

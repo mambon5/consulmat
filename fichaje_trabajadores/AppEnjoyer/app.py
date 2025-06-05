@@ -483,6 +483,18 @@ def llistar_usuaris():
     usuaris = User.query.order_by(User.name.asc()).all()
     return render_template('llistat_usuaris.html', usuaris=usuaris)
 
+@app.route('/comunitats')
+@login_required
+def llistar_comunitats():
+    if current_user.role != 'admin':
+        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        return redirect(url_for('index'))
+
+    comunitats = Comunidad.query.order_by(Comunidad.fecha_alta.asc()).all()
+    return render_template('llistat_comunitats.html', comunitats=comunitats)
+
+
+
 
 @app.context_processor
 def utility_processor():
