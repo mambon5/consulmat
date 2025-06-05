@@ -13,8 +13,8 @@ def create_admin_user():
         user = User(
             username='admin',
             password=hashed_password,
-            name='Administrador',
-            email='admin@empresa.com',
+            name='Jose Merchan',
+            email='quality@maxilim.es',
             data_consent=True,
             consent_date=datetime.utcnow(),
             data_retention_days=365,

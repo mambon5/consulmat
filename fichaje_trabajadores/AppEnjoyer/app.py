@@ -52,6 +52,15 @@ class User(UserMixin, db.Model):
     data_retention_days = db.Column(db.Integer, nullable=False, default=365)
     records = db.relationship('TimeRecord', backref='user', lazy=True)
 
+class Comunidad(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(120), nullable=False)
+    nif = db.Column(db.String(20), nullable=False, unique=True)
+    ciudad = db.Column(db.String(100), nullable=False)
+    provincia = db.Column(db.String(100), nullable=False)
+    direccion = db.Column(db.String(200), nullable=False)
+    fecha_alta = db.Column(db.Date, nullable=False)
+
 class TimeRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -421,6 +430,48 @@ def create_empleat():
             return redirect(url_for('create_empleat'))
     
     return render_template('create_empleat.html')
+
+
+@app.route('/create_comunitat', methods=['GET', 'POST'])
+@login_required
+def create_comunitat():
+    # Verificar si el usuario actual es admin
+    if current_user.role != 'admin':
+        flash('No tienes permisos para crear comunidades.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        nif = request.form.get('NIF')
+        ciudad = request.form.get('ciudad')
+        provincia = request.form.get('provincia')
+        direccion = request.form.get('direccion')
+
+        # Verificar si ya existe una comunidad con ese NIF
+        if Comunidad.query.filter_by(nif=nif).first():
+            flash('Ya existe una comunidad con ese NIF.', 'danger')
+            return redirect(url_for('create_comunitat'))
+
+        nueva_comunidad = Comunidad(
+            nombre=nombre,
+            nif=nif,
+            ciudad=ciudad,
+            provincia=provincia,
+            direccion=direccion,
+            fecha_alta=datetime.today()
+        )
+
+        try:
+            db.session.add(nueva_comunidad)
+            db.session.commit()
+            flash('Comunidad creada exitosamente.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear la comunidad: {str(e)}', 'danger')
+            return redirect(url_for('create_comunitat'))
+
+    return render_template('create_comunitat.html')
 
 @app.route('/usuaris')
 @login_required
