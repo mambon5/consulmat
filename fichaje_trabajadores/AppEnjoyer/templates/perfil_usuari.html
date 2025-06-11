@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="bi bi-person-circle me-2"></i> Perfil de {{ user.name }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Nombre completo:</strong> {{ user.name }}</p>
+            <p><strong>Rol:</strong>
+                {% if user.role == 'admin' %}
+                    <span class="badge bg-danger">Administrador</span>
+                {% else %}
+                    <span class="badge bg-secondary">Empleat</span>
+                {% endif %}
+            </p>
+             
+             {% if treballador %}
+            <hr>
+            <h5>Dades laborals</h5>
+            <p><strong>Departament:</strong> {{ treballador.departament|capitalize }}</p>
+            <p><strong>Adreça:</strong> {{ treballador.adreca or '-' }}</p>
+            <p><strong>Ciutat:</strong> {{ treballador.ciutat or '-' }}</p>
+            <p><strong>Codi postal:</strong> {{ treballador.codi_postal or '-' }}</p>
+            <p><strong>Sexe:</strong>
+                {% if treballador.sexe == 'm' %}
+                    Home
+                {% elif treballador.sexe == 'f' %}
+                    Dona
+                {% elif treballador.sexe == 'no' %}
+                    No ho vol dir
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            <p><strong>Nacionalitat:</strong> {{ treballador.nacionalitat or '-' }}</p>
+            <p><strong>Edat:</strong>
+                {% if treballador.edat %}
+                    {{ treballador.edat }} anys
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            <p><strong>Carnet de conduir:</strong>
+                {% if treballador.carnet_conduir == 'si' %}
+                    Sí
+                {% elif treballador.carnet_conduir == 'no' %}
+                    No
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            <p><strong>Vehicle propi:</strong>
+                {% if treballador.vehicle_propi == 'si' %}
+                    Sí
+                {% elif treballador.vehicle_propi == 'no' %}
+                    No
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            {% endif %}
+
+        </div>
+        <div class="card-footer text-end">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Tornar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -56,6 +56,7 @@ class User(UserMixin, db.Model):
     consent_date = db.Column(db.DateTime, nullable=True)
     data_retention_days = db.Column(db.Integer, nullable=False, default=365)
     records = db.relationship('TimeRecord', backref='user', lazy=True)
+    treballador = db.relationship('Treballador', backref='user', uselist=False)
 
 class Comunidad(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -599,6 +600,13 @@ def llistar_treballadors():
 
     usuaris = User.query.order_by(User.name.asc()).all()
     return render_template('llistat_treballadors.html', usuaris=usuaris)
+
+@app.route('/usuari/<int:user_id>')
+@login_required
+def perfil_usuari(user_id):
+    user = User.query.get_or_404(user_id)
+    treballador = user.treballador if user.role == 'employee' else None
+    return render_template('perfil_usuari.html', user=user, treballador=treballador)
 
 @app.route('/comunitats')
 @login_required
