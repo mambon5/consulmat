@@ -569,6 +569,35 @@ def create_treballador():
     return render_template('create_treballador.html')
 
 
+@app.route('/create_comunitat', methods=['GET', 'POST'])
+@login_required
+def create_comunitat():
+    # Verificar si el usuario actual es admin
+    if current_user.role != 'admin':
+        flash('No tienes permisos para crear comunidades.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        nif = request.form.get('NIF')
+        ciudad = request.form.get('ciudad')
+        provincia = request.form.get('provincia')
+        direccion = request.form.get('direccion')
+
+        # Verificar si ya existe una comunidad con ese NIF
+        if Comunidad.query.filter_by(nif=nif).first():
+            flash('Ya existe una comunidad con ese NIF.', 'danger')
+            return redirect(url_for('create_comunitat'))
+
+        nueva_comunidad = Comunidad(
+            nombre=nombre,
+            nif=nif,
+            ciudad=ciudad,
+            provincia=provincia,
+            direccion=direccion,
+            fecha_alta=datetime.today()
+        )
+
         try:
             db.session.add(nueva_comunidad)
             db.session.commit()
@@ -580,7 +609,6 @@ def create_treballador():
             return redirect(url_for('create_comunitat'))
 
     return render_template('create_comunitat.html')
-
 @app.route('/usuaris')
 @login_required
 def llistar_usuaris():
