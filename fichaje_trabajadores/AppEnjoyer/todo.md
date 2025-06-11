@@ -9,7 +9,10 @@
     6. foto amb la cara de la persona
     7. Que l'admin pugui clicar al usuari i veure el seu horari i calendari
     8. Pugui clicar a la comunitat i veure qui la netejarà i quan (vistes alternatives)
-    9. Fer un botó de tornar "enrere"
+    9. posar horari a madrid/europa central
+    10. Fer un botó de tornar "enrere"
+    11. Posar la app en castellà
+   
 
 ## Vista usuari
     1. Crear un calendari amb la hora i el lloc setmanals per cada treballador
@@ -18,4 +21,5 @@
 
 1. Crear taula comunitats
 2. Assignar treballador a comunitat
-3. 
+3. Afegir codis postals a les comunitats
+4. Afegir administradors a les comunitats

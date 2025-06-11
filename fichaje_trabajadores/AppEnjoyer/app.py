@@ -15,14 +15,19 @@ import locale
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 
+from urllib.parse import quote_plus
+
 # Configuración de la base de datos
 if os.environ.get('DATABASE_URL'):
-    # Railway proporciona DATABASE_URL, pero SQLAlchemy requiere un formato específico
-    database_url = os.environ.get('DATABASE_URL').replace('postgres://', 'postgresql://')
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
-    # Configuración local SQLite
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///employee_time.db'
+    # Connexió local a MySQL
+    USER = 'anamas'
+    PASSWORD = quote_plus('qmaxi_23')
+    HOST = 'localhost'
+    DB_NAME = 'maxilim_db'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DB_NAME}'
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -55,11 +60,76 @@ class User(UserMixin, db.Model):
 class Comunidad(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(120), nullable=False)
-    nif = db.Column(db.String(20), nullable=False, unique=True)
+    cif = db.Column(db.String(20), nullable=False, unique=True)
     ciudad = db.Column(db.String(100), nullable=False)
+    codi_postal = db.Column(db.Integer, nullable=True)
     provincia = db.Column(db.String(100), nullable=False)
     direccion = db.Column(db.String(200), nullable=False)
+    id_pagador = db.Column(db.Integer, db.ForeignKey('pagadors.id_pagador'), nullable=True)  
     fecha_alta = db.Column(db.Date, nullable=False)
+    latitud = db.Column(db.Numeric(9,6), nullable=False)
+    longitud = db.Column(db.Numeric(9,6), nullable=False)
+
+class Factura(db.Model):
+    __tablename__ = 'factures'
+
+    id_factura = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_comunitat = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
+
+    tipus_feina = db.Column(db.String(255), nullable=False)  # e.g. "Limpieza mensual..."
+    document_de_pago = db.Column(db.String(255), nullable=False)  # e.g. "pago a cuenta..."
+    regimen_impuestos = db.Column(db.String(255), nullable=True)  # pot ser nullable si no sempre s’omple
+
+    comunitat = db.relationship('Comunidad', backref='factures', lazy=True)
+
+class Treballador(db.Model):
+    __tablename__ = 'treballadors'
+
+    id_treballador = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_usuari = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    departament = db.Column(
+        db.Enum('parkings', 'comunitats', 'oficines', name='departament_enum'),
+        nullable=False
+    )
+    adreca = db.Column(db.String(255), nullable=True)
+    ciutat = db.Column(db.String(100), nullable=True)
+    codi_postal = db.Column(db.Integer, nullable=True)
+
+    sexe = db.Column(
+        db.Enum('f', 'm', 'no', name='sexe_enum'),
+        nullable=True
+    )
+    nacionalitat = db.Column(db.String(100), nullable=True)
+    edat = db.Column(db.Integer, nullable=True)
+
+    carnet_conduir = db.Column(
+        db.Enum('si', 'no', name='carnet_conduir_enum'),
+        nullable=True
+    )
+    vehicle_propi = db.Column(
+        db.Enum('si', 'no', name='vehicle_propi_enum'),
+        nullable=True
+    )
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+
+class Pagador(db.Model):
+    __tablename__ = 'pagadors'
+
+    id_pagador = db.Column(db.Integer, primary_key=True)
+    nom_pagador = db.Column(db.String(255), nullable=False)
+    telefon = db.Column(db.String(20), nullable=True)
+    email = db.Column(db.String(255), nullable=True, unique=True)
+    direccio = db.Column(db.String(255), nullable=True)
+    ciutat = db.Column(db.String(100), nullable=True)
+    codi_postal = db.Column(db.Integer, nullable=True)  # Transformat a numèric
+
+    # (Opcional) Relació amb comunitats si vols establir una connexió:
+    comunitats = db.relationship('Comunidad', backref='pagador', lazy=True)
+
 
 class TimeRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -442,23 +512,23 @@ def create_comunitat():
 
     if request.method == 'POST':
         nombre = request.form.get('nombre')
-        nif = request.form.get('NIF')
+        cif = request.form.get('CIF')
         ciudad = request.form.get('ciudad')
         provincia = request.form.get('provincia')
         direccion = request.form.get('direccion')
 
-        # Verificar si ya existe una comunidad con ese NIF
-        if Comunidad.query.filter_by(nif=nif).first():
-            flash('Ya existe una comunidad con ese NIF.', 'danger')
+        # Verificar si ya existe una comunidad con ese CIF
+        if Comunidad.query.filter_by(cif=cif).first():
+            flash('Ya existe una comunidad con ese CIF.', 'danger')
             return redirect(url_for('create_comunitat'))
 
         nueva_comunidad = Comunidad(
             nombre=nombre,
-            nif=nif,
+            cif=cif,
             ciudad=ciudad,
             provincia=provincia,
             direccion=direccion,
-            fecha_alta=datetime.today()
+            fecha_alta = datetime.today().date()
         )
 
         try:
