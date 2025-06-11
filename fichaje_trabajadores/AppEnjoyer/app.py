@@ -501,35 +501,72 @@ def create_empleat():
     
     return render_template('create_empleat.html')
 
-
-@app.route('/create_comunitat', methods=['GET', 'POST'])
+@app.route('/create_treballador', methods=['GET', 'POST'])
 @login_required
-def create_comunitat():
-    # Verificar si el usuario actual es admin
+def create_treballador():
+    # Solo los administradores pueden crear trabajadores
     if current_user.role != 'admin':
-        flash('No tienes permisos para crear comunidades.', 'danger')
+        flash('No tienes permisos para crear trabajadores.', 'danger')
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        cif = request.form.get('CIF')
-        ciudad = request.form.get('ciudad')
-        provincia = request.form.get('provincia')
-        direccion = request.form.get('direccion')
+        # Datos del usuario
+        username = request.form.get('username')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        email = request.form.get('email')
 
-        # Verificar si ya existe una comunidad con ese CIF
-        if Comunidad.query.filter_by(cif=cif).first():
-            flash('Ya existe una comunidad con ese CIF.', 'danger')
-            return redirect(url_for('create_comunitat'))
+        # Verificar que el usuario no exista
+        if User.query.filter_by(username=username).first():
+            flash('Ya existe un usuario con ese nombre.', 'danger')
+            return redirect(url_for('create_treballador'))
 
-        nueva_comunidad = Comunidad(
-            nombre=nombre,
-            cif=cif,
-            ciudad=ciudad,
-            provincia=provincia,
-            direccion=direccion,
-            fecha_alta = datetime.today().date()
+        # Crear usuario
+        nuevo_usuario = User(
+            username=username,
+            name=name,
+            email=email,
+            role='treballador',
+            consent_date=datetime.utcnow()
         )
+        nuevo_usuario.set_password(password)  # Asegúrate de tener esta función en tu modelo User
+
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+
+        # Datos del trabajador
+        departament = request.form.get('departament')
+        adreca = request.form.get('adreca')
+        ciutat = request.form.get('ciutat')
+        codi_postal = request.form.get('codi_postal')
+        sexe = request.form.get('sexe')
+        nacionalitat = request.form.get('nacionalitat')
+        edat = request.form.get('edat')
+        carnet_conduir = request.form.get('carnet_conduir')
+        vehicle_propi = request.form.get('vehicle_propi')
+
+        nou_treballador = Treballador(
+            id_usuari=nuevo_usuario.id,
+            departament=departament,
+            adreca=adreca,
+            ciutat=ciutat,
+            codi_postal=int(codi_postal) if codi_postal else None,
+            sexe=sexe,
+            nacionalitat=nacionalitat,
+            edat=int(edat) if edat else None,
+            carnet_conduir=carnet_conduir,
+            vehicle_propi=vehicle_propi,
+            created_at=datetime.utcnow()
+        )
+
+        db.session.add(nou_treballador)
+        db.session.commit()
+
+        flash('Trabajador creado exitosamente.', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('create_treballador.html')
+
 
         try:
             db.session.add(nueva_comunidad)
@@ -552,6 +589,16 @@ def llistar_usuaris():
 
     usuaris = User.query.order_by(User.name.asc()).all()
     return render_template('llistat_usuaris.html', usuaris=usuaris)
+
+@app.route('/treballadors')
+@login_required
+def llistar_treballadors():
+    if current_user.role != 'admin':
+        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        return redirect(url_for('index'))
+
+    usuaris = User.query.order_by(User.name.asc()).all()
+    return render_template('llistat_treballadors.html', usuaris=usuaris)
 
 @app.route('/comunitats')
 @login_required

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Crear Nuevo Empleado</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <!-- User fields -->
+                        <div class="form-group mb-3">
+                            <label for="username">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="name">Nombre Completo</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+
+                        <!-- Treballador fields -->
+                        <div class="form-group mb-3">
+                            <label for="departament">Departamento</label>
+                            <select class="form-control" id="departament" name="departament" required>
+                                <option value="parkings">Parkings</option>
+                                <option value="comunitats">Comunitats</option>
+                                <option value="oficines">Oficines</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="adreca">Dirección</label>
+                            <input type="text" class="form-control" id="adreca" name="adreca">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ciutat">Ciudad</label>
+                            <input type="text" class="form-control" id="ciutat" name="ciutat">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="codi_postal">Código Postal</label>
+                            <input type="number" class="form-control" id="codi_postal" name="codi_postal">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="sexe">Sexo</label>
+                            <select class="form-control" id="sexe" name="sexe">
+                                <option value="f">Femenino</option>
+                                <option value="m">Masculino</option>
+                                <option value="no">Prefiero no decirlo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="nacionalitat">Nacionalidad</label>
+                            <input type="text" class="form-control" id="nacionalitat" name="nacionalitat">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edat">Edad</label>
+                            <input type="number" class="form-control" id="edat" name="edat">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="carnet_conduir">Carnet de Conducir</label>
+                            <select class="form-control" id="carnet_conduir" name="carnet_conduir">
+                                <option value="si">Sí</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="vehicle_propi">Vehículo Propio</label>
+                            <select class="form-control" id="vehicle_propi" name="vehicle_propi">
+                                <option value="si">Sí</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Crear Empleat</button>
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
