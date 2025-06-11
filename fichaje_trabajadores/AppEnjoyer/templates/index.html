@@ -60,17 +60,17 @@
                 {% if current_user.role == 'admin' %}
                 <div class="mt-3">
                     <a href="{{ url_for('llistar_usuaris') }}" class="btn btn-info w-100">
-                        <i class="bi bi-people"></i> Veure Usuaris
+                        <i class="bi bi-people"></i> Ver Usuarios
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('create_empleat') }}" class="btn btn-info w-100">
-                        <i class="bi bi-person-plus"></i> Afegir Usuari
+                        <i class="bi bi-person-plus"></i> Añadir Usuario
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('create_admin') }}" class="btn btn-info w-100">
-                        <i class="bi bi-star"></i> Afegir Administrador
+                        <i class="bi bi-star"></i> Añadir Administrador
                     </a>
                 </div>
                 <div class="mt-3">
@@ -80,7 +80,7 @@
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('create_comunitat') }}" class="btn btn-primary w-100">
-                        <i class="bi bi-house-add"></i> Afegir Comunitat
+                        <i class="bi bi-house-add"></i> Añadir Comunidad
                     </a>
                 </div>
                 {% endif %}
