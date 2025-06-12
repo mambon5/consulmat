@@ -693,7 +693,50 @@ def llistar_comunitats():
     return render_template('llistat_comunitats.html', comunitats=comunitats)
 
 
+# Ruta para listar facturas
+@app.route('/factures')
+@login_required
+def llistar_factures():
+    if current_user.role != 'admin':
+        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        return redirect(url_for('index'))
 
+    factures = Factura.query.order_by(Factura.id_factura.desc()).all()
+    return render_template('llistat_factures.html', factures=factures)
+
+# Ruta per crear una factura nova
+@app.route('/create_factura', methods=['GET', 'POST'])
+@login_required
+def create_factura():
+    if not current_user.role == 'admin':
+        flash('No tienes permisos para crear facturas.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        id_comunitat = request.form.get('id_comunitat')
+        tipus_feina = request.form.get('tipus_feina')
+        document_de_pago = request.form.get('document_de_pago')
+        regimen_impuestos = request.form.get('regimen_impuestos') or None
+
+        nova_factura = Factura(
+            id_comunitat=id_comunitat,
+            tipus_feina=tipus_feina,
+            document_de_pago=document_de_pago,
+            regimen_impuestos=regimen_impuestos
+        )
+
+        db.session.add(nova_factura)
+        try:
+            db.session.commit()
+            flash('Factura creada exitosamente.', 'success')
+            return redirect(url_for('llistar_factures'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al crear la factura.', 'danger')
+            return redirect(url_for('create_factura'))
+
+    comunitats = Comunidad.query.order_by(Comunidad.nombre.asc()).all()
+    return render_template('create_factura.html', comunitats=comunitats)
 
 @app.context_processor
 def utility_processor():
