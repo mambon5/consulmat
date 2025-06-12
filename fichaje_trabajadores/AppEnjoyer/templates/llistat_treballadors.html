@@ -22,8 +22,8 @@
     <tbody>
         {% for treballador in treballadors %}
         <tr>
-            <td>{{ treballador.usuari.name }}</td>
-            <td>{{ treballador.usuari.email }}</td>
+            <td>{{ treballador.user.name }}</td>
+            <td>{{ treballador.user.email }}</td>
             <td>{{ treballador.departament }}</td>
             <td>{{ treballador.ciutat or '—' }}</td>
             <td>{{ treballador.codi_postal or '—' }}</td>

@@ -620,14 +620,9 @@ def llistar_usuaris():
     return render_template('llistat_usuaris.html', usuaris=usuaris)
 
 @app.route('/treballadors')
-@login_required
-def llistar_treballadors():
-    if current_user.role != 'admin':
-        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
-        return redirect(url_for('index'))
-
-    usuaris = User.query.order_by(User.name.asc()).all()
-    return render_template('llistat_treballadors.html', usuaris=usuaris)
+def llistat_treballadors():
+    treballadors = Treballador.query.all()
+    return render_template("llistat_treballadors.html", treballadors=treballadors)
 
 @app.route('/usuari/<int:user_id>')
 @login_required
