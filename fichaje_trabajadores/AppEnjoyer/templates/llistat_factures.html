@@ -16,7 +16,7 @@
         {% for factura in factures %}
         <tr>
             <td>{{ factura.id_factura }}</td>
-            <td>{{ factura.comunitat.nom }}</td>
+            <td>{{ factura.comunitat.nombre }}</td>
             <td>{{ factura.tipus_feina }}</td>
             <td>{{ factura.document_de_pago }}</td>
             <td>{{ factura.regimen_impuestos or '-' }}</td>

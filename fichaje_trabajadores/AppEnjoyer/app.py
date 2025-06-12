@@ -609,6 +609,57 @@ def create_comunitat():
             return redirect(url_for('create_comunitat'))
 
     return render_template('create_comunitat.html')
+
+@app.route('/create_pagador', methods=['GET', 'POST'])
+@login_required
+def create_pagador():
+    if current_user.role != 'admin':
+        flash('No tens permisos per crear pagadors.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        nom_pagador = request.form.get('nom_pagador')
+        telefon = request.form.get('telefon')
+        email = request.form.get('email')
+        direccio = request.form.get('direccio')
+        ciutat = request.form.get('ciutat')
+        codi_postal = request.form.get('codi_postal')
+
+        if Pagador.query.filter_by(email=email).first():
+            flash('Ja existeix un pagador amb aquest correu.', 'danger')
+            return redirect(url_for('create_pagador'))
+
+        nou_pagador = Pagador(
+            nom_pagador=nom_pagador,
+            telefon=telefon,
+            email=email,
+            direccio=direccio,
+            ciutat=ciutat,
+            codi_postal=codi_postal
+        )
+
+        try:
+            db.session.add(nou_pagador)
+            db.session.commit()
+            flash('Pagador creat correctament.', 'success')
+            return redirect(url_for('llistar_pagadors'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear el pagador: {str(e)}', 'danger')
+            return redirect(url_for('create_pagador'))
+
+    return render_template('create_pagador.html')
+
+@app.route('/pagadors')
+@login_required
+def llistar_pagadors():
+    if current_user.role != 'admin':
+        flash('No tens permisos per veure aquesta pàgina.', 'danger')
+        return redirect(url_for('index'))
+
+    pagadors = Pagador.query.order_by(Pagador.nom_pagador.asc()).all()
+    return render_template('llistat_pagadors.html', pagadors=pagadors)
+
 @app.route('/usuaris')
 @login_required
 def llistar_usuaris():
@@ -684,7 +735,7 @@ def create_factura():
             flash('Error al crear la factura.', 'danger')
             return redirect(url_for('create_factura'))
 
-    comunitats = Comunidad.query.order_by(Comunidad.nom.asc()).all()
+    comunitats = Comunidad.query.order_by(Comunidad.nombre.asc()).all()
     return render_template('create_factura.html', comunitats=comunitats)
 
 @app.context_processor
