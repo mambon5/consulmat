@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Llistat de Factures</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Comunitat</th>
+            <th>Tipus de feina</th>
+            <th>Document de pagament</th>
+            <th>Règim d’impostos</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for factura in factures %}
+        <tr>
+            <td>{{ factura.id_factura }}</td>
+            <td>{{ factura.comunitat.nom }}</td>
+            <td>{{ factura.tipus_feina }}</td>
+            <td>{{ factura.document_de_pago }}</td>
+            <td>{{ factura.regimen_impuestos or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('create_factura') }}" class="btn btn-primary">Crear Nova Factura</a>
+{% endblock %}
