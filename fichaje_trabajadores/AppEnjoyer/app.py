@@ -620,7 +620,7 @@ def llistar_usuaris():
     return render_template('llistat_usuaris.html', usuaris=usuaris)
 
 @app.route('/treballadors')
-def llistat_treballadors():
+def llistar_treballadors():
     treballadors = Treballador.query.all()
     return render_template("llistat_treballadors.html", treballadors=treballadors)
 
