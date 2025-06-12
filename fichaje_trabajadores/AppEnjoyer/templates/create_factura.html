@@ -7,7 +7,7 @@
         <label for="id_comunitat" class="form-label">Comunitat</label>
         <select name="id_comunitat" class="form-select" required>
             {% for comunitat in comunitats %}
-            <option value="{{ comunitat.id }}">{{ comunitat.nom }}</option>
+            <option value="{{ comunitat.id }}">{{ comunitat.nombre }}</option>
             {% endfor %}
         </select>
     </div>
