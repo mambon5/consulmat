@@ -40,22 +40,22 @@
 
                         <div class="form-group mb-3">
                             <label for="adreca">Dirección</label>
-                            <input type="text" class="form-control" id="adreca" name="adreca">
+                            <input type="text" class="form-control" id="adreca" name="adreca" required>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ciutat">Ciudad</label>
-                            <input type="text" class="form-control" id="ciutat" name="ciutat">
+                            <input type="text" class="form-control" id="ciutat" name="ciutat" required> 
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="codi_postal">Código Postal</label>
-                            <input type="number" class="form-control" id="codi_postal" name="codi_postal">
+                            <input type="number" class="form-control" id="codi_postal" name="codi_postal" required>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="sexe">Sexo</label>
-                            <select class="form-control" id="sexe" name="sexe">
+                            <select class="form-control" id="sexe" name="sexe" required>
                                 <option value="f">Femenino</option>
                                 <option value="m">Masculino</option>
                                 <option value="no">Prefiero no decirlo</option>
@@ -64,17 +64,23 @@
 
                         <div class="form-group mb-3">
                             <label for="nacionalitat">Nacionalidad</label>
-                            <input type="text" class="form-control" id="nacionalitat" name="nacionalitat">
+                            <select class="form-control" id="nacionalitat" name="nacionalitat" required>
+                                <option value="" disabled selected>-- Selecciona un país --</option>
+                                {% for pais in paisos %}
+                                    <option value="{{ pais.code }}">{{ pais.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="edat">Edad</label>
-                            <input type="number" class="form-control" id="edat" name="edat">
+                            <input type="number" class="form-control" id="edat" name="edat" required>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="carnet_conduir">Carnet de Conducir</label>
-                            <select class="form-control" id="carnet_conduir" name="carnet_conduir">
+                            <select class="form-control" id="carnet_conduir" name="carnet_conduir" required>
+                                <option value="" disabled selected>-- Selecciona una opció --</option>
                                 <option value="si">Sí</option>
                                 <option value="no">No</option>
                             </select>
@@ -82,7 +88,8 @@
 
                         <div class="form-group mb-4">
                             <label for="vehicle_propi">Vehículo Propio</label>
-                            <select class="form-control" id="vehicle_propi" name="vehicle_propi">
+                            <select class="form-control" id="vehicle_propi" name="vehicle_propi" required>
+                                <option value="" disabled selected>-- Selecciona una opció --</option>
                                 <option value="si">Sí</option>
                                 <option value="no">No</option>
                             </select>

@@ -11,6 +11,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO
 import locale
+import pycountry # per obtenir una llista amb tots els paísos del món
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -523,14 +525,16 @@ def create_treballador():
             return redirect(url_for('create_treballador'))
 
         # Crear usuario
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         nuevo_usuario = User(
             username=username,
+            password=hashed_password,
             name=name,
             email=email,
-            role='treballador',
-            consent_date=datetime.utcnow()
+            role='employee',
+            data_consent=True,
+            consent_date=datetime.utcnow(),
         )
-        nuevo_usuario.set_password(password)  # Asegúrate de tener esta función en tu modelo User
 
         db.session.add(nuevo_usuario)
         db.session.commit()
@@ -565,21 +569,23 @@ def create_treballador():
 
         flash('Trabajador creado exitosamente.', 'success')
         return redirect(url_for('index'))
+    
+    # Obtenir tots els països
+    paisos = [{'code': country.alpha_2, 'name': country.name} for country in pycountry.countries]
 
-    return render_template('create_treballador.html')
+    return render_template('create_treballador.html', paisos = paisos)
 
 
 @app.route('/create_comunitat', methods=['GET', 'POST'])
 @login_required
 def create_comunitat():
-    # Verificar si el usuario actual es admin
     if current_user.role != 'admin':
         flash('No tienes permisos para crear comunidades.', 'danger')
         return redirect(url_for('index'))
 
     if request.method == 'POST':
         nombre = request.form.get('nombre')
-        cif = request.form.get('cif')  # <-- correcció aquí
+        cif = request.form.get('cif')
         ciudad = request.form.get('ciudad')
         provincia = request.form.get('provincia')
         codi_postal = request.form.get('codi_postal')
@@ -588,33 +594,35 @@ def create_comunitat():
         latitud = request.form.get('latitud')
         longitud = request.form.get('longitud')
 
-    if Comunidad.query.filter_by(cif=cif).first():
-        flash('Ya existe una comunidad con ese CIF.', 'danger')
-        return redirect(url_for('create_comunitat'))
+        if Comunidad.query.filter_by(cif=cif).first():
+            flash('Ya existe una comunidad con ese CIF.', 'danger')
+            return redirect(url_for('create_comunitat'))
 
-    nueva_comunidad = Comunidad(
-        nombre=nombre,
-        cif=cif,
-        ciudad=ciudad,
-        provincia=provincia,
-        direccion=direccion,
-        codi_postal=codi_postal,
-        latitud=latitud,
-        longitud=longitud,
-        fecha_alta=fecha_alta
-    )
+        nueva_comunidad = Comunidad(
+            nombre=nombre,
+            cif=cif,
+            ciudad=ciudad,
+            provincia=provincia,
+            direccion=direccion,
+            codi_postal=codi_postal,
+            latitud=latitud,
+            longitud=longitud,
+            fecha_alta=fecha_alta
+        )
 
-    try:
-        db.session.add(nueva_comunidad)
-        db.session.commit()
-        flash('Comunidad creada exitosamente.', 'success')
-        return redirect(url_for('index'))
-    except Exception as e:
-        db.session.rollback()
-        flash(f'Error al crear la comunidad: {str(e)}', 'danger')
-        return redirect(url_for('create_comunitat'))
+        try:
+            db.session.add(nueva_comunidad)
+            db.session.commit()
+            flash('Comunidad creada exitosamente.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear la comunidad: {str(e)}', 'danger')
+            return redirect(url_for('create_comunitat'))
 
+    # Si no és POST, renderitzem el formulari
     return render_template('create_comunitat.html')
+
 
 @app.route('/create_pagador', methods=['GET', 'POST'])
 @login_required

@@ -9,19 +9,6 @@
                     <h3 class="text-center">Crear Nueva Comunidad</h3>
                 </div>
 
-
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(120), nullable=False)
-    cif = db.Column(db.String(20), nullable=False, unique=True)
-    ciudad = db.Column(db.String(100), nullable=False)
-    codi_postal = db.Column(db.Integer, nullable=True)
-    provincia = db.Column(db.String(100), nullable=False)
-    direccion = db.Column(db.String(200), nullable=False)
-    id_pagador = db.Column(db.Integer, db.ForeignKey('pagadors.id_pagador'), nullable=True)  
-    fecha_alta = db.Column(db.Date, nullable=False)
-    latitud = db.Column(db.Numeric(9,6), nullable=False)
-    longitud = db.Column(db.Numeric(9,6), nullable=False)
-
                 <div class="card-body">
                     <form method="POST">
                         <div class="form-group mb-3">
