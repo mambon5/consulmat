@@ -8,6 +8,20 @@
                 <div class="card-header">
                     <h3 class="text-center">Crear Nueva Comunidad</h3>
                 </div>
+
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(120), nullable=False)
+    cif = db.Column(db.String(20), nullable=False, unique=True)
+    ciudad = db.Column(db.String(100), nullable=False)
+    codi_postal = db.Column(db.Integer, nullable=True)
+    provincia = db.Column(db.String(100), nullable=False)
+    direccion = db.Column(db.String(200), nullable=False)
+    id_pagador = db.Column(db.Integer, db.ForeignKey('pagadors.id_pagador'), nullable=True)  
+    fecha_alta = db.Column(db.Date, nullable=False)
+    latitud = db.Column(db.Numeric(9,6), nullable=False)
+    longitud = db.Column(db.Numeric(9,6), nullable=False)
+
                 <div class="card-body">
                     <form method="POST">
                         <div class="form-group mb-3">
@@ -15,12 +29,12 @@
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="NIF">CIF: Código de Identificación Fiscal</label>
-                            <input type="text" class="form-control" id="NIF" name="NIF" required>
+                            <label for="cif">CIF: Código de Identificación Fiscal</label>
+                            <input type="text" class="form-control" id="cif" name="cif" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="cp">Código postal</label>
-                            <input type="number" class="form-control" id="cp" name="cp" required>
+                            <input type="number" class="form-control" id="codi_postal" name="codi_postal" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="ciutat">Ciudad</label>
@@ -37,7 +51,15 @@
                         <div class="form-group mb-3">
                             <label for="data_alta">Fecha de alta</label>
                             <input type="date" class="form-control" id="fecha_alta" placeholder="10/04/2025" name="fecha_alta" required>
-                        </div>                       
+                        </div> 
+                        <div class="form-group mb-3">
+                            <label for="data_alta">Latitud</label>
+                            <input type="number" class="form-control" value="200" id="latitud" placeholder="40.1" name="latitud" required>
+                        </div>  
+                        <div class="form-group mb-3">
+                            <label for="data_alta">Longitud</label>
+                            <input type="number" class="form-control" value="200" id="longitud" placeholder="2.6" name="longitud" required>
+                        </div>                                
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Crear Comunidad</button>
                             <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>

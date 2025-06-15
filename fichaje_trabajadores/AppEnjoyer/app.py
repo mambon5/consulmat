@@ -579,34 +579,40 @@ def create_comunitat():
 
     if request.method == 'POST':
         nombre = request.form.get('nombre')
-        nif = request.form.get('NIF')
+        cif = request.form.get('cif')  # <-- correcció aquí
         ciudad = request.form.get('ciudad')
         provincia = request.form.get('provincia')
+        codi_postal = request.form.get('codi_postal')
         direccion = request.form.get('direccion')
+        fecha_alta = request.form.get('fecha_alta')
+        latitud = request.form.get('latitud')
+        longitud = request.form.get('longitud')
 
-        # Verificar si ya existe una comunidad con ese NIF
-        if Comunidad.query.filter_by(nif=nif).first():
-            flash('Ya existe una comunidad con ese NIF.', 'danger')
-            return redirect(url_for('create_comunitat'))
+    if Comunidad.query.filter_by(cif=cif).first():
+        flash('Ya existe una comunidad con ese CIF.', 'danger')
+        return redirect(url_for('create_comunitat'))
 
-        nueva_comunidad = Comunidad(
-            nombre=nombre,
-            nif=nif,
-            ciudad=ciudad,
-            provincia=provincia,
-            direccion=direccion,
-            fecha_alta=datetime.today()
-        )
+    nueva_comunidad = Comunidad(
+        nombre=nombre,
+        cif=cif,
+        ciudad=ciudad,
+        provincia=provincia,
+        direccion=direccion,
+        codi_postal=codi_postal,
+        latitud=latitud,
+        longitud=longitud,
+        fecha_alta=fecha_alta
+    )
 
-        try:
-            db.session.add(nueva_comunidad)
-            db.session.commit()
-            flash('Comunidad creada exitosamente.', 'success')
-            return redirect(url_for('index'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error al crear la comunidad: {str(e)}', 'danger')
-            return redirect(url_for('create_comunitat'))
+    try:
+        db.session.add(nueva_comunidad)
+        db.session.commit()
+        flash('Comunidad creada exitosamente.', 'success')
+        return redirect(url_for('index'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al crear la comunidad: {str(e)}', 'danger')
+        return redirect(url_for('create_comunitat'))
 
     return render_template('create_comunitat.html')
 
