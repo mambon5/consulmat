@@ -6,6 +6,7 @@
 *.toc
 # entorn virtual de python:
 fichaje_trabajadores/venv/
+fichaje_trabajadores/AppEnjoyer/envi/
 **/target
 **/Cargo.lock
 # buffer de la resposta de google maps amb mil merdes:
