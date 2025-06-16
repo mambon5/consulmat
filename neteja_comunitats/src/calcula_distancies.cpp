@@ -17,7 +17,7 @@ using namespace std;
 // fitxer d'accés global
 string currentDate = getCurrentDate();
 // string currentDate = "2025-03-16"; // borrar aquesta linia per seguretat.
-string inputfile="../input/Comunidades_coords_2025_05_10.csv";
+string inputfile="../input/Comunidades_coords_2025-05-10.csv";
 string outputDistCotxe="../output/DistCotxe_"+currentDate+".csv";
 string outputDistMetro="../output/DistMetro_"+currentDate+".csv";
 string outputDistPeu="../output/DistPeu_"+currentDate+".csv";
@@ -278,6 +278,10 @@ void DistanceMatrixes(vector<vector<int>>& cotxe, vector<vector<int>>& metro,
                 metro[i][j] = temps[1];
                 peu[i][j] = temps[2];
                 bici[i][j] = temps[3];
+            }
+            if(n>0) {
+                double prog = 100*(i*(n-1)+j)/(n*n);
+                cout << "Progrés: " << prog << " % " << endl;
             }
             
            
