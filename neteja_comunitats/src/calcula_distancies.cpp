@@ -71,6 +71,10 @@ std::vector<int> extractTravelTimes_aux1(const std::string& html, bool debug = f
         travelTimes.push_back(t.second);
     }
 
+    if(travelTimes.size() == 0) {
+        cout << "error in extractTravelTimes_aux1(): size of travelTimes is 0!" << endl; 
+        return {};
+    }
     if(debug) {
         cout << "extractTravelTimes_aux1(): travel times: " << endl;
         OutputVectorInt(travelTimes);
@@ -328,7 +332,7 @@ int main() {
     
     vector<vector<string>> sub_v(coords.begin(), coords.begin() + n);
     cout << "adreces que calcularem la matriu de distàncies:" << endl;
-    Output2DVectorString(sub_v);
+    // Output2DVectorString(sub_v);
 
     string ultimOrig, ultDest;
     llegirUltimaLiniaCSV(outputDistCotxe,ultimOrig, ultDest);
