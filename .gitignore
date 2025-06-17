@@ -12,3 +12,4 @@ fichaje_trabajadores/AppEnjoyer/envi/
 # buffer de la resposta de google maps amb mil merdes:
 /neteja_comunitats/output/GmapsDistance.out
 /neteja_comunitats/output/gmapsout.out
+*.mp4
