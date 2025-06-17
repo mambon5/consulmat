@@ -110,3 +110,98 @@ flask run
 ## Licencia
 
 Este proyecto está bajo la licencia MIT.
+
+## Manual de Git
+
+### Instruccions bàsiques Git (sino joaquim s'enfada)
+
+Instruccions de lectura:
+
+1. `git status -sb`  Mostra l'estat actual del repositori en el commit on estem ara i les canvis fets que falta commitejar(el HEAD)
+2. `git log` o `git log --graph --pretty=format:\"%C(auto)%h %C(green)%as %C(auto)%d %C(auto)% s\" --date=relative --branches --decorate` (copieu els alies del repository .gitconfig al vostre home, de [.gitconfig joaquim](https://github.com/joaquimbrugues/dotfiles) )
+3. `git show 66yhhd` on 66yhhd és el nom del commit o de la branca, mostra tota la informació del commit seleccionat o l'últim commit de la branca o un tag.
+4. `git remote -v` llista tots els servidors que estem seguint
+5. `git branch -a` llista totes les branques locals
+6. `git fetch --prune` serveix per netejar les referències de branques remotes esborrades
+
+
+Instruccions de escriptura:
+
+5. `git pull 'remote' 'branch'` descarrega els canvis del remote que demanis, si no poses res, fa el pull del servidor i branca remots que hi hagi a `git status`.
+6. `git add .` afegeix tots els canvis 
+7.  `commit` cada commit és un tros de la tija, amb la data, el missatge i els canvis realitzats, autor.
+8.  `git commit` Abans de cometre hem de mirar en quina branca estem! El commit escriu els canvis en el registre de git, i desplaça la branca HEAD local, al commit fet.
+9.  `git push 'remote' 'branch'` envia els canvis al remote que demanis, si no poses res, fa el push del servidor i branca remots que hi hagi a `git status`. Compte amb aquesta comanda!
+10. `git checkout -b branch` crea una branca nova en el commit on estiguis (on està el HEAD).
+11.  `git checkout -b branch 'commit'` crea una branca nova en el commit 'commit'.
+12.  `git checkout -b branch 'remote'/'brancha remota'` crea una branca nova en el commit corresponent, i que segueix per fer pull i push a la branca remota 'remote'/'brancha remota'
+13. `git checkout 'branch'` et mous a la branca 'branch'. 
+14. `git branch -d 'branch'` eliminem la branca 'branch'
+   
+
+Instruccions per fer un commit ben fet
+
+1. `git diff` mostra les diferències entre el que no està afegit, i l'últim commit
+2. `git add fitxer1 fitxer2 ....` afegeix per fer commit, tots els fitxers amb els canvis que vulguis afegir
+3. O també podem fer `git add -u` no afegeix fitxers nous encara que no estiguin afegits mai, només afageix canvis que ja estiguessin en algun commit.
+4. `git reset` desfà el `git add`
+5. `git commit -m 'missatge sobre els canvis'` grava els canvis en un commit local. Sinó també podem fer `git commit` i escriure en el editor que surt un títol del commit (la primera línia de la pàgina) i una descripció (les següents línies del fitxer)
+   
+Instruccions avançades
+
+1. `git merge 'branch2'` fusiona la branca 'branch2' a la branca actual.
+2. Si hi ha un conflicte, escriure `git status`
+3. Els conflictes estan marcats amb uns: 
+```
+<<<<< HEAD
+# canvis a head local
+=======
+# canvis de la branca que estás fusionant que entren en conflicte
+>>>>> branch2
+```
+4. Per arreglar un conflicte s'ha d'editar el fitxer a mà i seleccionar una de les dues versions o un mix.
+
+
+### Com crear una branca nova amb diferent informació
+
+Principi 1: Volem tenir el mínim de branques possibles i esborrarles tan aviat com sigui possible.
+Principi 2: Els merges sempre van en una direcció
+
+Dia a dia de treballar en una nova funcionalitat (pagadors)
+1. Penso en quina feina vull treballar
+2. Em col·loco en la branca on vull treballar `pagadors`
+3. Fer pull de la branca remota `pagadors`.
+4. Posar-me a la branca `dev` i fer pull
+5. tornar a la branca `pagadors`
+6. Fer merge de la branca `dev` en la branca `pagadors` per tenir tot actualitzat a la branca pagadors usant `git merge dev` per escriure els canvis de "dev" a "pagadors"
+7. Treballem en la branca `pagadors` i mirem que estem a la branca que toca fent `git branch` i si estem a `pagadors` fem commits.
+8. Fem un pull per seguretat si hi ha coses noves, a `pagadors`
+9. Si tot va bé, fem `push`.
+
+### Esquema de branques per maxilim i organitzar el codi
+
+Tindrem dues branques principals. `estable` i `dev`
+1. `estable` és la branca de producció, no es canvia mai, i només es fa merge cap a ella desde `dev`. I només es fa el merge després de veure que `dev` funciona correctament.
+2. De la branca `dev` es faran merges d'altres branquetes com perexemple `pagadors` `crear_factura` `geolocalitzacio` incorporant petits canvis a dev. 
+3. També es poden fer canvis directament a `dev`.
+4. Un cop els canvis de les petites branques s'han incorporat a `dev` el joaquim diu que s'esborra la branca :(. (i els maniqueus diuen que té raó. :/)
+```
+    *   | 
+    | \ | 
+    |  \*
+    |   *   
+    |   | \ 
+    |   |  \
+    |   |   *
+    |   *   *
+    *   |   *
+    | \ * / |
+    |  \|/  |
+    *   *   *
+    | \ | / |
+    |  \|/ gelocalització
+    |   *
+    |   dev
+    |
+  estable
+```
