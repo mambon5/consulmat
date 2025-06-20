@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -145,7 +146,7 @@ class DataProcessingConsent(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     consent_type = db.Column(db.String(50), nullable=False)
     granted = db.Column(db.Boolean, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")))    
     ip_address = db.Column(db.String(45), nullable=True)
 
 @login_manager.user_loader

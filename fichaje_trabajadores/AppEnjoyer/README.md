@@ -118,7 +118,20 @@ Este proyecto está bajo la licencia MIT.
 Instruccions de lectura:
 
 1. `git status -sb`  Mostra l'estat actual del repositori en el commit on estem ara i les canvis fets que falta commitejar(el HEAD)
-2. `git log` o `git log --graph --pretty=format:\"%C(auto)%h %C(green)%as %C(auto)%d %C(auto)% s\" --date=relative --branches --decorate` (copieu els alies del repository .gitconfig al vostre home, de [.gitconfig joaquim](https://github.com/joaquimbrugues/dotfiles) )
+2. `git log` o `git log --graph --pretty=format:\"%C(auto)%h %C(green)%as %C(auto)%d %C(auto)% s\" --date=relative --branches --decorate` (copieu els alies del repository .gitconfig al vostre home, de [.gitconfig joaquim](https://github.com/joaquimbrugues/dotfiles) ) De fet copiar tot aixo al .gitconfig:
+```
+    [alias]
+	s = status -sb
+	c = commit
+	a = add
+	l = log --graph --pretty=format:\"%C(auto)%h %C(green)%as %C(auto)%d %C(auto)%s\" --date=relative --branches --decorate
+
+    [pull]
+        ff = only
+    [fetch]
+        prune = true
+
+```
 3. `git show 66yhhd` on 66yhhd és el nom del commit o de la branca, mostra tota la informació del commit seleccionat o l'últim commit de la branca o un tag.
 4. `git remote -v` llista tots els servidors que estem seguint
 5. `git branch -a` llista totes les branques locals
