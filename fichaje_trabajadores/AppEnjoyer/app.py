@@ -118,6 +118,22 @@ class Treballador(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class Calendari(db.Model):
+    __tablename__ = 'calendari'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    treballador_id = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
+    dia_setmana = db.Column(db.Enum('Dll','Dm','Dx','Dj','Dv','Ds','Dg', name='dia_setmana_enum'), nullable=False)
+    comunitat_id = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
+    hora_inici = db.Column(db.Time, nullable=False)
+    hora_fi = db.Column(db.Time, nullable=False)
+
+    treballador = db.relationship('Treballador', backref=db.backref('calendari', lazy=True))
+    comunitat = db.relationship('Comunidad', backref=db.backref('calendari', lazy=True))
+
+    def __repr__(self):
+        return f'<Calendari {self.treballador_id} {self.dia_setmana} {self.comunitat_id} {self.hora_inici}-{self.hora_fi}>'
+
 
 
 class Pagador(db.Model):
@@ -718,6 +734,20 @@ def llistar_factures():
 
     factures = Factura.query.order_by(Factura.id_factura.desc()).all()
     return render_template('llistat_factures.html', factures=factures)
+
+
+# ruta veure calendari
+@app.route('/calendari')
+@login_required
+def llistar_calendari():
+    # Opcional: pots filtrar per treballador actual si vols
+    # treballador = Treballador.query.filter_by(id_usuari=current_user.id).first()
+    # entries = Calendari.query.filter_by(treballador_id=treballador.id_treballador).all()
+
+    # O simplement mostrar tots els registres
+    entries = Calendari.query.order_by(Calendari.dia_setmana, Calendari.hora_inici).all()
+    return render_template('llistar_calendari.html', entries=entries)
+
 
 # Ruta per crear una factura nova
 @app.route('/create_factura', methods=['GET', 'POST'])

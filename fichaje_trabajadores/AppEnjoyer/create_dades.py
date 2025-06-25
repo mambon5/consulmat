@@ -1,6 +1,7 @@
-from app import app, db, User, bcrypt, Comunidad, Factura, Treballador, Pagador
+from app import app, db, User, bcrypt, Comunidad, Factura, Treballador, Pagador, Calendari
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from datetime import time
 
 def create_admin_user():
     with app.app_context():
@@ -160,6 +161,52 @@ def create_treballador():
             db.session.rollback()
             print(f"Error al crear treballador: {e}")
 
+
+def create_calendari():
+    with app.app_context():
+        treballador = Treballador.query.first()
+        comunitat = Comunidad.query.first()
+
+        if not treballador:
+            print("Cal crear un treballador abans.")
+            return
+        if not comunitat:
+            print("Cal crear una comunitat abans.")
+            return
+
+        # Exemple: assignem neteja dilluns i dimecres de 9 a 12h
+        dies = ['Dll', 'Dx']
+        hora_inici = time(9, 0)
+        hora_fi = time(12, 0)
+
+        for dia in dies:
+            exists = Calendari.query.filter_by(
+                treballador_id=treballador.id_treballador,
+                dia_setmana=dia,
+                comunitat_id=comunitat.id
+            ).first()
+            if exists:
+                print(f"Ja existeix un registre per {dia}")
+                continue
+
+            nou_registre = Calendari(
+                treballador_id=treballador.id_treballador,
+                dia_setmana=dia,
+                comunitat_id=comunitat.id,
+                hora_inici=hora_inici,
+                hora_fi=hora_fi
+            )
+            db.session.add(nou_registre)
+
+        try:
+            db.session.commit()
+            print("Entrades de calendari creades amb èxit.")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al crear entrades de calendari: {e}")
+
+
+
 if __name__ == '__main__':
     create_admin_user()
     create_employee()
@@ -167,3 +214,4 @@ if __name__ == '__main__':
     create_comunitat()
     create_factura()
     create_treballador()
+    create_calendari()
