@@ -1,7 +1,9 @@
 bcrypt==4.3.0
 blinker==1.9.0
+cffi==1.17.1
 chardet==5.2.0
 click==8.2.1
+cryptography==45.0.5
 Flask==3.1.1
 Flask-Bcrypt==1.0.1
 Flask-Login==0.6.3
@@ -12,6 +14,7 @@ Jinja2==3.1.6
 MarkupSafe==3.0.2
 pillow==11.2.1
 pycountry==24.6.1
+pycparser==2.22
 PyMySQL==1.1.1
 reportlab==4.4.1
 SQLAlchemy==2.0.41
