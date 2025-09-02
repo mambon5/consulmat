@@ -156,6 +156,12 @@ class TimeRecord(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     check_in = db.Column(db.DateTime, nullable=False)
     check_out = db.Column(db.DateTime, nullable=True)
+    check_in_latitude = db.Column(db.Float, nullable=True)
+    check_in_longitude = db.Column(db.Float, nullable=True)
+    check_in_accuracy = db.Column(db.Float, nullable=True)
+    check_out_latitude = db.Column(db.Float, nullable=True)
+    check_out_longitude = db.Column(db.Float, nullable=True)
+    check_out_accuracy = db.Column(db.Float, nullable=True)
 
 class DataProcessingConsent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -310,7 +316,16 @@ def check_in():
     if active_record:
         flash('Ya tienes un registro activo', 'warning')
     else:
-        record = TimeRecord(user_id=current_user.id, check_in=datetime.now())
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        accuracy = request.form.get('accuracy')
+        record = TimeRecord(
+            user_id=current_user.id,
+            check_in=datetime.now(),
+            check_in_latitude=float(latitude) if latitude else None,
+            check_in_longitude=float(longitude) if longitude else None,
+            check_in_accuracy=float(accuracy) if accuracy else None
+        )
         db.session.add(record)
         db.session.commit()
         flash('Registro de entrada exitoso', 'success')
@@ -321,7 +336,13 @@ def check_in():
 def check_out():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if active_record:
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        accuracy = request.form.get('accuracy')
         active_record.check_out = datetime.now()
+        active_record.check_out_latitude = float(latitude) if latitude else None
+        active_record.check_out_longitude = float(longitude) if longitude else None
+        active_record.check_out_accuracy = float(accuracy) if accuracy else None
         db.session.commit()
         flash('Registro de salida exitoso', 'success')
     else:
@@ -761,13 +782,13 @@ def create_factura():
         id_comunitat = request.form.get('id_comunitat')
         tipus_feina = request.form.get('tipus_feina')
         document_de_pago = request.form.get('document_de_pago')
-        regimen_impuestos = request.form.get('regimen_impuestos') or None
+        regimen_impuestos = request.form.get('regimen_impostos') or None
 
         nova_factura = Factura(
             id_comunitat=id_comunitat,
             tipus_feina=tipus_feina,
             document_de_pago=document_de_pago,
-            regimen_impuestos=regimen_impuestos
+            regimen_impostos=regimen_impostos
         )
 
         db.session.add(nova_factura)
