@@ -163,6 +163,35 @@ class TimeRecord(db.Model):
     check_out_longitude = db.Column(db.Float, nullable=True)
     check_out_accuracy = db.Column(db.Float, nullable=True)
 
+     # 🔽 afegim propietats
+    @property
+    def total_pause_seconds(self):
+        return sum(
+            (p.pause_end - p.pause_start).total_seconds()
+            for p in self.pauses if p.pause_end
+        )
+
+    @property
+    def total_pause_hms(self):
+        total = int(self.total_pause_seconds or 0)
+        hours = total // 3600
+        minutes = (total % 3600) // 60
+        seconds = total % 60
+        return f"{hours}:{minutes:02d}:{seconds:02d}"
+
+
+class PauseRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    time_record_id = db.Column(db.Integer, db.ForeignKey('time_record.id'), nullable=False)
+    pause_start = db.Column(db.DateTime, nullable=False)
+    pause_end = db.Column(db.DateTime, nullable=True)
+    pause_date = db.Column(db.Date, nullable=False)  # Nou camp per associar la pausa a un dia
+    # Opcional: geolocalització de la pausa
+    pause_latitude = db.Column(db.Float, nullable=True)
+    pause_longitude = db.Column(db.Float, nullable=True)
+    pause_accuracy = db.Column(db.Float, nullable=True)
+    time_record = db.relationship('TimeRecord', backref=db.backref('pauses', lazy=True))
+
 class DataProcessingConsent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -807,6 +836,55 @@ def create_factura():
 @app.context_processor
 def utility_processor():
     return {'now': datetime.now()}
+
+@app.route('/start_pause', methods=['POST'])
+@login_required
+def start_pause():
+    active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
+    if not active_record:
+        flash('No tienes un registro activo para pausar.', 'warning')
+        return redirect(url_for('index'))
+    open_pause = PauseRecord.query.filter_by(time_record_id=active_record.id, pause_end=None).first()
+    if open_pause:
+        flash('Ya tienes una pausa activa.', 'warning')
+        return redirect(url_for('index'))
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
+    accuracy = request.form.get('accuracy')
+    pause = PauseRecord(
+        time_record_id=active_record.id,
+        pause_start=datetime.now(),
+        pause_date=datetime.now().date(),  # Assigna el dia de la pausa
+        pause_latitude=float(latitude) if latitude else None,
+        pause_longitude=float(longitude) if longitude else None,
+        pause_accuracy=float(accuracy) if accuracy else None
+    )
+    db.session.add(pause)
+    db.session.commit()
+    flash('Pausa iniciada.', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/end_pause', methods=['POST'])
+@login_required
+def end_pause():
+    active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
+    if not active_record:
+        flash('No tienes un registro activo.', 'warning')
+        return redirect(url_for('index'))
+    open_pause = PauseRecord.query.filter_by(time_record_id=active_record.id, pause_end=None).first()
+    if not open_pause:
+        flash('No tienes una pausa activa.', 'warning')
+        return redirect(url_for('index'))
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
+    accuracy = request.form.get('accuracy')
+    open_pause.pause_end = datetime.now()
+    open_pause.pause_latitude = float(latitude) if latitude else open_pause.pause_latitude
+    open_pause.pause_longitude = float(longitude) if longitude else open_pause.pause_longitude
+    open_pause.pause_accuracy = float(accuracy) if accuracy else open_pause.pause_accuracy
+    db.session.commit()
+    flash('Pausa finalitzada.', 'success')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     with app.app_context():
