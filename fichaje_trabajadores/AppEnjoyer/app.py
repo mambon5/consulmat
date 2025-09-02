@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -117,6 +118,22 @@ class Treballador(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class Calendari(db.Model):
+    __tablename__ = 'calendari'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    treballador_id = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
+    dia_setmana = db.Column(db.Enum('Dll','Dm','Dx','Dj','Dv','Ds','Dg', name='dia_setmana_enum'), nullable=False)
+    comunitat_id = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
+    hora_inici = db.Column(db.Time, nullable=False)
+    hora_fi = db.Column(db.Time, nullable=False)
+
+    treballador = db.relationship('Treballador', backref=db.backref('calendari', lazy=True))
+    comunitat = db.relationship('Comunidad', backref=db.backref('calendari', lazy=True))
+
+    def __repr__(self):
+        return f'<Calendari {self.treballador_id} {self.dia_setmana} {self.comunitat_id} {self.hora_inici}-{self.hora_fi}>'
+
 
 
 class Pagador(db.Model):
@@ -139,13 +156,19 @@ class TimeRecord(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     check_in = db.Column(db.DateTime, nullable=False)
     check_out = db.Column(db.DateTime, nullable=True)
+    check_in_latitude = db.Column(db.Float, nullable=True)
+    check_in_longitude = db.Column(db.Float, nullable=True)
+    check_in_accuracy = db.Column(db.Float, nullable=True)
+    check_out_latitude = db.Column(db.Float, nullable=True)
+    check_out_longitude = db.Column(db.Float, nullable=True)
+    check_out_accuracy = db.Column(db.Float, nullable=True)
 
 class DataProcessingConsent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     consent_type = db.Column(db.String(50), nullable=False)
     granted = db.Column(db.Boolean, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")))    
     ip_address = db.Column(db.String(45), nullable=True)
 
 @login_manager.user_loader
@@ -293,7 +316,16 @@ def check_in():
     if active_record:
         flash('Ya tienes un registro activo', 'warning')
     else:
-        record = TimeRecord(user_id=current_user.id, check_in=datetime.now())
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        accuracy = request.form.get('accuracy')
+        record = TimeRecord(
+            user_id=current_user.id,
+            check_in=datetime.now(),
+            check_in_latitude=float(latitude) if latitude else None,
+            check_in_longitude=float(longitude) if longitude else None,
+            check_in_accuracy=float(accuracy) if accuracy else None
+        )
         db.session.add(record)
         db.session.commit()
         flash('Registro de entrada exitoso', 'success')
@@ -304,7 +336,13 @@ def check_in():
 def check_out():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if active_record:
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        accuracy = request.form.get('accuracy')
         active_record.check_out = datetime.now()
+        active_record.check_out_latitude = float(latitude) if latitude else None
+        active_record.check_out_longitude = float(longitude) if longitude else None
+        active_record.check_out_accuracy = float(accuracy) if accuracy else None
         db.session.commit()
         flash('Registro de salida exitoso', 'success')
     else:
@@ -718,6 +756,20 @@ def llistar_factures():
     factures = Factura.query.order_by(Factura.id_factura.desc()).all()
     return render_template('llistat_factures.html', factures=factures)
 
+
+# ruta veure calendari
+@app.route('/calendari')
+@login_required
+def llistar_calendari():
+    # Opcional: pots filtrar per treballador actual si vols
+    # treballador = Treballador.query.filter_by(id_usuari=current_user.id).first()
+    # entries = Calendari.query.filter_by(treballador_id=treballador.id_treballador).all()
+
+    # O simplement mostrar tots els registres
+    entries = Calendari.query.order_by(Calendari.dia_setmana, Calendari.hora_inici).all()
+    return render_template('llistar_calendari.html', entries=entries)
+
+
 # Ruta per crear una factura nova
 @app.route('/create_factura', methods=['GET', 'POST'])
 @login_required
@@ -730,13 +782,13 @@ def create_factura():
         id_comunitat = request.form.get('id_comunitat')
         tipus_feina = request.form.get('tipus_feina')
         document_de_pago = request.form.get('document_de_pago')
-        regimen_impuestos = request.form.get('regimen_impuestos') or None
+        regimen_impuestos = request.form.get('regimen_impostos') or None
 
         nova_factura = Factura(
             id_comunitat=id_comunitat,
             tipus_feina=tipus_feina,
             document_de_pago=document_de_pago,
-            regimen_impuestos=regimen_impuestos
+            regimen_impostos=regimen_impostos
         )
 
         db.session.add(nova_factura)
