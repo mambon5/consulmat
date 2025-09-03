@@ -322,6 +322,78 @@
     </div>
 </div>
 
+<!-- Incidències -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Incidències registrades avui</h4>
+                {% if today_incidencies and today_incidencies|length > 0 %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Categoria</th>
+                            <th>Descripció</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inc in today_incidencies %}
+                        <tr>
+                            <td>{{ inc.time.strftime('%H:%M:%S') }}</td>
+                            <td>{{ inc.category }}</td>
+                            <td>{{ inc.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No s'ha registrat cap incidència avui.</p>
+                {% endif %}
+                {% if active_record %}
+                <button class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#incidenciaModal">
+                    <i class="bi bi-exclamation-diamond"></i> Registrar Incidència
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Modal Incidència -->
+        <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="POST" action="{{ url_for('report_incident') }}">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="incidenciaModalLabel">Registrar Incidència</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tanca"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="category" class="form-label">Categoria</label>
+                    <select class="form-select" id="category" name="category" required>
+                      <option value="Retard">Retard</option>
+                      <option value="Problema tècnic">Problema tècnic</option>
+                      <option value="Incidència laboral">Incidència laboral</option>
+                      <option value="Altres">Altres</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="description" class="form-label">Descripció</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="time" class="form-label">Hora</label>
+                    <input type="time" class="form-control" id="time" name="time" value="{{ now.strftime('%H:%M:%S') }}">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·la</button>
+                  <button type="submit" class="btn btn-danger">Envia</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Fi Incidències -->
+        <!-- Historial de Pauses -->
+
 <script>
 function enviarCheckIn(formId, latId, lonId, accId) {
     if (navigator.geolocation) {

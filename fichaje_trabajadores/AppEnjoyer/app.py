@@ -240,6 +240,16 @@ class EventoLaboral(db.Model):
 
     treballador = db.relationship('Treballador', backref='eventos_laborales')
     comunitat = db.relationship('Comunidad', backref='eventos_laborales')
+class Incidencia(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    time_record_id = db.Column(db.Integer, db.ForeignKey('time_record.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")).date())
+    time = db.Column(db.Time, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")).time())
+    category = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    user = db.relationship('User', backref=db.backref('incidencies', lazy=True))
+    time_record = db.relationship('TimeRecord', backref=db.backref('incidencies', lazy=True))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -377,7 +387,9 @@ def generate_report():
 def index():
     records = TimeRecord.query.filter_by(user_id=current_user.id).order_by(TimeRecord.check_in.desc()).all()
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
-    return render_template('index.html', records=records, active_record=active_record)
+    today = datetime.now(ZoneInfo("Europe/Madrid")).date()
+    today_incidencies = Incidencia.query.filter_by(user_id=current_user.id, date=today).order_by(Incidencia.time.desc()).all()
+    return render_template('index.html', records=records, active_record=active_record, today_incidencies=today_incidencies)
 
 @app.route('/check_in', methods=['POST'])
 @login_required
@@ -1019,6 +1031,32 @@ def end_pause():
     open_pause.pause_accuracy = float(accuracy) if accuracy else open_pause.pause_accuracy
     db.session.commit()
     flash('Pausa finalitzada.', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/report_incident', methods=['POST'])
+@login_required
+def report_incident():
+    active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
+    if not active_record:
+        flash('Has d\'estar registrat per reportar una incidència.', 'warning')
+        return redirect(url_for('index'))
+    category = request.form.get('category')
+    description = request.form.get('description')
+    time = request.form.get('time')
+    # Si l'usuari no edita l'hora, agafem la d'ara
+    if not time:
+        time = datetime.now(ZoneInfo("Europe/Madrid")).time().strftime('%H:%M:%S')
+    incidencia = Incidencia(
+        user_id=current_user.id,
+        time_record_id=active_record.id,
+        date=datetime.now(ZoneInfo("Europe/Madrid")).date(),
+        time=datetime.strptime(time, '%H:%M:%S').time(),
+        category=category,
+        description=description
+    )
+    db.session.add(incidencia)
+    db.session.commit()
+    flash('Incidència registrada correctament.', 'success')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
