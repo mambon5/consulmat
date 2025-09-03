@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Calendario Laboral</h3>
+                </div>
+                <div class="card-body">
+                    {% if treballadors %}
+                    <div class="mb-3">
+                        <form method="get">
+                            <label for="treballador_id" class="form-label">Selecciona trabajador:</label>
+                            <select name="treballador_id" id="treballador_id" class="form-select" onchange="this.form.submit()">
+                                {% for t in treballadors %}
+                                    <option value="{{ t.id_treballador }}" {% if t.id_treballador == treballador_seleccionat.id_treballador %}selected{% endif %}>
+                                        {{ t.user.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar CSS y JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        height: 'auto',
+        events: {{ eventos|tojson | safe }},
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        eventDidMount: function(info) {
+            // Festivos en rojo, trabajo en azul
+            if (
+                info.event.title.includes('Festivo Nacional') ||
+                info.event.title.includes('Festivo Autonómico') ||
+                info.event.title.includes('Festivo Local')
+            ) {
+                info.el.style.backgroundColor = '#e53935';
+                info.el.style.borderColor = '#e53935';
+                info.el.style.color = 'white';
+            } else if (info.event.title.includes('Trabajo')) {
+                info.el.style.backgroundColor = '#1976d2';
+                info.el.style.borderColor = '#1976d2';
+                info.el.style.color = 'white';
+            }
+        }
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

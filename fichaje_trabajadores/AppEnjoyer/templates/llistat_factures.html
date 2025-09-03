@@ -10,6 +10,7 @@
             <th>Tipus de feina</th>
             <th>Document de pagament</th>
             <th>Règim d’impostos</th>
+            <th>Accions</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,11 @@
             <td>{{ factura.tipus_feina }}</td>
             <td>{{ factura.document_de_pago }}</td>
             <td>{{ factura.regimen_impuestos or '-' }}</td>
+            <td>
+                <a href="{{ url_for('download_factura', factura_id=factura.id_factura) }}" class="btn btn-success btn-sm">
+                    Descarregar PDF
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

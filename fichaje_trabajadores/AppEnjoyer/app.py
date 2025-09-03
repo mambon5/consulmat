@@ -14,6 +14,11 @@ from io import BytesIO
 import locale
 import pycountry # per obtenir una llista amb tots els paísos del món
 
+# packages importants er descarregar factures
+from flask import send_file, redirect, url_for, flash
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+import io
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -85,6 +90,15 @@ class Factura(db.Model):
     regimen_impuestos = db.Column(db.String(255), nullable=True)  # pot ser nullable si no sempre s’omple
 
     comunitat = db.relationship('Comunidad', backref='factures', lazy=True)
+
+class LineaFactura(db.Model): # LineaFactura es para ve los detalles legales obligatorios de una factura
+    __tablename__ = 'linea_factura'
+    id = db.Column(db.Integer, primary_key=True)
+    factura_id = db.Column(db.Integer, db.ForeignKey('factures.id_factura'), nullable=False)
+    descripcion = db.Column(db.String(255), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False)
+    precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
+    subtotal = db.Column(db.Numeric(10, 2), nullable=False)
 
 class Treballador(db.Model):
     __tablename__ = 'treballadors'
@@ -199,6 +213,33 @@ class DataProcessingConsent(db.Model):
     granted = db.Column(db.Boolean, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")))    
     ip_address = db.Column(db.String(45), nullable=True)
+
+# calendari laboral: horaris, festius, dies de treball
+
+class HorarioLaboral(db.Model):
+    __tablename__ = 'horarios_laborales'
+    id = db.Column(db.Integer, primary_key=True)
+    id_treballador = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
+    id_comunitat = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
+    dia_semana = db.Column(db.Integer, nullable=False)  # 0=Lunes, 6=Domingo
+    hora_inicio = db.Column(db.Time, nullable=False)
+    hora_fin = db.Column(db.Time, nullable=False)
+
+    treballador = db.relationship('Treballador', backref='horarios_laborales')
+    comunitat = db.relationship('Comunidad', backref='horarios_laborales')
+
+class EventoLaboral(db.Model):
+    __tablename__ = 'eventos_laborales'
+    id = db.Column(db.Integer, primary_key=True)
+    id_treballador = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
+    id_comunitat = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    hora_inicio = db.Column(db.Time, nullable=True)  # Puede ser None si es festivo
+    hora_fin = db.Column(db.Time, nullable=True)
+    tipo_evento = db.Column(db.Enum('trabajo', 'festivo_nacional', 'festivo_autonomico', 'festivo_local', name='tipo_evento_enum'), nullable=False, default='trabajo')
+
+    treballador = db.relationship('Treballador', backref='eventos_laborales')
+    comunitat = db.relationship('Comunidad', backref='eventos_laborales')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -443,6 +484,10 @@ def data_consent():
 def privacy_settings():
     return render_template('privacy_settings.html')
 
+@app.route('/aviso-legal')
+def aviso_legal():
+    return render_template('aviso_legal.html')
+
 @app.route('/export-data')
 @login_required
 def export_data():
@@ -482,6 +527,68 @@ def delete_data():
     
     flash('Confirmación requerida para eliminar datos', 'error')
     return redirect(url_for('privacy_settings'))
+
+@app.route('/calendario-laboral')
+@login_required
+def calendario_laboral():
+    #eventos = []
+    eventos = [
+    {"title": "Trabajo", "start": "2025-09-03T09:00:00", "end": "2025-09-03T17:00:00", "color": "#1976d2"},
+    {"title": "Festivo Nacional", "start": "2025-10-12", "allDay": True, "color": "#e53935"},
+]
+    treballador_id = request.args.get('treballador_id', type=int)
+
+    # Si es admin y selecciona trabajador, muestra ese calendario
+    if current_user.role == 'admin':
+        # Si no se selecciona, muestra el primero
+        if not treballador_id:
+            treballador = Treballador.query.first()
+        else:
+            treballador = Treballador.query.get(treballador_id)
+        # Para el desplegable de selección
+        treballadors = Treballador.query.all()
+    else:
+        # Si es trabajador, solo el suyo
+        treballador = current_user.treballador
+        treballadors = None
+
+    if treballador:
+        eventos_db = EventoLaboral.query.filter_by(id_treballador=treballador.id_treballador).all()
+        horarios_db = HorarioLaboral.query.filter_by(id_treballador=treballador.id_treballador).all()
+    else:
+        eventos_db = []
+        horarios_db = []
+
+    # Eventos puntuales (festivos y días especiales)
+    for evento in eventos_db:
+        eventos.append({
+            "title": evento.tipo_evento.replace('_', ' ').capitalize(),
+            "start": evento.fecha.isoformat(),
+            "allDay": True if not evento.hora_inicio else False,
+            "color": "#e53935" if "festivo" in evento.tipo_evento else "#1976d2"
+        })
+
+    # Horarios recurrentes (Lunes a Viernes, etc.)
+    from calendar import monthrange
+    from datetime import date
+
+    today = date.today()
+    year = today.year
+    month = today.month
+    num_days = monthrange(year, month)[1]
+
+    for horario in horarios_db:
+        for day in range(1, num_days + 1):
+            d = date(year, month, day)
+            if d.weekday() == horario.dia_semana:
+                eventos.append({
+                    "title": "Trabajo",
+                    "start": datetime.combine(d, horario.hora_inicio).isoformat(),
+                    "end": datetime.combine(d, horario.hora_fin).isoformat(),
+                    "color": "#1976d2"
+                })
+
+    return render_template('calendari.html', eventos=eventos, treballadors=treballadors, treballador_seleccionat=treballador)
 
 @app.route('/create_admin', methods=['GET', 'POST'])
 @login_required
@@ -785,19 +892,47 @@ def llistar_factures():
     factures = Factura.query.order_by(Factura.id_factura.desc()).all()
     return render_template('llistat_factures.html', factures=factures)
 
-
-# ruta veure calendari
-@app.route('/calendari')
+# Ruta per descarregar una factura concreta
+@app.route('/factura/<int:factura_id>/download')
 @login_required
-def llistar_calendari():
-    # Opcional: pots filtrar per treballador actual si vols
-    # treballador = Treballador.query.filter_by(id_usuari=current_user.id).first()
-    # entries = Calendari.query.filter_by(treballador_id=treballador.id_treballador).all()
+def download_factura(factura_id):
+    if current_user.role != 'admin':
+        flash('No tens permisos per descarregar factures.', 'danger')
+        return redirect(url_for('llistar_factures'))
 
-    # O simplement mostrar tots els registres
-    entries = Calendari.query.order_by(Calendari.dia_setmana, Calendari.hora_inici).all()
-    return render_template('llistar_calendari.html', entries=entries)
+    factura = Factura.query.get_or_404(factura_id)
+    import io
+    from reportlab.lib.pagesizes import A4
+    from reportlab.pdfgen import canvas
 
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    y = 800
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, y, f"Factura ID: {factura.id_factura}")
+
+    p.setFont("Helvetica", 12)
+    y -= 30
+    p.drawString(100, y, f"Comunitat: {factura.comunitat.nombre}")
+    y -= 20
+    p.drawString(100, y, f"Tipus de feina: {factura.tipus_feina}")
+    y -= 20
+    p.drawString(100, y, f"Document de pagament: {factura.document_de_pago}")
+    y -= 20
+    p.drawString(100, y, f"Règim d’impostos: {factura.regimen_impuestos or '-'}")
+    # Afegeix més camps si cal
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    from flask import send_file
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f'factura_{factura.id_factura}.pdf',
+        mimetype='application/pdf'
+    )
 
 # Ruta per crear una factura nova
 @app.route('/create_factura', methods=['GET', 'POST'])
