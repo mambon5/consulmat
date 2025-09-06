@@ -12,3 +12,4 @@ instance/
 *.sqlite3
 .DS_Store
 employee-time-tracker.zip
+.env

@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
+from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+from dotenv import load_dotenv #env per no tenir les contrasenyes visibles
 import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -12,6 +14,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO
 import locale
+import random
 import pycountry # per obtenir una llista amb tots els paísos del món
 
 # packages importants er descarregar factures
@@ -20,28 +23,99 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import io
 
+
+load_dotenv()
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 
-from urllib.parse import quote_plus
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
+mail = Mail(app)
+
+# per tema enviar email confirmacio al crear compte
+def send_verification_email(email, code):
+    msg = Message('Código de verificación', sender=app.config['MAIL_USERNAME'], recipients=[email])
+    msg.body = f'Tu código de verificación es: {code}'
+    mail.send(msg)
+    
 # Configuración de la base de datos
 if os.environ.get('DATABASE_URL'):
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
-    # Connexió local a MySQL
-    USER = 'anamas'
-    PASSWORD = quote_plus('qmaxi_23')
-    HOST = 'localhost'
-    DB_NAME = 'maxilim_db'
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DB_NAME}'
+    DB_USER = os.environ.get('DB_USER')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD')
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_NAME = os.environ.get('DB_NAME')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 bcrypt = Bcrypt(app)
+
+# Configuración Flask-Mail; remitent des del qual s'envia el mail de confirmació al crear un compte
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    email_sent = False
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+
+        # Si el usuario está intentando verificar el email
+        if 'email_code' in request.form:
+            user = User.query.filter_by(username=username, email=email).first()
+            if user and request.form['email_code'] == user.email_code:
+                user.email_verified = True
+                db.session.commit()
+                flash('Email verificado y cuenta creada correctamente.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('Código de verificación incorrecto.', 'danger')
+                email_sent = True
+                return render_template('register.html', email_sent=email_sent, username=username, name=name, email=email, phone=phone)
+
+        # Validación: usuario único
+        if User.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe.', 'danger')
+            return render_template('register.html')
+
+        # Generar código de verificación
+        email_code = str(random.randint(100000, 999999))
+
+        # Guardar usuario temporalmente (no verificado)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        user = User(
+            username=username,
+            password=hashed_password,
+            name=name,
+            email=email,
+            phone=phone,
+            email_code=email_code,  # Usamos el mismo campo para el código
+            data_consent=False,
+            consent_date=None,
+            data_retention_days=1460
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        # Enviar email
+        send_verification_email(email, email_code)
+        email_sent = True
+        flash('Se ha enviado un email de verificación a tu correo.', 'info')
+        return render_template('register.html', email_sent=email_sent, username=username, name=name, email=email, phone=phone)
+    return render_template('register.html')
 
 # Configuración de locale
 try:
@@ -53,12 +127,16 @@ except locale.Error:
         # Si no se puede configurar el locale español, usamos el predeterminado
         locale.setlocale(locale.LC_TIME, '')
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email_code = db.Column(db.String(6), nullable=True)
+    email_verified = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(20), nullable=False, default='employee')
     data_consent = db.Column(db.Boolean, nullable=False, default=False)
     consent_date = db.Column(db.DateTime, nullable=True)
@@ -464,6 +542,15 @@ def logout():
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy_policy.html')
+
+@app.before_request
+def require_data_consent():
+    # Solo para usuarios autenticados y rutas privadas
+    if current_user.is_authenticated:
+        # Excluye rutas públicas y la propia ruta de consentimiento
+        allowed_routes = ['data_consent', 'logout', 'privacy_policy', 'aviso_legal', 'static']
+        if not current_user.data_consent and request.endpoint not in allowed_routes:
+            return redirect(url_for('data_consent'))
 
 @app.route('/data-consent', methods=['GET', 'POST'])
 @login_required
