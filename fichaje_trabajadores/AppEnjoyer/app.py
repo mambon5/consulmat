@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, flash, send_file, jsonify
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -24,13 +24,18 @@ from reportlab.pdfgen import canvas
 import io
 
 
-load_dotenv()
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
+load_dotenv() # carregar variables d'entorn des del fitxer .env
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+# Configuración Flask-Mail; remitent des del qual s'envia el mail de confirmació al crear un compte
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True # TLS sistema de seguretat per xifrar la info quan envies correu de verificacio que s'usa de forma standard : Transport Layer Security
+app.config['MAIL_USE_SSL'] = False  # SSL desactivat - sistema de seguretat antic : Secure Sockets Layer
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 mail = Mail(app)
 
@@ -56,85 +61,85 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 bcrypt = Bcrypt(app)
 
-# Configuración Flask-Mail; remitent des del qual s'envia el mail de confirmació al crear un compte
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-
+# nou codi register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     email_sent = False
     if request.method == 'POST':
+        # Si el usuario está verificando el código
+        if 'email_code' in request.form:
+            reg_data = session.get('reg_data')
+            if not reg_data:
+                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                return redirect(url_for('register'))
+            if request.form['email_code'] == reg_data['email_code']:
+                # Crear usuario en la base de datos ahora
+                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
+                user = User(
+                    username=reg_data['username'],
+                    password=hashed_password,
+                    name=reg_data['name'],
+                    email=reg_data['email'],
+                    phone=reg_data['phone'],
+                    email_verified=True,
+                    data_consent=False,
+                    consent_date=None,
+                    data_retention_days=1460
+                )
+                db.session.add(user)
+                db.session.commit()
+                session.pop('reg_data', None)
+                flash('Email verificado y cuenta creada correctamente.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('Código de verificación incorrecto.', 'danger')
+                email_sent = True
+                return render_template('register.html', email_sent=email_sent)
+        
+        # Primer paso: registro
         username = request.form['username']
         password = request.form['password']
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
 
-        # Si el usuario está intentando verificar el email
-        if 'email_code' in request.form:
-            user = User.query.filter_by(username=username, email=email).first()
-            if user and request.form['email_code'] == user.email_code:
-                user.email_verified = True
-                db.session.commit()
-                flash('Email verificado y cuenta creada correctamente.', 'success')
-                return redirect(url_for('login'))
-            else:
-                flash('Código de verificación incorrecto.', 'danger')
-                email_sent = True
-                return render_template('register.html', email_sent=email_sent, username=username, name=name, email=email, phone=phone)
+        # Validación: email único
+        if User.query.filter_by(email=email).first():
+            flash('El email ya está registrado.', 'danger')
+            return render_template('register.html', username=username, name=name, phone=phone)
 
-        # Validación: usuario único
+        # Validación: username único
         if User.query.filter_by(username=username).first():
             flash('El nombre de usuario ya existe.', 'danger')
-            return render_template('register.html')
+            return render_template('register.html', name=name, email=email, phone=phone)
 
         # Generar código de verificación
         email_code = str(random.randint(100000, 999999))
 
-        # Guardar usuario temporalmente (no verificado)
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        user = User(
-            username=username,
-            password=hashed_password,
-            name=name,
-            email=email,
-            phone=phone,
-            email_code=email_code,  # Usamos el mismo campo para el código
-            data_consent=False,
-            consent_date=None,
-            data_retention_days=1460
-        )
-        db.session.add(user)
-        db.session.commit()
+        # Guardar datos en sesión
+        session['reg_data'] = {
+            'username': username,
+            'password': password,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'email_code': email_code
+        }
 
         # Enviar email
         send_verification_email(email, email_code)
         email_sent = True
         flash('Se ha enviado un email de verificación a tu correo.', 'info')
-        return render_template('register.html', email_sent=email_sent, username=username, name=name, email=email, phone=phone)
+        return render_template('register.html', email_sent=email_sent)
     return render_template('register.html')
-
-# Configuración de locale
-try:
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_TIME, 'es_ES')
-    except locale.Error:
-        # Si no se puede configurar el locale español, usamos el predeterminado
-        locale.setlocale(locale.LC_TIME, '')
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
+    name = db.Column(db.String(120), nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
+    phone = db.Column(db.String(20), nullable=True)
     email_code = db.Column(db.String(6), nullable=True)
     email_verified = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(20), nullable=False, default='employee')

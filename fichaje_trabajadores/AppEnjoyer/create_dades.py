@@ -15,6 +15,7 @@ def create_admin_user():
             password=hashed_password,
             name='Jose Merchan',
             email='quality@maxilim.es',
+            phone='600123456',
             data_consent=True,
             consent_date=datetime.utcnow(),
             data_retention_days=365,
@@ -42,6 +43,7 @@ def create_employee():
             password=hashed_password,
             role='employee',
             data_consent=True,
+            phone='600123456',
             consent_date=datetime.now(ZoneInfo("Europe/Madrid")),
             data_retention_days=365
         )
