@@ -61,78 +61,6 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 bcrypt = Bcrypt(app)
 
-# nou codi register
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    email_sent = False
-    if request.method == 'POST':
-        # Si el usuario está verificando el código
-        if 'email_code' in request.form:
-            reg_data = session.get('reg_data')
-            if not reg_data:
-                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
-                return redirect(url_for('register'))
-            if request.form['email_code'] == reg_data['email_code']:
-                # Crear usuario en la base de datos ahora
-                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
-                user = User(
-                    username=reg_data['username'],
-                    password=hashed_password,
-                    name=reg_data['name'],
-                    email=reg_data['email'],
-                    phone=reg_data['phone'],
-                    email_verified=True,
-                    data_consent=False,
-                    consent_date=None,
-                    data_retention_days=1460
-                )
-                db.session.add(user)
-                db.session.commit()
-                session.pop('reg_data', None)
-                flash('Email verificado y cuenta creada correctamente.', 'success')
-                return redirect(url_for('login'))
-            else:
-                flash('Código de verificación incorrecto.', 'danger')
-                email_sent = True
-                return render_template('register.html', email_sent=email_sent)
-        
-        # Primer paso: registro
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-
-        # Validación: email único
-        if User.query.filter_by(email=email).first():
-            flash('El email ya está registrado.', 'danger')
-            return render_template('register.html', username=username, name=name, phone=phone)
-
-        # Validación: username único
-        if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.', 'danger')
-            return render_template('register.html', name=name, email=email, phone=phone)
-
-        # Generar código de verificación
-        email_code = str(random.randint(100000, 999999))
-
-        # Guardar datos en sesión
-        session['reg_data'] = {
-            'username': username,
-            'password': password,
-            'name': name,
-            'email': email,
-            'phone': phone,
-            'email_code': email_code
-        }
-
-        # Enviar email
-        send_verification_email(email, email_code)
-        email_sent = True
-        flash('Se ha enviado un email de verificación a tu correo.', 'info')
-        return render_template('register.html', email_sent=email_sent)
-    return render_template('register.html')
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -430,6 +358,80 @@ def generate_pdf_report(records, user, report_type):
     doc.build(elements)
     buffer.seek(0)
     return buffer
+
+
+# nou codi register
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    email_sent = False
+    if request.method == 'POST':
+        # Si el usuario está verificando el código
+        if 'email_code' in request.form:
+            reg_data = session.get('reg_data')
+            if not reg_data:
+                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                return redirect(url_for('register'))
+            if request.form['email_code'] == reg_data['email_code']:
+                # Crear usuario en la base de datos ahora
+                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
+                user = User(
+                    username=reg_data['username'],
+                    password=hashed_password,
+                    name=reg_data['name'],
+                    email=reg_data['email'],
+                    phone=reg_data['phone'],
+                    email_verified=True,
+                    data_consent=False,
+                    consent_date=None,
+                    data_retention_days=1460
+                )
+                db.session.add(user)
+                db.session.commit()
+                session.pop('reg_data', None)
+                flash('Email verificado y cuenta creada correctamente.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('Código de verificación incorrecto.', 'danger')
+                email_sent = True
+                return render_template('register.html', email_sent=email_sent)
+        
+        # Primer paso: registro
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+
+        # Validación: email único
+        if User.query.filter_by(email=email).first():
+            flash('El email ya está registrado.', 'danger')
+            return render_template('register.html', username=username, name=name, phone=phone)
+
+        # Validación: username único
+        if User.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe.', 'danger')
+            return render_template('register.html', name=name, email=email, phone=phone)
+
+        # Generar código de verificación
+        email_code = str(random.randint(100000, 999999))
+
+        # Guardar datos en sesión
+        session['reg_data'] = {
+            'username': username,
+            'password': password,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'email_code': email_code
+        }
+
+        # Enviar email
+        send_verification_email(email, email_code)
+        email_sent = True
+        flash('Se ha enviado un email de verificación a tu correo.', 'info')
+        return render_template('register.html', email_sent=email_sent)
+    return render_template('register.html')
+
 
 @app.route('/generate_report', methods=['GET', 'POST'])
 @login_required
@@ -740,6 +742,7 @@ def create_admin():
 
 @app.route('/create_empleat', methods=['GET', 'POST'])
 @login_required
+
 def create_empleat():
     # Verificar si el usuario actual es admin
     if not current_user.role == 'admin':
@@ -780,7 +783,7 @@ def create_empleat():
             flash('Error al crear el empleado.', 'danger')
             return redirect(url_for('create_empleat'))
     
-    return render_template('create_empleat.html')
+    return render_template('register.html')
 
 @app.route('/create_treballador', methods=['GET', 'POST'])
 @login_required
