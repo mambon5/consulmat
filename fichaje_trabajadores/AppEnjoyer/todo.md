@@ -26,3 +26,9 @@
 2. Assignar treballador a comunitat
 3. Afegir codis postals a les comunitats
 4. Afegir administradors a les comunitats
+
+
+# 22 09 2025 to do
+
+1. Crear taula empreses, i definir una contrasenya per empresa. Pensar en general com assegurar-nos que cada empresa pot registrar els seus usuaries, treballadors i admins.
+2. Reordenar codi pq hi hagi un boto per crear treballador, usuari i admin
