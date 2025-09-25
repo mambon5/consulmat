@@ -10,7 +10,10 @@
                         {% if email_sent %}
                             Verifica tu correo electrónico
                         {% else %}
-                            Crear Nueva Cuenta
+                            {{ page_title }}
+                            {% if empresa %}
+                                <p>{{ empresa.nom_empresa }}</p>
+                            {% endif %}
                         {% endif %}
                     </h3>
                 </div>
@@ -20,9 +23,6 @@
                             <div class="form-group mb-3">
                                 <label for="email_code">Código email de Verificación</label>
                                 <input type="text" class="form-control" id="email_code" name="email_code" required>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Verificar código</button>
                             </div>
                         {% else %}
                             <div class="form-group mb-3">
@@ -45,11 +45,27 @@
                                 <label for="phone">Teléfono</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" required>
                             </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Registrarse</button>
-                                <a href="{{ url_for('login') }}" class="btn btn-secondary">Cancelar</a>
-                            </div>
+
+                            {% if show_role_dropdown %}
+                                <div class="form-group mb-3">
+                                    <label for="role">Rol</label>
+                                    <select class="form-control" id="role" name="role">
+                                        <option value="employee" {% if role=="employee" %}selected{% endif %}>Empleado</option>
+                                        <option value="admin" {% if role=="admin" %}selected{% endif %}>Administrador</option>
+                                    </select>
+                                </div>
+                            {% else %}
+                                <input type="hidden" name="role" value="{{ role }}">
+                            {% endif %}
+
                         {% endif %}
+
+                        {% block extra_fields %}{% endblock %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                            <a href="{{ url_for('login') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
                     </form>
                 </div>
             </div>

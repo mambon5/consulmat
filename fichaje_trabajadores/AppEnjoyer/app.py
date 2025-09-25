@@ -22,6 +22,7 @@ from flask import send_file, redirect, url_for, flash
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import io
+from utils import get_serializer
 
 
 load_dotenv() # carregar variables d'entorn des del fitxer .env
@@ -45,6 +46,32 @@ def send_verification_email(email, code):
     msg.body = f'Tu código de verificación es: {code}'
     mail.send(msg)
     
+
+def send_empresa_registration_email(email, link):
+    """
+    Envia l'enllaç de registre d'empresa amb token a l'email.
+    """
+    msg = Message(
+        subject='Enllaç per registrar la teva empresa',
+        sender=app.config['MAIL_USERNAME'],
+        recipients=[email]
+    )
+    msg.body = f"""
+Hola,
+
+S'ha generat un enllaç únic per registrar la teva empresa.
+Pots utilitzar-lo per crear la teva empresa al sistema:
+
+{link}
+
+Aquest enllaç caduca en 24 hores.
+
+Salutacions,
+L'equip de Consulmat
+"""
+    mail.send(msg)
+
+
 # Configuración de la base de datos
 if os.environ.get('DATABASE_URL'):
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -63,6 +90,8 @@ bcrypt = Bcrypt(app)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    empresa_id = db.Column(db.Integer, db.ForeignKey('empreses.id'), nullable=False)
+
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     name = db.Column(db.String(120), nullable=True)
@@ -74,6 +103,7 @@ class User(UserMixin, db.Model):
     data_consent = db.Column(db.Boolean, nullable=False, default=False)
     consent_date = db.Column(db.DateTime, nullable=True)
     data_retention_days = db.Column(db.Integer, nullable=False, default=365)
+
     records = db.relationship('TimeRecord', backref='user', lazy=True)
     treballador = db.relationship('Treballador', backref='user', uselist=False)
 
@@ -111,11 +141,30 @@ class LineaFactura(db.Model): # LineaFactura es para ve los detalles legales obl
     precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
     subtotal = db.Column(db.Numeric(10, 2), nullable=False)
 
+class Empresa(db.Model):
+    __tablename__ = 'empreses'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    password = db.Column(db.String(120), nullable=False)
+    nom = db.Column(db.String(255), nullable=False, unique=True)
+    numero_fiscal = db.Column(db.String(50), nullable=False, unique=True)
+    adreca = db.Column(db.String(255), nullable=True)
+    correu_gerent = db.Column(db.String(255), nullable=True)
+    telefon_gerent = db.Column(db.String(20), nullable=True)
+    data_registre = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relacions
+    usuaris = db.relationship('User', backref='empresa', lazy=True)
+    treballadors = db.relationship('Treballador', backref='empresa', lazy=True)
+
+
+
 class Treballador(db.Model):
     __tablename__ = 'treballadors'
 
     id_treballador = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_usuari = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    empresa_id = db.Column(db.Integer, db.ForeignKey('empreses.id'), nullable=False)
 
     departament = db.Column(
         db.Enum('parkings', 'comunitats', 'oficines', name='departament_enum'),
@@ -124,24 +173,16 @@ class Treballador(db.Model):
     adreca = db.Column(db.String(255), nullable=True)
     ciutat = db.Column(db.String(100), nullable=True)
     codi_postal = db.Column(db.Integer, nullable=True)
-
-    sexe = db.Column(
-        db.Enum('f', 'm', 'no', name='sexe_enum'),
-        nullable=True
-    )
+    sexe = db.Column(db.Enum('f', 'm', 'no', name='sexe_enum'), nullable=True)
     nacionalitat = db.Column(db.String(100), nullable=True)
     edat = db.Column(db.Integer, nullable=True)
-
-    carnet_conduir = db.Column(
-        db.Enum('si', 'no', name='carnet_conduir_enum'),
-        nullable=True
-    )
-    vehicle_propi = db.Column(
-        db.Enum('si', 'no', name='vehicle_propi_enum'),
-        nullable=True
-    )
-
+    carnet_conduir = db.Column(db.Enum('si', 'no', name='carnet_conduir_enum'), nullable=True)
+    vehicle_propi = db.Column(db.Enum('si', 'no', name='vehicle_propi_enum'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+
+
+
 
 class Calendari(db.Model):
     __tablename__ = 'calendari'
@@ -360,77 +401,6 @@ def generate_pdf_report(records, user, report_type):
     return buffer
 
 
-# nou codi register
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    email_sent = False
-    if request.method == 'POST':
-        # Si el usuario está verificando el código
-        if 'email_code' in request.form:
-            reg_data = session.get('reg_data')
-            if not reg_data:
-                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
-                return redirect(url_for('register'))
-            if request.form['email_code'] == reg_data['email_code']:
-                # Crear usuario en la base de datos ahora
-                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
-                user = User(
-                    username=reg_data['username'],
-                    password=hashed_password,
-                    name=reg_data['name'],
-                    email=reg_data['email'],
-                    phone=reg_data['phone'],
-                    email_verified=True,
-                    data_consent=False,
-                    consent_date=None,
-                    data_retention_days=1460
-                )
-                db.session.add(user)
-                db.session.commit()
-                session.pop('reg_data', None)
-                flash('Email verificado y cuenta creada correctamente.', 'success')
-                return redirect(url_for('login'))
-            else:
-                flash('Código de verificación incorrecto.', 'danger')
-                email_sent = True
-                return render_template('register.html', email_sent=email_sent)
-        
-        # Primer paso: registro
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-
-        # Validación: email único
-        if User.query.filter_by(email=email).first():
-            flash('El email ya está registrado.', 'danger')
-            return render_template('register.html', username=username, name=name, phone=phone)
-
-        # Validación: username único
-        if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.', 'danger')
-            return render_template('register.html', name=name, email=email, phone=phone)
-
-        # Generar código de verificación
-        email_code = str(random.randint(100000, 999999))
-
-        # Guardar datos en sesión
-        session['reg_data'] = {
-            'username': username,
-            'password': password,
-            'name': name,
-            'email': email,
-            'phone': phone,
-            'email_code': email_code
-        }
-
-        # Enviar email
-        send_verification_email(email, email_code)
-        email_sent = True
-        flash('Se ha enviado un email de verificación a tu correo.', 'info')
-        return render_template('register.html', email_sent=email_sent)
-    return render_template('register.html')
 
 
 @app.route('/generate_report', methods=['GET', 'POST'])
@@ -696,165 +666,215 @@ def calendario_laboral():
 
     return render_template('calendari.html', eventos=eventos, treballadors=treballadors, treballador_seleccionat=treballador)
 
-@app.route('/create_admin', methods=['GET', 'POST'])
+
+def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
+                      template_name='create_user.html', page_title="Crear Usuario",
+                      show_role_dropdown=True):
+    email_sent = False
+
+    empresa = None
+    if empresa_id:
+        empresa = Empresa.query.get(empresa_id)
+        if empresa:
+            page_title = f"{page_title} - {empresa.nom}"
+
+    if request.method == 'POST':
+        # POST de verificació del codi email
+        if 'email_code' in request.form:
+            reg_data = session.get('reg_data')
+            if not reg_data:
+                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                return redirect(request.url)
+            if request.form['email_code'] == reg_data['email_code']:
+                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
+                user = User(
+                    username=reg_data['username'],
+                    password=hashed_password,
+                    name=reg_data['name'],
+                    email=reg_data['email'],
+                    phone=reg_data['phone'],
+                    email_verified=True,
+                    role=reg_data['role'],  # 👈 rol guardat a sessió
+                    data_consent=True,
+                    consent_date=datetime.utcnow(),
+                    data_retention_days=1460,
+                    empresa_id=empresa_id
+                )
+                db.session.add(user)
+                db.session.commit()
+
+                # Si és treballador, crear entrada a Treballador
+                if reg_data['role'] == "employee" and extra_fields:
+                    nou_treballador = Treballador(
+                        id_usuari=user.id,
+                        empresa_id=empresa_id,
+                        **extra_fields
+                    )
+                    db.session.add(nou_treballador)
+                    db.session.commit()
+
+                session.pop('reg_data', None)
+                flash(f'Cuenta creada correctamente como {reg_data["role"]}.', 'success')
+                return redirect(url_for('index'))
+            else:
+                flash('Código de verificación incorrecto.', 'danger')
+                email_sent = True
+                return render_template(template_name, email_sent=email_sent,
+                                       page_title=page_title, empresa=empresa,
+                                       role=role, show_role_dropdown=show_role_dropdown)
+
+        # Primer pas: registre
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+
+        # Capturar el rol del dropdown si s'usa
+        role = request.form.get('role', role)
+
+        # Validacions
+        if User.query.filter_by(email=email).first():
+            flash('El email ya está registrado.', 'danger')
+            return render_template(template_name, username=username, name=name, phone=phone,
+                                   page_title=page_title, empresa=empresa,
+                                   role=role, show_role_dropdown=show_role_dropdown)
+
+        if User.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe.', 'danger')
+            return render_template(template_name, name=name, email=email, phone=phone,
+                                   page_title=page_title, empresa=empresa,
+                                   role=role, show_role_dropdown=show_role_dropdown)
+
+        # Generar codi de verificació
+        email_code = str(random.randint(100000, 999999))
+
+        session['reg_data'] = {
+            'username': username,
+            'password': password,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'email_code': email_code,
+            'role': role
+        }
+
+        send_verification_email(email, email_code)
+        email_sent = True
+        flash('Se ha enviado un email de verificación a tu correo.', 'info')
+        return render_template(template_name, email_sent=email_sent,
+                               page_title=page_title, empresa=empresa,
+                               role=role, show_role_dropdown=show_role_dropdown)
+
+    # GET
+    return render_template(template_name, email_sent=email_sent,
+                           page_title=page_title, empresa=empresa,
+                           role=role, show_role_dropdown=show_role_dropdown)
+
+
+
+
+# Crear usuari genèric
+@app.route('/create_user/<int:empresa_id>', methods=['GET', 'POST'])
 @login_required
-def create_admin():
-    # Verificar si el usuario actual es admin
-    if not current_user.role == 'admin':
+def create_user(empresa_id):
+    return create_user_logic(role="employee", empresa_id=empresa_id,
+                             template_name='create_user.html',
+                             page_title="Crear Usuario",
+                             show_role_dropdown=True)
+
+# Crear admin (només per admins)
+@app.route('/create_admin/<int:empresa_id>', methods=['GET', 'POST'])
+@login_required
+def create_admin(empresa_id):
+    if current_user.role != 'admin':
         flash('No tienes permisos para crear administradores.', 'danger')
         return redirect(url_for('index'))
 
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        name = request.form.get('name')
-        email = request.form.get('email')
-        
-        # Verificar si el usuario ya existe
-        if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.', 'danger')
-            return redirect(url_for('create_admin'))
-        
-        # Crear nuevo usuario admin
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_admin = User(
-            username=username,
-            password=hashed_password,
-            name=name,
-            email=email,
-            role='admin',
-            data_consent=True,
-            consent_date=datetime.utcnow(),
-            data_retention_days=365
-        )
-        
-        db.session.add(new_admin)
-        try:
-            db.session.commit()
-            flash('Administrador creado exitosamente.', 'success')
-            return redirect(url_for('index'))
-        except Exception as e:
-            db.session.rollback()
-            flash('Error al crear el administrador.', 'danger')
-            return redirect(url_for('create_admin'))
-    
-    return render_template('create_admin.html')
+    return create_user_logic(role="admin", empresa_id=empresa_id,
+                             template_name='create_user.html',
+                             page_title="Crear Administrador",
+                             show_role_dropdown=True)
 
-@app.route('/create_empleat', methods=['GET', 'POST'])
+
+# Crear treballador (admin només)
+@app.route('/create_treballador/<int:empresa_id>', methods=['GET', 'POST'])
 @login_required
-
-def create_empleat():
-    # Verificar si el usuario actual es admin
-    if not current_user.role == 'admin':
-        flash('No tienes permisos para crear empleados.', 'danger')
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        name = request.form.get('name')
-        email = request.form.get('email')
-        
-        # Verificar si el usuario ya existe
-        if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.', 'danger')
-            return redirect(url_for('create_empleat'))
-        
-        # Crear nuevo usuario admin
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_admin = User(
-            username=username,
-            password=hashed_password,
-            name=name,
-            email=email,
-            role='employee',
-            data_consent=True,
-            consent_date=datetime.utcnow(),
-            data_retention_days=365
-        )
-        
-        db.session.add(new_admin)
-        try:
-            db.session.commit()
-            flash('Empleado creado exitosamente.', 'success')
-            return redirect(url_for('index'))
-        except Exception as e:
-            db.session.rollback()
-            flash('Error al crear el empleado.', 'danger')
-            return redirect(url_for('create_empleat'))
-    
-    return render_template('register.html')
-
-@app.route('/create_treballador', methods=['GET', 'POST'])
-@login_required
-def create_treballador():
-    # Solo los administradores pueden crear trabajadores
+def create_treballador(empresa_id):
     if current_user.role != 'admin':
         flash('No tienes permisos para crear trabajadores.', 'danger')
         return redirect(url_for('index'))
 
-    if request.method == 'POST':
-        # Datos del usuario
-        username = request.form.get('username')
-        password = request.form.get('password')
-        name = request.form.get('name')
-        email = request.form.get('email')
-
-        # Verificar que el usuario no exista
-        if User.query.filter_by(username=username).first():
-            flash('Ya existe un usuario con ese nombre.', 'danger')
-            return redirect(url_for('create_treballador'))
-
-        # Crear usuario
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        nuevo_usuario = User(
-            username=username,
-            password=hashed_password,
-            name=name,
-            email=email,
-            role='employee',
-            data_consent=True,
-            consent_date=datetime.utcnow(),
-        )
-
-        db.session.add(nuevo_usuario)
-        db.session.commit()
-
-        # Datos del trabajador
-        departament = request.form.get('departament')
-        adreca = request.form.get('adreca')
-        ciutat = request.form.get('ciutat')
-        codi_postal = request.form.get('codi_postal')
-        sexe = request.form.get('sexe')
-        nacionalitat = request.form.get('nacionalitat')
-        edat = request.form.get('edat')
-        carnet_conduir = request.form.get('carnet_conduir')
-        vehicle_propi = request.form.get('vehicle_propi')
-
-        nou_treballador = Treballador(
-            id_usuari=nuevo_usuario.id,
-            departament=departament,
-            adreca=adreca,
-            ciutat=ciutat,
-            codi_postal=int(codi_postal) if codi_postal else None,
-            sexe=sexe,
-            nacionalitat=nacionalitat,
-            edat=int(edat) if edat else None,
-            carnet_conduir=carnet_conduir,
-            vehicle_propi=vehicle_propi,
-            created_at=datetime.utcnow()
-        )
-
-        db.session.add(nou_treballador)
-        db.session.commit()
-
-        flash('Trabajador creado exitosamente.', 'success')
-        return redirect(url_for('index'))
-    
-    # Obtenir tots els països
     paisos = [{'code': country.alpha_2, 'name': country.name} for country in pycountry.countries]
 
-    return render_template('create_treballador.html', paisos = paisos)
+    extra_fields = None
+    if request.method == 'POST':
+        extra_fields = {
+            "departament": request.form.get('departament'),
+            "adreca": request.form.get('adreca'),
+            "ciutat": request.form.get('ciutat'),
+            "codi_postal": int(request.form.get('codi_postal')) if request.form.get('codi_postal') else None,
+            "sexe": request.form.get('sexe'),
+            "nacionalitat": request.form.get('nacionalitat'),
+            "edat": int(request.form.get('edat')) if request.form.get('edat') else None,
+            "carnet_conduir": request.form.get('carnet_conduir'),
+            "vehicle_propi": request.form.get('vehicle_propi'),
+            "created_at": datetime.utcnow()
+        }
+
+    return create_user_logic(role="employee", empresa_id=empresa_id,
+                             extra_fields=extra_fields,
+                             template_name='create_treballador.html',
+                             page_title="Crear Treballador",
+                             show_role_dropdown=False)  # ✅ no mostrar dropdown
+
+
+
+@app.route('/register_first_admin/<int:empresa_id>', methods=['GET', 'POST'])
+def register_first_admin(empresa_id):
+    empresa = Empresa.query.get_or_404(empresa_id)
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        empresa_password = request.form['empresa_password']
+
+        # Validar contrasenya empresa
+        if not bcrypt.check_password_hash(empresa.password, empresa_password):
+            flash('Contrasenya de l’empresa incorrecta.', 'danger')
+            return render_template('register_first_admin.html', empresa=empresa)
+
+        # Comprovar que no hi hagi ja un admin
+        if User.query.filter_by(empresa_id=empresa.id, role='admin').first():
+            flash('Ja existeix un administrador per aquesta empresa.', 'danger')
+            return redirect(url_for('login'))
+
+        hashed_password = bcrypt.generate_password_hash(password)
+
+        admin = User(
+            username=username,
+            password=hashed_password,
+            role='admin',
+            email=request.form['email'],
+            name=request.form['name'],
+            phone=request.form['phone'],
+            empresa_id=empresa.id,
+            data_consent=True,
+            consent_date=datetime.utcnow(),
+            data_retention_days=365
+        )
+
+        db.session.add(admin)
+        db.session.commit()
+
+        # 🔑 Login automàtic
+        login_user(admin)
+
+        flash('Administrador creat correctament.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register_first_admin.html', empresa=empresa)
+
 
 
 @app.route('/create_comunitat', methods=['GET', 'POST'])
@@ -905,6 +925,81 @@ def create_comunitat():
     return render_template('create_comunitat.html')
 
 
+def create_empresa_logic(template_name='create_empresa.html', page_title="Crear Empresa"):
+    email_sent = False
+
+    if request.method == 'POST':
+        # POST de verificació del codi email
+        if 'email_code' in request.form:
+            reg_data = session.get('empresa_reg_data')
+            if not reg_data:
+                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                return redirect(request.url)
+
+            if request.form['email_code'] == reg_data['email_code']:
+                hashed_password = bcrypt.generate_password_hash(reg_data['password']).decode('utf-8')
+                nova_empresa = Empresa(
+                    nom=reg_data['nom_empresa'],
+                    numero_fiscal=reg_data['numero_fiscal'],
+                    adreca=reg_data['adreca'],
+                    correu_gerent=reg_data['correu_gerent'],
+                    telefon_gerent=reg_data['telefon_gerent'],
+                    password=hashed_password
+                )
+                db.session.add(nova_empresa)
+                db.session.commit()
+
+                session.pop('empresa_reg_data', None)
+                flash('Empresa creada correctamente. Ahora puedes registrar el primer administrador.', 'success')
+                return redirect(url_for('register_first_admin', empresa_id=nova_empresa.id))
+            else:
+                flash('Código de verificación incorrecto.', 'danger')
+                email_sent = True
+                return render_template(template_name, email_sent=email_sent, page_title=page_title)
+
+        # Primer pas: registre empresa
+        nom_empresa = request.form.get('nom_empresa')
+        numero_fiscal = request.form.get('numero_fiscal')
+        adreca = request.form.get('adreca')
+        correu_gerent = request.form.get('correu_gerent')
+        telefon_gerent = request.form.get('telefon_gerent')
+        password = request.form.get('password')
+
+        # Validar unicitat NIF
+        if Empresa.query.filter_by(numero_fiscal=numero_fiscal).first():
+            flash('Ya existe una empresa con ese número fiscal.', 'danger')
+            return render_template(template_name, page_title=page_title)
+
+        # Generar codi de verificació
+        email_code = str(random.randint(100000, 999999))
+
+        session['empresa_reg_data'] = {
+            'nom_empresa': nom_empresa,
+            'numero_fiscal': numero_fiscal,
+            'adreca': adreca,
+            'correu_gerent': correu_gerent,
+            'telefon_gerent': telefon_gerent,
+            'password': password,
+            'email_code': email_code
+        }
+
+        send_verification_email(correu_gerent, email_code)
+        email_sent = True
+        flash('Se ha enviado un email de verificación al correo del gerente.', 'info')
+        return render_template(template_name, email_sent=email_sent, page_title=page_title)
+
+    # GET
+    return render_template(template_name, email_sent=email_sent, page_title=page_title)
+
+
+@app.route('/create_empresa', methods=['GET', 'POST'])
+@login_required
+def create_empresa():
+    return create_empresa_logic(template_name='create_empresa.html', page_title="Registrar Empresa")
+
+
+
+
 @app.route('/create_pagador', methods=['GET', 'POST'])
 @login_required
 def create_pagador():
@@ -944,6 +1039,8 @@ def create_pagador():
             return redirect(url_for('create_pagador'))
 
     return render_template('create_pagador.html')
+
+
 
 @app.route('/pagadors')
 @login_required
@@ -1153,6 +1250,76 @@ def report_incident():
     db.session.commit()
     flash('Incidència registrada correctament.', 'success')
     return redirect(url_for('index'))
+
+
+@app.route('/generate_empresa_link', methods=['GET', 'POST'])
+@login_required
+def generate_empresa_link():
+    # ✅ Només admins de l'empresa amb id=1
+    if current_user.role != 'admin' or current_user.empresa_id != 1:
+        flash("No tens permisos per generar enllaços.", "danger")
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        email_destinatari = request.form['email']
+
+        # Serialitzador per generar token únic
+        s = get_serializer()
+        token = s.dumps({"action": "create_empresa"})
+        link = url_for('create_empresa_with_token', token=token, _external=True)
+
+        # Enviar email amb el link
+        subject = "Enllaç per registrar la teva empresa"
+        body = f"""
+        Hola,
+
+        S'ha generat un enllaç únic per registrar la teva empresa.
+        Pots utilitzar-lo per crear la teva empresa al sistema:
+
+        {link}
+
+        Tingues en compte que aquest enllaç caduca en 24 hores.
+
+        Salutacions,
+        L'equip de Anamas
+        """
+        send_empresa_registration_email(email_destinatari, link)
+
+        flash(f"S'ha enviat un enllaç de registre a {email_destinatari}", "success")
+        return redirect(url_for('index'))
+
+    return render_template('generate_empresa_link.html')
+
+
+@app.route('/create_empresa_with_token/<token>', methods=['GET', 'POST'])
+def create_empresa_with_token(token):
+    s = get_serializer()
+    try:
+        data = s.loads(token, max_age=86400)  # token vàlid 24h
+        if data.get("action") != "create_empresa":
+            flash("Enllaç invàlid.", "danger")
+            return redirect(url_for('login'))
+    except Exception:
+        flash("L'enllaç no és vàlid o ha caducat.", "danger")
+        return redirect(url_for('login'))
+
+    # Reutilitzar la lògica de creació d'empresa
+    return create_empresa_logic(template_name='create_empresa.html', page_title="Registrar Empresa")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     with app.app_context():

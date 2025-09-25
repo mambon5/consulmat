@@ -1,60 +1,119 @@
-from app import app, db, User, bcrypt, Comunidad, Factura, Treballador, Pagador, Calendari
+from app import app, db, User, bcrypt, Comunidad, Factura, Treballador, Pagador, Calendari, Empresa
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from datetime import time
 
-def create_admin_user():
+
+
+def create_empresa():
+    num_fisc='B12345678'  # numero fiscal inventat
     with app.app_context():
-        if User.query.filter_by(username='admin').first():
-            print("El usuario admin ya existe.")
-            return
-        
-        hashed_password = bcrypt.generate_password_hash('admin123').decode('utf-8')
-        user = User(
-            username='admin',
+        empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
+        if empresa:
+            print(f"La empresa amb número fiscal {num_fisc} ja existeix.")
+            return empresa   # <- en lloc de None
+
+        hashed_password = bcrypt.generate_password_hash('empresa123').decode('utf-8')
+        empresa = Empresa(
+            nom='Quality Maxilim SL',
             password=hashed_password,
-            name='Jose Merchan',
-            email='quality@maxilim.es',
-            phone='600123456',
+            numero_fiscal=num_fisc,
+            adreca='Carrer de Joanot Martorell, 5, 08403 Granollers, Barcelona',
+            correu_gerent='qmaxi@gmail.com',
+            telefon_gerent=647112622
+        )
+        db.session.add(empresa)
+        try:
+            db.session.commit()
+            empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
+            print(f"Empresa {empresa.nom} creada exitosamente")
+            return empresa   # <- retornem també si és nova
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al crear la empresa admin: {e}")
+            return None
+
+
+def create_user(username, password, name, email, role, empresa_id, phone=None):
+    with app.app_context():
+        if User.query.filter_by(username=username).first():
+            print(f"El usuario '{username}' ya existe.")
+            return None
+
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        user = User(
+            username=username,
+            password=hashed_password,
+            name=name,
+            email=email,
+            phone=phone,
             data_consent=True,
             consent_date=datetime.utcnow(),
             data_retention_days=365,
-            role='admin'
+            role=role,
+            empresa_id=empresa_id
         )
         db.session.add(user)
         try:
             db.session.commit()
-            print("Usuario admin creado exitosamente")
+            user = User.query.filter_by(username=username).first() # <- per assegurar que l'usuari existeix
+            print(f"Usuario {role} '{username}' creado exitosamente.")
+            return user
         except Exception as e:
             db.session.rollback()
-            print(f"Error al crear usuario admin: {e}")
+            print(f"Error al crear usuario {role}: {e}")
+            return None
 
-def create_employee():
-    with app.app_context():
-        if User.query.filter_by(username='empleado1').first():
-            print("El usuario 'empleado1' ya existe.")
-            return
 
-        hashed_password = bcrypt.generate_password_hash('empleado123').decode('utf-8')
-        new_employee = User(
-            username='empleado1',
-            name='Juan Pérez',
-            email='juan.perez@empresa.com',
-            password=hashed_password,
-            role='employee',
-            data_consent=True,
-            phone='600123456',
-            consent_date=datetime.now(ZoneInfo("Europe/Madrid")),
-            data_retention_days=365
+# 👇 Creació d'un admin
+def create_admin_user(empresa_id):
+    return create_user(
+        username="admin",
+        password="admin123",
+        name="Jose Merchan",
+        email="quality@maxilim.es",
+        role="admin",
+        empresa_id=empresa_id,
+        phone="600123456"
+    )
+
+
+# 👇 Creació d'un empleat
+def create_treballador(empresa_id):
+    user = create_user(
+        username="empleado1",
+        password="empleado123",
+        name="Juan Pérez",
+        email="juan.perez@empresa.com",
+        role="employee",
+        empresa_id=empresa_id,
+        phone="600123456"
+    )
+    if user:
+        # 🔗 afegim també la taula Treballador (relació 1-1)
+        treballador = Treballador(
+            id_usuari=user.id,
+            empresa_id=empresa_id,
+            departament='comunitats',
+            adreca='Carrer València 200',
+            ciutat='Barcelona',
+            codi_postal=8002,
+            sexe='m',
+            nacionalitat='Espanyola',
+            edat=35,
+            carnet_conduir='si',
+            vehicle_propi='no'
         )
-
-        db.session.add(new_employee)
+        db.session.add(treballador)
         try:
             db.session.commit()
-            print("Usuario empleado creado exitosamente.")
+            print(f"Treballador per usuari '{user.username}' creat correctament.")
         except Exception as e:
             db.session.rollback()
-            print(f"Error al crear empleado: {e}")
+            print(f"Error al crear treballador per usuari {user.username}: {e}")
+
+
 
 def create_pagador():
     with app.app_context():
@@ -135,33 +194,6 @@ def create_factura():
             db.session.rollback()
             print(f"Error al crear factura: {e}")
 
-def create_treballador():
-    with app.app_context():
-        usuari = User.query.filter_by(role='employee').first()
-        if not usuari:
-            print("Cal un usuari amb rol employee abans.")
-            return
-
-        treballador = Treballador(
-            id_usuari=usuari.id,
-            departament='comunitats',
-            adreca='Carrer València 200',
-            ciutat='Barcelona',
-            codi_postal=8002,
-            sexe='m',
-            nacionalitat='Espanyola',
-            edat=35,
-            carnet_conduir='si',
-            vehicle_propi='no'
-        )
-
-        db.session.add(treballador)
-        try:
-            db.session.commit()
-            print("Treballador creat amb èxit.")
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error al crear treballador: {e}")
 
 
 def create_calendari():
@@ -209,11 +241,13 @@ def create_calendari():
 
 
 
-if __name__ == '__main__':
-    create_admin_user()
-    create_employee()
-    create_pagador()
-    create_comunitat()
-    create_factura()
-    create_treballador()
-    create_calendari()
+# if __name__ == '__main__':
+    # empresa = create_empresa()
+    # if empresa:
+    #     create_admin_user(empresa.id)
+    #     create_employee(empresa.id)
+    # create_pagador()
+    # create_comunitat()
+    # create_factura()
+    # create_treballador()
+    # create_calendari()

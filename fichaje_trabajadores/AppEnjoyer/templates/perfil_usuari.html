@@ -11,6 +11,7 @@
             <p><strong>Email:</strong> {{ user.email }}</p>
             <p><strong>Teléfono:</strong> {{ user.phone or '-' }}</p>
             <p><strong>Nombre completo:</strong> {{ user.name }}</p>
+             <p><strong>Empresa:</strong> {{ user.empresa.nom if user.empresa else '-' }}</p>
             <p><strong>Rol:</strong>
                 {% if user.role == 'admin' %}
                     <span class="badge bg-danger">Administrador</span>
