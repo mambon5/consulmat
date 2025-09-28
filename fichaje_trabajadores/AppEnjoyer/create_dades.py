@@ -5,7 +5,35 @@ from datetime import time
 
 
 
-def create_empresa():
+def create_empresa1():
+    num_fisc='B1278'  # numero fiscal inventat
+    with app.app_context():
+        empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
+        if empresa:
+            print(f"La empresa amb número fiscal {num_fisc} ja existeix.")
+            return empresa   # <- en lloc de None
+
+        hashed_password = bcrypt.generate_password_hash('empresa123').decode('utf-8')
+        empresa = Empresa(
+            nom='Anamas digital',
+            password=hashed_password,
+            numero_fiscal=num_fisc,
+            adreca='Carrer duoda 21, 08020, Barcelona',
+            correu_gerent='anamasdigital@gmail.com',
+            telefon_gerent=611648478
+        )
+        db.session.add(empresa)
+        try:
+            db.session.commit()
+            empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
+            print(f"Empresa {empresa.nom} creada exitosamente")
+            return empresa   # <- retornem també si és nova
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al crear la empresa admin: {e}")
+            return None
+        
+def create_empresa2():
     num_fisc='B12345678'  # numero fiscal inventat
     with app.app_context():
         empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
@@ -67,9 +95,19 @@ def create_user(username, password, name, email, role, empresa_id, phone=None):
 
 
 # 👇 Creació d'un admin
-def create_admin_user(empresa_id):
+def create_admin_user1(empresa_id):
     return create_user(
         username="admin",
+        password="admin123",
+        name="Ruth Masa",
+        email="masaruth@anamas.es",
+        role="admin",
+        empresa_id=empresa_id,
+        phone="611171"
+    )
+def create_admin_user2(empresa_id):
+    return create_user(
+        username="jose",
         password="admin123",
         name="Jose Merchan",
         email="quality@maxilim.es",

@@ -1,7 +1,9 @@
 from app import db, app
 from create_dades import (
-    create_empresa,
-    create_admin_user, 
+    create_empresa1,
+    create_empresa2,
+    create_admin_user1, 
+    create_admin_user2,
     create_comunitat,
     create_pagador,
     create_factura,
@@ -18,12 +20,20 @@ def init_database():
             print("Tablas creadas correctamente.")
             
             # Crear registros iniciales
-            empresa = create_empresa()
+            empresa = create_empresa1()
             if empresa:
-                create_admin_user(empresa.id)
+                create_admin_user1(empresa.id)
+            else:
+                print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
+
+            # Crear registros iniciales
+            empresa = create_empresa2()
+            if empresa:
+                create_admin_user2(empresa.id)
                 create_treballador(empresa.id)
             else:
                 print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
+            create_pagador()
             create_pagador()
             create_comunitat()
             create_factura()

@@ -992,10 +992,10 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
     return render_template(template_name, email_sent=email_sent, page_title=page_title)
 
 
-@app.route('/create_empresa', methods=['GET', 'POST'])
-@login_required
-def create_empresa():
-    return create_empresa_logic(template_name='create_empresa.html', page_title="Registrar Empresa")
+# @app.route('/create_empresa', methods=['GET', 'POST'])
+# @login_required
+# def create_empresa():
+#     return create_empresa_logic(template_name='create_empresa.html', page_title="Registrar Empresa")
 
 
 
@@ -1305,19 +1305,6 @@ def create_empresa_with_token(token):
 
     # Reutilitzar la lògica de creació d'empresa
     return create_empresa_logic(template_name='create_empresa.html', page_title="Registrar Empresa")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
