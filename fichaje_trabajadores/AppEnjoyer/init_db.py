@@ -1,11 +1,14 @@
 from app import db, app
 from create_dades import (
-    create_admin_user, 
-    create_employee, 
+    create_empresa1,
+    create_empresa2,
+    create_admin_user1, 
+    create_admin_user2,
     create_comunitat,
     create_pagador,
     create_factura,
-    create_treballador
+    create_treballador,
+    create_calendari
 )
 
 def init_database():
@@ -17,12 +20,24 @@ def init_database():
             print("Tablas creadas correctamente.")
             
             # Crear registros iniciales
-            create_admin_user()
-            create_employee()
+            empresa = create_empresa1()
+            if empresa:
+                create_admin_user1(empresa.id)
+            else:
+                print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
+
+            # Crear registros iniciales
+            empresa = create_empresa2()
+            if empresa:
+                create_admin_user2(empresa.id)
+                create_treballador(empresa.id)
+            else:
+                print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
+            create_pagador()
             create_pagador()
             create_comunitat()
             create_factura()
-            create_treballador()
+            create_calendari()
             
             print("Inicialización de la base de datos completada.")
         except Exception as e:
