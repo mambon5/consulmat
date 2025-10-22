@@ -24,6 +24,10 @@
                     </div>
                     {% endif %}
                     <div id="calendar"></div>
+                    <p class="mt-3 text-muted small">
+                        🔹 Fes clic en un dia buit per marcar-lo com a <strong>vacances</strong>.<br>
+                        🔹 Fes clic en un dia de vacances per <strong>eliminar-lo</strong>.
+                    </p>
                 </div>
             </div>
         </div>
@@ -36,24 +40,89 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
         height: 'auto',
         events: {{ eventos|tojson | safe }},
+        selectable: true,
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
         },
+
+        // Selecció de dies per vacances
+        select: async function(info) {
+            const startInput = prompt("📅 Introdueix el dia d'inici de les vacances (YYYY-MM-DD):", info.startStr);
+            if (!startInput) return;
+
+            const endInput = prompt("📅 Introdueix el dia de final de les vacances (YYYY-MM-DD):", info.endStr || info.startStr);
+            if (!endInput) return;
+
+            const startDate = new Date(startInput);
+            const endDate = new Date(endInput);
+
+            if (isNaN(startDate) || isNaN(endDate)) {
+                alert("⚠️ Format de data incorrecte.");
+                return;
+            }
+            if (endDate < startDate) {
+                alert("⚠️ La data final no pot ser anterior a la inicial.");
+                return;
+            }
+
+            const dates = [];
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                dates.push(d.toISOString().split('T')[0]);
+            }
+
+            if (!confirm(`Vols marcar vacances del ${startInput} al ${endInput} (${dates.length} dies)?`)) return;
+
+            try {
+                for (const date of dates) {
+                    const res = await fetch('/api/vacances', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fecha: date })
+                    });
+                    const data = await res.json();
+                    if (data.status !== 'ok') {
+                        console.error("❌ Error afegint vacances:", data.message || data.error);
+                    }
+                }
+                alert(`✔️ Vacances afegides del ${startInput} al ${endInput}`);
+                calendar.refetchEvents();
+            } catch (err) {
+                console.error("⚠️ Error:", err);
+                alert("S'ha produït un error al afegir vacances.");
+            }
+        },
+
+        // Esborrar vacances fent clic
+        eventClick: async function(info) {
+            if (info.event.title.toLowerCase().includes('vacances')) {
+                if (!confirm(`Vols eliminar les vacances del dia ${info.event.startStr}?`)) return;
+
+                try {
+                    const res = await fetch(`/api/vacances/${info.event.id}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (data.status === 'ok') {
+                        info.event.remove();
+                        alert("Vacances eliminades correctament");
+                    } else {
+                        alert("❌ Error: " + data.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("S'ha produït un error al eliminar vacances.");
+                }
+            }
+        },
+
         eventDidMount: function(info) {
-            // Festivos en rojo, trabajo en azul
-            if (
-                info.event.title.includes('Festivo Nacional') ||
-                info.event.title.includes('Festivo Autonómico') ||
-                info.event.title.includes('Festivo Local')
-            ) {
+            if (info.event.title.includes('Festivo')) {
                 info.el.style.backgroundColor = '#e53935';
                 info.el.style.borderColor = '#e53935';
                 info.el.style.color = 'white';
@@ -61,9 +130,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 info.el.style.backgroundColor = '#1976d2';
                 info.el.style.borderColor = '#1976d2';
                 info.el.style.color = 'white';
+            } else if (info.event.title.toLowerCase().includes('vacances')) {
+                info.el.style.backgroundColor = '#43a047';
+                info.el.style.borderColor = '#43a047';
+                info.el.style.color = 'white';
             }
         }
     });
+
     calendar.render();
 });
 </script>

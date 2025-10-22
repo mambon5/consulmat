@@ -286,12 +286,24 @@ class EventoLaboral(db.Model):
     id_treballador = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
     id_comunitat = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
-    hora_inicio = db.Column(db.Time, nullable=True)  # Puede ser None si es festivo
+    hora_inicio = db.Column(db.Time, nullable=True)
     hora_fin = db.Column(db.Time, nullable=True)
-    tipo_evento = db.Column(db.Enum('trabajo', 'festivo_nacional', 'festivo_autonomico', 'festivo_local', name='tipo_evento_enum'), nullable=False, default='trabajo')
+    tipo_evento = db.Column(
+        db.Enum(
+            'trabajo',
+            'festivo_nacional',
+            'festivo_autonomico',
+            'festivo_local',
+            'vacances',   # 🔹 AFEGIT
+            name='tipo_evento_enum'
+        ),
+        nullable=False,
+        default='trabajo'
+    )
 
     treballador = db.relationship('Treballador', backref='eventos_laborales')
     comunitat = db.relationship('Comunidad', backref='eventos_laborales')
+
 class Incidencia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -637,12 +649,19 @@ def calendario_laboral():
 
     # Eventos puntuales (festivos y días especiales)
     for evento in eventos_db:
+        color = "#1976d2"  # blau = treball
+        if "festivo" in evento.tipo_evento:
+            color = "#e53935"  # vermell = festiu
+        elif evento.tipo_evento == "vacances":
+            color = "#43a047"  # verd = vacances
+
         eventos.append({
             "title": evento.tipo_evento.replace('_', ' ').capitalize(),
             "start": evento.fecha.isoformat(),
             "allDay": True if not evento.hora_inicio else False,
-            "color": "#e53935" if "festivo" in evento.tipo_evento else "#1976d2"
-        })
+            "color": color
+    })
+
 
     # Horarios recurrentes (Lunes a Viernes, etc.)
     from calendar import monthrange
@@ -665,6 +684,43 @@ def calendario_laboral():
                 })
 
     return render_template('calendari.html', eventos=eventos, treballadors=treballadors, treballador_seleccionat=treballador)
+
+
+
+@app.route('/api/vacances', methods=['POST'])
+@login_required
+def crear_vacances():
+    data = request.get_json(silent=True)
+    if not data or 'fecha' not in data:
+        return jsonify({"error": "No s'ha rebut la data"}), 400
+
+    try:
+        fecha = datetime.strptime(data['fecha'][:10], '%Y-%m-%d').date()
+        dia = EventoLaboral(
+            id_treballador=current_user.treballador.id_treballador,
+            id_comunitat=data.get('id_comunitat', 1),
+            fecha=fecha,
+            tipo_evento='vacances'
+        )
+        db.session.add(dia)
+        db.session.commit()
+        return jsonify({"status": "ok", "message": f"Vacances afegides per {fecha}"})
+    except Exception as e:
+        db.session.rollback()
+        print("❌ Error a /api/vacances:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/vacances/<int:event_id>', methods=['DELETE'])
+@login_required
+def eliminar_vacances(event_id):
+    evento = EventoLaboral.query.get_or_404(event_id)
+    if evento.id_treballador == current_user.treballador.id_treballador and evento.tipo_evento == 'vacances':
+        db.session.delete(evento)
+        db.session.commit()
+        return jsonify({"status": "ok", "message": "Vacances eliminades"})
+    return jsonify({"status": "error", "message": "No autoritzat"}), 403
+
 
 
 def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
