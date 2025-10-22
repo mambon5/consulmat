@@ -31,7 +31,7 @@ for taula in taules:
     # Mostrar columnes
     cursor.execute(f"DESCRIBE {taula};")
     columnes = [c[0] for c in cursor.fetchall()]
-    # print("🧩 Columnes:", ", ".join(columnes))
+    print("🧩 Columnes:", ", ".join(columnes))
 
     # Mostrar files
     cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
