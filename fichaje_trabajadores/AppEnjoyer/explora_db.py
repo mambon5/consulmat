@@ -1,6 +1,7 @@
 import pymysql
 import os
 from dotenv import load_dotenv
+from tabulate import tabulate  # 👈 Per formatar taules
 
 # Carregar variables del .env
 load_dotenv()
@@ -16,17 +17,32 @@ cursor = conn.cursor()
 # Llistar taules
 cursor.execute("SHOW TABLES;")
 taules = [t[0] for t in cursor.fetchall()]
-print("Taules disponibles:")
+
+print("\n📊 Taules disponibles a la base de dades:\n")
+for i, taula in enumerate(taules, 1):
+    print(f"{i}. {taula}")
+
+print("\n──────────────────────────────────────────────")
+
 for taula in taules:
-    print(f"\n- {taula}")
+    print(f"\n📁 Taula: {taula}")
+    print("──────────────────────────────────────────────")
+
+    # Mostrar columnes
     cursor.execute(f"DESCRIBE {taula};")
     columnes = [c[0] for c in cursor.fetchall()]
-    print("  Columnes:", columnes)
+    # print("🧩 Columnes:", ", ".join(columnes))
 
+    # Mostrar files
     cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
     files = cursor.fetchall()
-    for fila in files:
-        print("  ", fila)
+    if files:
+        print("\n📄 Primeres 5 files:")
+        print(tabulate(files, headers=columnes, tablefmt="fancy_grid"))
+    else:
+        print("⚠️ (Sense dades a aquesta taula)")
 
 cursor.close()
 conn.close()
+
+print("\n✅ Finalitzat correctament.\n")
