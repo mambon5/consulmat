@@ -1,25 +1,32 @@
-import sqlite3
+import pymysql
+import os
+from dotenv import load_dotenv
 
-# Connexió al fitxer SQLite
-conn = sqlite3.connect('instance/employee_time.db')
+# Carregar variables del .env
+load_dotenv()
+
+conn = pymysql.connect(
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME"),
+)
 cursor = conn.cursor()
 
-# Mostrar totes les taules
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-taules = cursor.fetchall()
+# Llistar taules
+cursor.execute("SHOW TABLES;")
+taules = [t[0] for t in cursor.fetchall()]
 print("Taules disponibles:")
-for t in taules:
-    print("-", t[0])
+for taula in taules:
+    print(f"\n- {taula}")
+    cursor.execute(f"DESCRIBE {taula};")
+    columnes = [c[0] for c in cursor.fetchall()]
+    print("  Columnes:", columnes)
 
-# Exemple: Mostrar les primeres files d'una taula concreta
-taula = taules[1][0]  # Agafa la primera taula (canvia-ho si vols)
-for t in taules:
-    taula = t[0]
-    print(f"\nMostrant dades de la taula '{taula}':")
     cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
     files = cursor.fetchall()
     for fila in files:
-        print(fila)
+        print("  ", fila)
 
-# Tanca la connexió
+cursor.close()
 conn.close()
