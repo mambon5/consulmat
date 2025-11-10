@@ -295,6 +295,9 @@ class EventoLaboral(db.Model):
             'festivo_autonomico',
             'festivo_local',
             'vacances',   # 🔹 AFEGIT
+            'assumptes_propis',
+            'baixa_medica',
+            'teletreball',
             name='tipo_evento_enum'
         ),
         nullable=False,
@@ -687,28 +690,39 @@ def calendario_laboral():
 
 
 
-@app.route('/api/vacances', methods=['POST'])
+@app.route('/api/absencia', methods=['POST'])
 @login_required
-def crear_vacances():
+def crear_absencia():
     data = request.get_json(silent=True)
-    if not data or 'fecha' not in data:
-        return jsonify({"error": "No s'ha rebut la data"}), 400
+    if not data or 'fecha' not in data or 'tipo_evento' not in data:
+        return jsonify({"error": "Falten dades (fecha o tipo_evento)"}), 400
 
     try:
         fecha = datetime.strptime(data['fecha'][:10], '%Y-%m-%d').date()
+        tipo_evento = data['tipo_evento']
+
+        # Evitar duplicats
+        existent = EventoLaboral.query.filter_by(
+            id_treballador=current_user.treballador.id_treballador,
+            fecha=fecha
+        ).first()
+        if existent:
+            return jsonify({"error": "Ja existeix una absència per aquest dia"}), 400
+
         dia = EventoLaboral(
             id_treballador=current_user.treballador.id_treballador,
             id_comunitat=data.get('id_comunitat', 1),
             fecha=fecha,
-            tipo_evento='vacances'
+            tipo_evento=tipo_evento
         )
         db.session.add(dia)
         db.session.commit()
-        return jsonify({"status": "ok", "message": f"Vacances afegides per {fecha}"})
+        return jsonify({"status": "ok", "message": f"{tipo_evento.capitalize()} afegit per {fecha}"})
     except Exception as e:
         db.session.rollback()
-        print("❌ Error a /api/vacances:", e)
+        print("❌ Error a /api/absencia:", e)
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route('/api/vacances/<int:event_id>', methods=['DELETE'])

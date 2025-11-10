@@ -22,7 +22,26 @@
                             </select>
                         </form>
                     </div>
-                    {% endif %}
+                     {% endif %}
+
+                     
+                    <div class="mb-3">
+                    <label class="form-label fw-bold">Tipus d'absència:</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipo_evento" id="radio_vacances" value="vacances" checked>
+                        <label class="form-check-label" for="radio_vacances">Vacances</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipo_evento" id="radio_baixa" value="baixa_medica">
+                        <label class="form-check-label" for="radio_baixa">Baixa mèdica</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipo_evento" id="radio_assumptes" value="assumptes_propis">
+                        <label class="form-check-label" for="radio_assumptes">Assumptes propis</label>
+                    </div>
+                </div>
+
+                   
                     <div id="calendar"></div>
                     <p class="mt-3 text-muted small">
                         🔹 Fes clic en un dia buit per marcar-lo com a <strong>vacances</strong>.<br>
@@ -54,51 +73,55 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         // Selecció de dies per vacances
-        select: async function(info) {
-            const startInput = prompt("📅 Introdueix el dia d'inici de les vacances (YYYY-MM-DD):", info.startStr);
-            if (!startInput) return;
+       select: async function(info) {
+        const tipo_evento = document.querySelector('input[name="tipo_evento"]:checked').value;
 
-            const endInput = prompt("📅 Introdueix el dia de final de les vacances (YYYY-MM-DD):", info.endStr || info.startStr);
-            if (!endInput) return;
+        const startInput = prompt(`📅 Introdueix el dia d'inici de ${tipo_evento.replace('_', ' ')} (YYYY-MM-DD):`, info.startStr);
+        if (!startInput) return;
 
-            const startDate = new Date(startInput);
-            const endDate = new Date(endInput);
+        const endInput = prompt(`📅 Introdueix el dia final de ${tipo_evento.replace('_', ' ')} (YYYY-MM-DD):`, info.endStr || info.startStr);
+        if (!endInput) return;
 
-            if (isNaN(startDate) || isNaN(endDate)) {
-                alert("⚠️ Format de data incorrecte.");
-                return;
-            }
-            if (endDate < startDate) {
-                alert("⚠️ La data final no pot ser anterior a la inicial.");
-                return;
-            }
+        const startDate = new Date(startInput);
+        const endDate = new Date(endInput);
 
-            const dates = [];
-            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                dates.push(d.toISOString().split('T')[0]);
-            }
+        if (isNaN(startDate) || isNaN(endDate)) {
+            alert("⚠️ Format de data incorrecte.");
+            return;
+        }
+        if (endDate < startDate) {
+            alert("⚠️ La data final no pot ser anterior a la inicial.");
+            return;
+        }
 
-            if (!confirm(`Vols marcar vacances del ${startInput} al ${endInput} (${dates.length} dies)?`)) return;
+        const dates = [];
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            dates.push(d.toISOString().split('T')[0]);
+        }
 
-            try {
-                for (const date of dates) {
-                    const res = await fetch('/api/vacances', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ fecha: date })
-                    });
-                    const data = await res.json();
-                    if (data.status !== 'ok') {
-                        console.error("❌ Error afegint vacances:", data.message || data.error);
-                    }
+        if (!confirm(`Vols marcar ${tipo_evento.replace('_', ' ')} del ${startInput} al ${endInput}?`)) return;
+
+        try {
+            for (const date of dates) {
+                const res = await fetch('/api/absencia', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fecha: date, tipo_evento })
+                });
+                const data = await res.json();
+                if (data.status !== 'ok') {
+                    console.error("❌ Error afegint absència:", data.message || data.error);
+                    alert(`❌ No s'ha pogut afegir ${date}: ${data.error || data.message}`);
                 }
-                alert(`✔️ Vacances afegides del ${startInput} al ${endInput}`);
-                calendar.refetchEvents();
-            } catch (err) {
-                console.error("⚠️ Error:", err);
-                alert("S'ha produït un error al afegir vacances.");
             }
+            alert(`✔️ ${tipo_evento.replace('_', ' ')} afegides del ${startInput} al ${endInput}`);
+            calendar.refetchEvents();
+        } catch (err) {
+            console.error("⚠️ Error:", err);
+            alert("S'ha produït un error al afegir les absències.");
+        }
         },
+
 
         // Esborrar vacances fent clic
         eventClick: async function(info) {
