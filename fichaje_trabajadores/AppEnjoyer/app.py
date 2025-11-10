@@ -286,12 +286,27 @@ class EventoLaboral(db.Model):
     id_treballador = db.Column(db.Integer, db.ForeignKey('treballadors.id_treballador'), nullable=False)
     id_comunitat = db.Column(db.Integer, db.ForeignKey('comunidad.id'), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
-    hora_inicio = db.Column(db.Time, nullable=True)  # Puede ser None si es festivo
+    hora_inicio = db.Column(db.Time, nullable=True)
     hora_fin = db.Column(db.Time, nullable=True)
-    tipo_evento = db.Column(db.Enum('trabajo', 'festivo_nacional', 'festivo_autonomico', 'festivo_local', name='tipo_evento_enum'), nullable=False, default='trabajo')
+    tipo_evento = db.Column(
+        db.Enum(
+            'trabajo',
+            'festivo_nacional',
+            'festivo_autonomico',
+            'festivo_local',
+            'vacances',   # 🔹 AFEGIT
+            'assumptes_propis',
+            'baixa_medica',
+            'teletreball',
+            name='tipo_evento_enum'
+        ),
+        nullable=False,
+        default='trabajo'
+    )
 
     treballador = db.relationship('Treballador', backref='eventos_laborales')
     comunitat = db.relationship('Comunidad', backref='eventos_laborales')
+
 class Incidencia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -637,12 +652,19 @@ def calendario_laboral():
 
     # Eventos puntuales (festivos y días especiales)
     for evento in eventos_db:
+        color = "#1976d2"  # blau = treball
+        if "festivo" in evento.tipo_evento:
+            color = "#e53935"  # vermell = festiu
+        elif evento.tipo_evento == "vacances":
+            color = "#43a047"  # verd = vacances
+
         eventos.append({
             "title": evento.tipo_evento.replace('_', ' ').capitalize(),
             "start": evento.fecha.isoformat(),
             "allDay": True if not evento.hora_inicio else False,
-            "color": "#e53935" if "festivo" in evento.tipo_evento else "#1976d2"
-        })
+            "color": color
+    })
+
 
     # Horarios recurrentes (Lunes a Viernes, etc.)
     from calendar import monthrange
@@ -664,7 +686,81 @@ def calendario_laboral():
                     "color": "#1976d2"
                 })
 
-    return render_template('calendari.html', eventos=eventos, treballadors=treballadors, treballador_seleccionat=treballador)
+
+
+    absencies = EventoLaboral.query.filter_by(id_treballador=treballador.id_treballador).all()
+    tipus_abs = ['vacances', 'baixa_medica', 'assumptes_propis']
+
+    stats = {t: 0 for t in tipus_abs}
+    for a in absencies:
+        if a.tipo_evento in stats:
+            stats[a.tipo_evento] += 1
+
+    # valors de referència
+    lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
+    restants = {t: lim[t] - stats[t] for t in stats}
+
+    return render_template(
+        'calendari.html',
+        eventos=eventos,
+        treballadors=treballadors,
+        treballador_seleccionat=treballador,
+        stats=stats,
+        restants=restants
+    )
+
+    
+
+
+
+
+@app.route('/api/absencia', methods=['POST'])
+@login_required
+def crear_absencia():
+    data = request.get_json(silent=True)
+    if not data or 'fecha' not in data or 'tipo_evento' not in data:
+        return jsonify({"error": "Falten dades (fecha o tipo_evento)"}), 400
+
+    try:
+        fecha = datetime.strptime(data['fecha'][:10], '%Y-%m-%d').date()
+        tipo_evento = data['tipo_evento']
+
+        # ⚙️ teleworking és compatible amb altres absències
+        if tipo_evento != 'teletreball':
+            existent = EventoLaboral.query.filter_by(
+                id_treballador=current_user.treballador.id_treballador,
+                fecha=fecha
+            ).filter(EventoLaboral.tipo_evento != 'teletreball').first()
+            if existent:
+                return jsonify({"error": "Ja existeix una absència per aquest dia"}), 400
+
+        dia = EventoLaboral(
+            id_treballador=current_user.treballador.id_treballador,
+            id_comunitat=data.get('id_comunitat', 1),
+            fecha=fecha,
+            tipo_evento=tipo_evento
+        )
+        db.session.add(dia)
+        db.session.commit()
+        return jsonify({"status": "ok", "message": f"{tipo_evento.capitalize()} afegit per {fecha}"})
+    except Exception as e:
+        db.session.rollback()
+        print("❌ Error a /api/absencia:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+@app.route('/api/vacances/<int:event_id>', methods=['DELETE'])
+@login_required
+def eliminar_vacances(event_id):
+    evento = EventoLaboral.query.get_or_404(event_id)
+    if evento.id_treballador == current_user.treballador.id_treballador and evento.tipo_evento == 'vacances':
+        db.session.delete(evento)
+        db.session.commit()
+        return jsonify({"status": "ok", "message": "Vacances eliminades"})
+    return jsonify({"status": "error", "message": "No autoritzat"}), 403
+
 
 
 def create_user_logic(role="employee", empresa_id=None, extra_fields=None,

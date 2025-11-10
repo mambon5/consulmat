@@ -1,25 +1,48 @@
-import sqlite3
+import pymysql
+import os
+from dotenv import load_dotenv
+from tabulate import tabulate  # 👈 Per formatar taules
 
-# Connexió al fitxer SQLite
-conn = sqlite3.connect('instance/employee_time.db')
+# Carregar variables del .env
+load_dotenv()
+
+conn = pymysql.connect(
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME"),
+)
 cursor = conn.cursor()
 
-# Mostrar totes les taules
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-taules = cursor.fetchall()
-print("Taules disponibles:")
-for t in taules:
-    print("-", t[0])
+# Llistar taules
+cursor.execute("SHOW TABLES;")
+taules = [t[0] for t in cursor.fetchall()]
 
-# Exemple: Mostrar les primeres files d'una taula concreta
-taula = taules[1][0]  # Agafa la primera taula (canvia-ho si vols)
-for t in taules:
-    taula = t[0]
-    print(f"\nMostrant dades de la taula '{taula}':")
+print("\n📊 Taules disponibles a la base de dades:\n")
+for i, taula in enumerate(taules, 1):
+    print(f"{i}. {taula}")
+
+print("\n──────────────────────────────────────────────")
+
+for taula in taules:
+    print(f"\n📁 Taula: {taula}")
+    print("──────────────────────────────────────────────")
+
+    # Mostrar columnes
+    cursor.execute(f"DESCRIBE {taula};")
+    columnes = [c[0] for c in cursor.fetchall()]
+    print("🧩 Columnes:", ", ".join(columnes))
+
+    # Mostrar files
     cursor.execute(f"SELECT * FROM {taula} LIMIT 5;")
     files = cursor.fetchall()
-    for fila in files:
-        print(fila)
+    if files:
+        print("\n📄 Primeres 5 files:")
+        print(tabulate(files, headers=columnes, tablefmt="fancy_grid"))
+    else:
+        print("⚠️ (Sense dades a aquesta taula)")
 
-# Tanca la connexió
+cursor.close()
 conn.close()
+
+print("\n✅ Finalitzat correctament.\n")
