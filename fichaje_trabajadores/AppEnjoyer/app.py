@@ -725,7 +725,25 @@ def crear_absencia():
         fecha = datetime.strptime(data['fecha'][:10], '%Y-%m-%d').date()
         tipo_evento = data['tipo_evento']
 
-        # ⚙️ teleworking és compatible amb altres absències
+        # --- 🛑 VALIDACIÓ LÍMITS D'ABSÈNCIES ---
+        limits = {
+            'vacances': 30,
+            'baixa_medica': 90,
+            'assumptes_propis': 3
+        }
+
+        if tipo_evento in limits:
+            actuals = EventoLaboral.query.filter_by(
+                id_treballador=current_user.treballador.id_treballador,
+                tipo_evento=tipo_evento
+            ).count()
+
+            if actuals >= limits[tipo_evento]:
+                return jsonify({
+                    "error": f"S'ha superat el límit de {limits[tipo_evento]} dies per '{tipo_evento.replace('_',' ')}'"
+                }), 400
+
+        # ⚙️ teletreball és compatible amb altres absències
         if tipo_evento != 'teletreball':
             existent = EventoLaboral.query.filter_by(
                 id_treballador=current_user.treballador.id_treballador,
@@ -743,10 +761,12 @@ def crear_absencia():
         db.session.add(dia)
         db.session.commit()
         return jsonify({"status": "ok", "message": f"{tipo_evento.capitalize()} afegit per {fecha}"})
+
     except Exception as e:
         db.session.rollback()
         print("❌ Error a /api/absencia:", e)
         return jsonify({"error": str(e)}), 500
+
 
 
 
