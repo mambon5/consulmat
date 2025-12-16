@@ -92,37 +92,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert("⚠️ Selecciona primer un tipus d'absència.");
                 return;
             }
-            const tipo_evento = selected.value;
-            const startInput = info.startStr;
-            const endInput = info.endStr || info.startStr;
 
-            const startDate = new Date(startInput);
-            const endDate = new Date(endInput);
+            const tipo_evento = selected.value;
+            const startDate = new Date(info.startStr);
+            const endDate = new Date(info.endStr || info.startStr);
 
             const dates = [];
             for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
                 dates.push(d.toISOString().split('T')[0]);
             }
 
-            if (!confirm(`Vols marcar ${tipo_evento.replace('_', ' ')} del ${startInput} al ${endInput}?`)) return;
+            if (!confirm(`Vols marcar ${tipo_evento.replace('_', ' ')} (${dates.length} dies)?`)) return;
 
-            try {
-                for (const date of dates) {
+            let errors = [];
+            let successCount = 0;
+
+            for (const date of dates) {
+                try {
                     const res = await fetch('/api/absencia', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fecha: date, tipo_evento })
                     });
+
                     const data = await res.json();
-                    if (data.status !== 'ok') {
-                        alert(`❌ No s'ha pogut afegir ${date}: ${data.error || data.message}`);
+
+                    if (!res.ok) {
+                        errors.push(`${date}: ${data.error}`);
+                    } else {
+                        successCount++;
                     }
+
+                } catch (err) {
+                    errors.push(`${date}: error de connexió`);
                 }
-                alert(`✔️ ${tipo_evento.replace('_', ' ')} afegides correctament.`);
-                window.location.reload(); // 🔁 refresca pàgina per veure els canvis
-            } catch (err) {
-                console.error("⚠️ Error:", err);
-                alert("S'ha produït un error al afegir les absències.");
+            }
+
+            if (errors.length > 0) {
+                alert(
+                    "❌ Algunes dates NO s'han pogut afegir:\n\n" +
+                    errors.join("\n")
+                );
+            }
+
+            if (successCount > 0) {
+                alert(`✔️ ${successCount} dia(es) afegits correctament`);
+                window.location.reload();
             }
         },
 
