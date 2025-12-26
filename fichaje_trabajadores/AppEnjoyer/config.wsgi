@@ -8,6 +8,5 @@ sys.path.insert(0, '/var/www/consulmat/fichaje_trabajadores/AppEnjoyer')
 # Carregar .env
 load_dotenv('/var/www/consulmat/fichaje_trabajadores/AppEnjoyer/.env')
 
-import app
-raise Exception(f"WSGI CARREGA: {app.__file__}")
+
 from app import app as application
