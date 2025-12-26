@@ -1,6 +1,3 @@
-raise Exception("APP.PY CARREGAT — PROVA DEFINITIVA")
-
-
 from flask import Flask, render_template, request, session, redirect, url_for, flash, send_file, jsonify
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
