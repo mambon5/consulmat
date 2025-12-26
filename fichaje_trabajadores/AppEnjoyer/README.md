@@ -1,3 +1,14 @@
+- [Employee Time Tracker](#employee-time-tracker)
+  - [Características](#características)
+  - [Tecnologías](#tecnologías)
+  - [Instalación](#instalación)
+  - [Instal·lació en servidor apache](#installació-en-servidor-apache)
+  - [Licencia](#licencia)
+  - [Manual de Git](#manual-de-git)
+    - [Instruccions bàsiques Git (sino joaquim s'enfada)](#instruccions-bàsiques-git-sino-joaquim-senfada)
+    - [Com crear una branca nova amb diferent informació](#com-crear-una-branca-nova-amb-diferent-informació)
+    - [Esquema de branques per maxilim i organitzar el codi](#esquema-de-branques-per-maxilim-i-organitzar-el-codi)
+  - [Crear base de dades i usuari mysql](#crear-base-de-dades-i-usuari-mysql)
 # Employee Time Tracker
 
 Una aplicación web desarrollada con Flask para el seguimiento del tiempo de los empleados.
@@ -218,3 +229,9 @@ Tindrem dues branques principals. `estable` i `dev`
     |
   estable
 ```
+
+## Crear base de dades i usuari mysql
+
+    Create database "whatever"
+    CREATE USER 'user'@'localhost' IDENTIFIED BY 'passi';
+    GRANT ALL PRIVILEGES ON meva_base.* TO 'nou_usuari'@'localhost';

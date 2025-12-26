@@ -751,6 +751,14 @@ def crear_absencia():
             ).filter(EventoLaboral.tipo_evento != 'teletreball').first()
             if existent:
                 return jsonify({"error": "Ja existeix una absència per aquest dia"}), 400
+        
+        if tipo_evento == 'teletreball':
+            existent = EventoLaboral.query.filter_by(
+                id_treballador=current_user.treballador.id_treballador,
+                fecha=fecha
+            ).filter(EventoLaboral.tipo_evento == 'teletreball').first()
+            if existent:
+                return jsonify({"error": "Ja existeix un teletreball per aquest dia"}), 400
 
         dia = EventoLaboral(
             id_treballador=current_user.treballador.id_treballador,
