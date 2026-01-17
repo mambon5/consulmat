@@ -30,7 +30,66 @@ def init_database():
             empresa = create_empresa2()
             if empresa:
                 create_admin_user2(empresa.id)
-                create_treballador(empresa.id)
+                create_treballador(empresa.id) # treballador per defecte
+                create_treballador(             # tres treballadors addicionals
+                    empresa.id,
+                    username="empleado2",
+                    password="empleado123",
+                    name="Carlos Martínez",
+                    email="carlos.martinez@empresa.com",
+                    phone="611234567",
+                    departament="manteniment",
+                    adreca="Carrer Aragó 145",
+                    ciutat="Barcelona",
+                    codi_postal=8007,
+                    sexe="m",
+                    nacionalitat="Espanyola",
+                    edat=42,
+                    carnet_conduir="si",
+                    vehicle_propi="si",
+                    role="employee"
+                )
+
+                create_treballador(
+                    empresa.id,
+                    username="empleado3",
+                    password="empleado123",
+                    name="Laura Gómez",
+                    email="laura.gomez@empresa.com",
+                    phone="622345678",
+                    departament="administracio",
+                    adreca="Carrer Provença 310",
+                    ciutat="Barcelona",
+                    codi_postal=8037,
+                    sexe="f",
+                    nacionalitat="Espanyola",
+                    edat=29,
+                    carnet_conduir="no",
+                    vehicle_propi="no",
+                    role="employee"
+                )
+
+                create_treballador(
+                    empresa.id,
+                    username="empleado4",
+                    password="empleado123",
+                    name="Ahmed Benali",
+                    email="ahmed.benali@empresa.com",
+                    phone="633456789",
+                    departament="comunitats",
+                    adreca="Carrer Marina 220",
+                    ciutat="Barcelona",
+                    codi_postal=8013,
+                    sexe="m",
+                    nacionalitat="Marroquina",
+                    edat=37,
+                    carnet_conduir="si",
+                    vehicle_propi="no",
+                    role="employee"
+                )
+ 
+
+
             else:
                 print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
             create_pagador()

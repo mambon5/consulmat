@@ -9,6 +9,7 @@
     - [Com crear una branca nova amb diferent informació](#com-crear-una-branca-nova-amb-diferent-informació)
     - [Esquema de branques per maxilim i organitzar el codi](#esquema-de-branques-per-maxilim-i-organitzar-el-codi)
   - [Crear base de dades i usuari mysql](#crear-base-de-dades-i-usuari-mysql)
+- [Desenvolupament de la app](#desenvolupament-de-la-app)
 # Employee Time Tracker
 
 Una aplicación web desarrollada con Flask para el seguimiento del tiempo de los empleados.
@@ -235,3 +236,34 @@ Tindrem dues branques principals. `estable` i `dev`
     Create database "whatever"
     CREATE USER 'user'@'localhost' IDENTIFIED BY 'passi';
     GRANT ALL PRIVILEGES ON meva_base.* TO 'nou_usuari'@'localhost';
+
+
+# Desenvolupament de la app
+
+
+Idea del sistema d'arxius en arbre:
+
+    AppEnjoyer/
+    │
+    ├── app/
+    │   ├── __init__.py        ← crea app + config + db + login
+    │   ├── models.py          ← totes les taules SQLAlchemy
+    │   ├── routes/
+    │   │   ├── auth.py
+    │   │   ├── treballadors.py
+    │   │   ├── comunitats.py
+    │   │   ├── calendari.py
+    │   │   ├── factures.py
+    │   │   └── api.py
+    │   │
+    │   ├── services/
+    │   │   ├── pdf_service.py
+    │   │   ├── email_service.py
+    │   │   └── user_service.py
+    │   │
+    │   └── utils.py
+    │
+    ├── create_dades.py
+    ├── init_db.py
+    ├── run.py
+    └── .env

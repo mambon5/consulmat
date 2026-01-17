@@ -118,30 +118,34 @@ def create_admin_user2(empresa_id):
 
 
 # 👇 Creació d'un empleat
-def create_treballador(empresa_id):
+def create_treballador(empresa_id, username="empleado1", password="empleado123",
+                       name="Juan Pérez", email="juan.perez@empresa.com", phone="600123456",
+                       departament='comunitats', adreca='Carrer València 200', ciutat='Barcelona',
+                       codi_postal=8002, sexe='m', nacionalitat='Espanyola', edat=35,
+                       carnet_conduir='si', vehicle_propi='no', role="employee"):
     user = create_user(
-        username="empleado1",
-        password="empleado123",
-        name="Juan Pérez",
-        email="juan.perez@empresa.com",
-        role="employee",
+        username=username,
+        password=password,
+        name=name,
+        email=email,
+        role=role,
         empresa_id=empresa_id,
-        phone="600123456"
+        phone=phone
     )
     if user:
         # 🔗 afegim també la taula Treballador (relació 1-1)
         treballador = Treballador(
             id_usuari=user.id,
             empresa_id=empresa_id,
-            departament='comunitats',
-            adreca='Carrer València 200',
-            ciutat='Barcelona',
-            codi_postal=8002,
-            sexe='m',
-            nacionalitat='Espanyola',
-            edat=35,
-            carnet_conduir='si',
-            vehicle_propi='no'
+            departament=departament,
+            adreca=adreca,
+            ciutat=ciutat,
+            codi_postal=codi_postal,
+            sexe=sexe,
+            nacionalitat=nacionalitat,
+            edat=edat,
+            carnet_conduir=carnet_conduir,
+            vehicle_propi=vehicle_propi
         )
         db.session.add(treballador)
         try:

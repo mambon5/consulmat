@@ -167,7 +167,7 @@ class Treballador(db.Model):
     empresa_id = db.Column(db.Integer, db.ForeignKey('empreses.id'), nullable=False)
 
     departament = db.Column(
-        db.Enum('parkings', 'comunitats', 'oficines', name='departament_enum'),
+        db.Enum('parkings', 'comunitats', 'oficines', 'manteniment', 'administració', name='departament_enum'),
         nullable=False
     )
     adreca = db.Column(db.String(255), nullable=True)
