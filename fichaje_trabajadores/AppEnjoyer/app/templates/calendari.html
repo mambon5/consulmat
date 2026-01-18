@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- 📊 Columna esquerra -->
+        <div class="col-md-3 mb-4">
+            <div class="card p-3">
+                <h5 class="fw-bold mb-3">Tipus d'absència:</h5>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="tipo_evento" id="radio_vacances" value="vacances">
+                    <label class="form-check-label" for="radio_vacances">Vacances</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="tipo_evento" id="radio_baixa" value="baixa_medica">
+                    <label class="form-check-label" for="radio_baixa">Baixa mèdica</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="tipo_evento" id="radio_assumptes" value="assumptes_propis">
+                    <label class="form-check-label" for="radio_assumptes">Assumptes propis</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="tipo_evento" id="radio_tele" value="teletreball">
+                    <label class="form-check-label" for="radio_tele">Teletreball</label>
+                </div>
+
+                <hr>
+                <h6 class="fw-bold mb-2">Resum d'absències</h6>
+                <ul class="list-unstyled small">
+                    <li>🏖️ Vacances: {{ stats.vacances }} / {{ restants.vacances + stats.vacances }} ({{ restants.vacances }} restants)</li>
+                    <li>🤒 Baixa mèdica: {{ stats.baixa_medica }} / {{ restants.baixa_medica + stats.baixa_medica }} ({{ restants.baixa_medica }} restants)</li>
+                    <li>📋 Assumptes propis: {{ stats.assumptes_propis }} / {{ restants.assumptes_propis + stats.assumptes_propis }} ({{ restants.assumptes_propis }} restants)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 🗓️ Columna calendari -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Calendari Laboral</h3>
+                </div>
+                <div class="card-body">
+                    {% if treballadors %}
+                    <div class="mb-3">
+                        <form method="get">
+                            <label for="treballador_id" class="form-label">Selecciona treballador:</label>
+                            <select name="treballador_id" id="treballador_id" class="form-select" onchange="this.form.submit()">
+                                {% for t in treballadors %}
+                                    <option value="{{ t.id_treballador }}" {% if t.id_treballador == treballador_seleccionat.id_treballador %}selected{% endif %}>
+                                        {{ t.user.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <div id="calendar"></div>
+                    <p class="mt-3 text-muted small">
+                        🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-la.<br>
+                        🔹 Fes clic sobre un dia d'absència per eliminar-lo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        height: 'auto',
+        events: {{ eventos|tojson | safe }},
+        selectable: true,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+
+        select: async function(info) {
+            const selected = document.querySelector('input[name="tipo_evento"]:checked');
+            if (!selected) {
+                alert("⚠️ Selecciona primer un tipus d'absència.");
+                return;
+            }
+
+            const tipo_evento = selected.value;
+            const startDate = new Date(info.startStr);
+            const endDate = new Date(info.endStr || info.startStr);
+
+            const dates = [];
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                dates.push(d.toISOString().split('T')[0]);
+            }
+
+            if (!confirm(`Vols marcar ${tipo_evento.replace('_', ' ')} (${dates.length} dies)?`)) return;
+
+            let errors = [];
+            let successCount = 0;
+
+            for (const date of dates) {
+                try {
+                    const res = await fetch('/api/absencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fecha: date, tipo_evento })
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        errors.push(`${date}: ${data.error}`);
+                    } else {
+                        successCount++;
+                    }
+
+                } catch (err) {
+                    errors.push(`${date}: error de connexió`);
+                }
+            }
+
+            if (errors.length > 0) {
+                alert(
+                    "❌ Algunes dates NO s'han pogut afegir:\n\n" +
+                    errors.join("\n")
+                );
+            }
+
+            if (successCount > 0) {
+                alert(`✔️ ${successCount} dia(es) afegits correctament`);
+                window.location.reload();
+            }
+        },
+
+        eventClick: async function(info) {
+            const tipus = info.event.title.toLowerCase();
+            if (['vacances', 'baixa', 'assumptes', 'teletreball'].some(k => tipus.includes(k))) {
+                if (!confirm(`Vols eliminar l'absència (${info.event.title}) del dia ${info.event.startStr}?`)) return;
+
+                try {
+                    const res = await fetch(`/api/vacances/${info.event.id}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (data.status === 'ok') {
+                        info.event.remove();
+                        alert("Absència eliminada correctament");
+                    } else {
+                        alert("❌ Error: " + data.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("S'ha produït un error al eliminar l'absència.");
+                }
+            }
+        },
+
+        eventDidMount: function(info) {
+            const title = info.event.title.toLowerCase();
+            let color = '#1976d2'; // treball
+            if (title.includes('festivo')) color = '#e53935';
+            else if (title.includes('vacances')) color = '#43a047';
+            else if (title.includes('baixa')) color = '#fb8c00';
+            else if (title.includes('assumptes')) color = '#6d6d6d';
+            else if (title.includes('teletreball')) color = '#1e88e5';
+
+            info.el.style.backgroundColor = color;
+            info.el.style.borderColor = color;
+            info.el.style.color = 'white';
+        }
+    });
+
+    calendar.render();
+});
+</script>
+{% endblock %}

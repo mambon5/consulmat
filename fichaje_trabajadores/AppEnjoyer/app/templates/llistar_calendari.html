@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Calendari de Treballadors</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Treballador</th>
+            <th>Dia Setmana</th>
+            <th>Comunitat</th>
+            <th>Hora Inici</th>
+            <th>Hora Fi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+        <tr>
+            <td>{{ entry.treballador.user.name if entry.treballador and entry.treballador.user else '—' }}</td>
+            <td>{{ entry.dia_setmana }}</td>
+            <td>{{ entry.comunitat.nombre if entry.comunitat else '—' }}</td>
+            <td>{{ entry.hora_inici.strftime('%H:%M') }}</td>
+            <td>{{ entry.hora_fi.strftime('%H:%M') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

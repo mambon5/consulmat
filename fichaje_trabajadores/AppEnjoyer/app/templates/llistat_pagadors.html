@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Llistat de pagadors</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Telèfon</th>
+            <th>Email</th>
+            <th>Direcció</th>
+            <th>Ciutat</th>
+            <th>Codi Postal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pagador in pagadors %}
+        <tr>
+            <td>{{ pagador.nom_pagador }}</td>
+            <td>{{ pagador.telefon or '—' }}</td>
+            <td>{{ pagador.email }}</td>
+            <td>{{ pagador.direccio or '—' }}</td>
+            <td>{{ pagador.ciutat or '—' }}</td>
+            <td>{{ pagador.codi_postal or '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

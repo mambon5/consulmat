@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Crear Nova Factura</h2>
+
+<form method="POST">
+    <div class="mb-3">
+        <label for="id_comunitat" class="form-label">Comunitat</label>
+        <select name="id_comunitat" class="form-select" required>
+            {% for comunitat in comunitats %}
+            <option value="{{ comunitat.id }}">{{ comunitat.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="tipus_feina" class="form-label">Tipus de Feina</label>
+        <input type="text" class="form-control" name="tipus_feina" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="document_de_pago" class="form-label">Document de Pagament</label>
+        <input type="text" class="form-control" name="document_de_pago" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="regimen_impuestos" class="form-label">Règim d’Impostos (opcional)</label>
+        <input type="text" class="form-control" name="regimen_impuestos">
+    </div>
+
+    <button type="submit" class="btn btn-success">Crear Factura</button>
+</form>
+{% endblock %}
