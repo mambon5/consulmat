@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, send_file
 from flask_login import login_required, current_user
-from app.models import TimeRecord, Incidencia, PauseRecord
+from models import TimeRecord, Incidencia, PauseRecord
 from app import db
 from datetime import datetime
 from zoneinfo import ZoneInfo

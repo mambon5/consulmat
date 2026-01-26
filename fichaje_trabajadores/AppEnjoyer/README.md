@@ -261,7 +261,36 @@ Idea del sistema d'arxius en arbre:
     │   │   ├── email_service.py
     │   │   └── user_service.py
     │   │
-    │   └── utils.py
+    │   ├── utils.py
+    │   └── templates/
+    │       ├── base.html
+    │       ├── auth/
+    │       │   ├── login.html
+    │       │   ├── create_user.html
+    │       │   └── register_first_admin.html
+    │       │
+    │       ├── empresa/
+    │       │   ├── create_empresa.html
+    │       │   ├── generate_empresa_link.html
+    │       │   └── create_admin.html
+    │       │
+    │       ├── treballadors/
+    │       │   ├── create_treballador.html
+    │       │   └── llistat_treballadors.html
+    │       │
+    │       ├── comunitats/
+    │       │   ├── create_comunitat.html
+    │       │   └── llistat_comunitats.html
+    │       │
+    │       ├── factures/
+    │       │   ├── create_factura.html
+    │       │   └── llistat_factures.html
+    │       │
+    │       ├── pagadors/
+    │       ├── calendari/
+    │       └── legal/
+    │           ├── privacy_policy.html
+    │           └── aviso_legal.html
     │
     ├── create_dades.py
     ├── init_db.py
