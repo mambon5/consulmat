@@ -37,8 +37,13 @@
         <!-- 🗓️ Columna calendari -->
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Calendari Laboral</h3>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Calendari Laboral</h3>
+                    {% if current_user.role == 'admin' %}
+                    <a href="/admin/solicitudes" class="btn btn-primary btn-sm">
+                        📋 Veure Sol·licituds Pendents
+                    </a>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     {% if treballadors %}
@@ -60,6 +65,9 @@
                     <p class="mt-3 text-muted small">
                         🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-la.<br>
                         🔹 Fes clic sobre un dia d'absència per eliminar-lo.
+                        {% if current_user.role == 'admin' %}
+                        <br>🔹 <strong>Admin:</strong> Fes clic en una sol·licitud pendent per aprovar-la o denegar-la.
+                        {% endif %}
                     </p>
                 </div>
             </div>
@@ -73,6 +81,51 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // 🔹 Dades de límits de dies
+    const limits = {
+        'vacances': 30,
+        'baixa_medica': 90,
+        'assumptes_propis': 3,
+        'teletreball': null  // sense límit
+    };
+
+    // Obtenir els dies utilitzats del HTML
+    const stats = {
+        'vacances': {{ stats.get('vacances', 0) }},
+        'baixa_medica': {{ stats.get('baixa_medica', 0) }},
+        'assumptes_propis': {{ stats.get('assumptes_propis', 0) }}
+    };
+
+    // 🔹 Funció per actualitzar l'estat dels radios
+    function updateRadioState() {
+        document.querySelectorAll('input[name="tipo_evento"]').forEach(radio => {
+            const tipo = radio.value;
+            const limit = limits[tipo];
+            const used = stats[tipo] || 0;
+            const available = limit - used;
+
+            if (limit !== null && available <= 0) {
+                // Deshabilitar i mostrar visualmente
+                radio.disabled = true;
+                const label = radio.nextElementSibling;
+                if (label) {
+                    label.classList.add('text-muted');
+                    label.style.opacity = '0.5';
+                }
+            } else {
+                radio.disabled = false;
+                const label = radio.nextElementSibling;
+                if (label) {
+                    label.classList.remove('text-muted');
+                    label.style.opacity = '1';
+                }
+            }
+        });
+    }
+
+    // Executar al carregar
+    updateRadioState();
+
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -94,11 +147,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const tipo_evento = selected.value;
+            
+            // 🔹 Validació al frontend: verificar que queden dies
+            const limit = limits[tipo_evento];
+            const used = stats[tipo_evento] || 0;
+            const available = limit - used;
+
+            if (limit !== null && available <= 0) {
+                alert(`❌ No tens dies disponibles de ${tipo_evento.replace('_', ' ')}.\nS'ha exhaurit el límit de ${limit} dies.`);
+                return;
+            }
+
             const startDate = new Date(info.startStr);
             const endDate = new Date(info.endStr || info.startStr);
 
             const dates = [];
-            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            for (let d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
                 dates.push(d.toISOString().split('T')[0]);
             }
 
@@ -136,29 +200,89 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (successCount > 0) {
-                alert(`✔️ ${successCount} dia(es) afegits correctament`);
+                alert(`✔️ ${successCount} dia(es) demanats correctament`);
                 window.location.reload();
             }
         },
 
         eventClick: async function(info) {
+            console.log('Event clicked:', info.event.title, 'ID:', info.event.id);
             const tipus = info.event.title.toLowerCase();
-            if (['vacances', 'baixa', 'assumptes', 'teletreball'].some(k => tipus.includes(k))) {
-                if (!confirm(`Vols eliminar l'absència (${info.event.title}) del dia ${info.event.startStr}?`)) return;
-
+            const isAdmin = {{ 'true' if current_user.role == 'admin' else 'false' }};
+            const esAprovada = info.event.extendedProps?.aprovada || false;
+            
+            // 🔹 Solo permettir eliminar los eventos que son absencias
+            const absenciaTypes = ['vacances', 'baixa', 'assumptes', 'teletreball', 'mèdica'];
+            const isAbsencia = absenciaTypes.some(k => tipus.includes(k));
+            
+            if (!isAbsencia) {
+                console.log('Event no és absencia - tipus:', tipus);
+                return; // No hacer nada si no es una ausencia
+            }
+            
+            // 🔹 SI ÉS ADMIN I ESTÁ PENDENT: OPCIONS D'APROVAR/DENEGAR
+            if (isAdmin && !esAprovada && tipus.includes('pendent')) {
+                const respuesta = confirm(
+                    `Sol·licitud pendent: "${info.event.title}" del ${info.event.startStr}\n\n` +
+                    `OK = Aprovar\n` +
+                    `Cancel = Denegar`
+                );
+                
                 try {
-                    const res = await fetch(`/api/vacances/${info.event.id}`, { method: 'DELETE' });
+                    let res;
+                    if (respuesta) {
+                        // Aprovar
+                        res = await fetch(`/api/absencia/${info.event.id}/aprobar`, { 
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' } 
+                        });
+                    } else {
+                        // Denegar
+                        if (!confirm('Estàs segur que vols DENEGAR aquesta sol·licitud?')) return;
+                        res = await fetch(`/api/absencia/${info.event.id}/denegar`, { 
+                            method: 'DELETE' 
+                        });
+                    }
+                    
                     const data = await res.json();
                     if (data.status === 'ok') {
-                        info.event.remove();
-                        alert("Absència eliminada correctament");
+                        alert(`✅ ${data.message}`);
+                        window.location.reload();
                     } else {
-                        alert("❌ Error: " + data.message);
+                        alert(`❌ Error: ${data.message}`);
                     }
                 } catch (err) {
-                    console.error(err);
-                    alert("S'ha produït un error al eliminar l'absència.");
+                    console.error('Error:', err);
+                    alert('S\'ha produït un error.');
                 }
+                return;
+            }
+            
+            // 🔹 COMPORTAMENT NORMAL: Eliminar absència
+            if (!confirm(`Vols eliminar "${info.event.title}" del dia ${info.event.startStr}?`)) return;
+
+            try {
+                if (!info.event.id) {
+                    alert("❌ Error: L'event no té ID. No es pot eliminar.");
+                    return;
+                }
+                
+                console.log('Deleting absencia with ID:', info.event.id);
+                // 🔹 Usar la nova ruta genèrica /api/absencia
+                const res = await fetch(`/api/absencia/${info.event.id}`, { method: 'DELETE' });
+                const data = await res.json();
+                console.log('Delete response:', data);
+                if (data.status === 'ok') {
+                    info.event.remove();
+                    alert(`✔️ ${data.message}`);
+                    // Reload per actualitzar els estadístics
+                    setTimeout(() => window.location.reload(), 500);
+                } else {
+                    alert("❌ Error: " + data.message);
+                }
+            } catch (err) {
+                console.error('Error al eliminar absencia:', err);
+                alert("S'ha produït un error al eliminar l'absència.");
             }
         },
 

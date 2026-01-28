@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, send_file
 from flask_login import login_required, current_user
-from models import TimeRecord, Incidencia, PauseRecord
-from app import db
+from app.models import TimeRecord, Incidencia, PauseRecord, db
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from reportlab.lib import colors
@@ -10,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO
-from timedelta import timedelta
+from datetime import timedelta
 
 fichajes_bp = Blueprint("fichajes", __name__)
 
@@ -107,11 +106,6 @@ def generate_pdf_report(records, user, report_type):
     buffer.seek(0)
     return buffer
 
-    # Build PDF
-    doc.build(elements)
-    buffer.seek(0)
-    return buffer
-
 @fichajes_bp.route("/")
 @login_required
 def index():
@@ -119,9 +113,6 @@ def index():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     today = datetime.now(ZoneInfo("Europe/Madrid")).date()
     today_incidencies = Incidencia.query.filter_by(user_id=current_user.id, date=today).order_by(Incidencia.time.desc()).all()
-    return render_template('index.html', records=records, active_record=active_record, today_incidencies=today_incidencies)
-
-
     return render_template('index.html', records=records, active_record=active_record, today_incidencies=today_incidencies)
 
 @fichajes_bp.route("/check_in", methods=['POST'])
@@ -257,6 +248,9 @@ def report_incident():
     category = request.form.get('category')
     description = request.form.get('description')
     time = request.form.get('time')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
+    accuracy = request.form.get('accuracy')
     # Si l'usuari no edita l'hora, agafem la d'ara
     if not time:
         time = datetime.now(ZoneInfo("Europe/Madrid")).time().strftime('%H:%M:%S')
@@ -266,7 +260,10 @@ def report_incident():
         date=datetime.now(ZoneInfo("Europe/Madrid")).date(),
         time=datetime.strptime(time, '%H:%M:%S').time(),
         category=category,
-        description=description
+        description=description,
+        latitude=latitude,
+        longitude=longitude,
+        accuracy=accuracy
     )
     db.session.add(incidencia)
     db.session.commit()

@@ -10,11 +10,11 @@
         </div>
         <div class="toast-body">
             No has registrat la teva entrada avui.
-            <form id="checkInFormToast" method="POST" action="{{ url_for('check_in') }}" class="mt-2">
+            <form id="checkInFormToast" method="POST" action="{{ url_for('fichajes.check_in') }}" class="mt-2">
                 <input type="hidden" name="latitude" id="latitudeToast">
                 <input type="hidden" name="longitude" id="longitudeToast">
                 <input type="hidden" name="accuracy" id="accuracyToast">
-                <button type="button" class="btn btn-success btn-sm" onclick="enviarCheckIn('checkInFormToast', 'latitudeToast', 'longitudeToast', 'accuracyToast')">
+                <button type="button" class="btn btn-success btn-sm" onclick="enviarCheckIn(this, 'checkInFormToast', 'latitudeToast', 'longitudeToast', 'accuracyToast')">
                     <i class="bi bi-box-arrow-in-right"></i> Registrar Entrada Ara
                 </button>
             </form>
@@ -27,11 +27,11 @@
         <div id="checkInReminder" class="alert alert-warning d-none">
             <i class="bi bi-exclamation-triangle"></i>
             <strong>Recordatori:</strong> No has registrat la teva entrada avui.
-            <form id="checkInFormReminder" method="POST" action="{{ url_for('check_in') }}" class="mt-2">
+            <form id="checkInFormReminder" method="POST" action="{{ url_for('fichajes.check_in') }}" class="mt-2">
                 <input type="hidden" name="latitude" id="latitudeReminder">
                 <input type="hidden" name="longitude" id="longitudeReminder">
                 <input type="hidden" name="accuracy" id="accuracyReminder">
-                <button type="button" class="btn btn-success btn-sm" onclick="enviarCheckIn('checkInFormReminder', 'latitudeReminder', 'longitudeReminder', 'accuracyReminder')">
+                <button type="button" class="btn btn-success btn-sm" onclick="enviarCheckIn(this, 'checkInFormReminder', 'latitudeReminder', 'longitudeReminder', 'accuracyReminder')">
                     <i class="bi bi-box-arrow-in-right"></i> Registrar Entrada Ara
                 </button>
             </form>
@@ -45,11 +45,11 @@
                         <i class="bi bi-clock-history"></i>
                         Entrada registrada: {{ active_record.check_in.strftime('%H:%M:%S') }}
                     </p>
-                    <form id="checkOutFormMain" method="POST" action="{{ url_for('check_out') }}">
+                    <form id="checkOutFormMain" method="POST" action="{{ url_for('fichajes.check_out') }}">
                         <input type="hidden" name="latitude" id="latitudeOutMain">
                         <input type="hidden" name="longitude" id="longitudeOutMain">
                         <input type="hidden" name="accuracy" id="accuracyOutMain">
-                        <button type="button" class="btn btn-danger w-100" onclick="enviarCheckIn('checkOutFormMain', 'latitudeOutMain', 'longitudeOutMain', 'accuracyOutMain')">
+                        <button type="button" class="btn btn-danger w-100" onclick="enviarCheckIn(this, 'checkOutFormMain', 'latitudeOutMain', 'longitudeOutMain', 'accuracyOutMain')">
                             <i class="bi bi-box-arrow-right"></i> Registrar Sortida
                         </button>
                     </form>
@@ -58,32 +58,32 @@
                     {% set open_pause = active_record.pauses|selectattr('pause_end', 'equalto', None)|list %}
                     {% if not open_pause %}
                         <!-- Botó començar pausa -->
-                        <form id="startPauseForm" method="POST" action="{{ url_for('start_pause') }}" class="mt-2">
+                        <form id="startPauseForm" method="POST" action="{{ url_for('fichajes.start_pause') }}" class="mt-2">
                             <input type="hidden" name="latitude" id="latitudePauseStart">
                             <input type="hidden" name="longitude" id="longitudePauseStart">
                             <input type="hidden" name="accuracy" id="accuracyPauseStart">
-                            <button type="button" class="btn btn-warning w-100 mb-2" onclick="enviarCheckIn('startPauseForm', 'latitudePauseStart', 'longitudePauseStart', 'accuracyPauseStart')">
+                            <button type="button" class="btn btn-warning w-100 mb-2" onclick="enviarCheckIn(this, 'startPauseForm', 'latitudePauseStart', 'longitudePauseStart', 'accuracyPauseStart')">
                                 <i class="bi bi-pause-circle"></i> Començar Pausa
                             </button>
                         </form>
                     {% else %}
                         <!-- Botó acabar pausa -->
-                        <form id="endPauseForm" method="POST" action="{{ url_for('end_pause') }}" class="mt-2">
+                        <form id="endPauseForm" method="POST" action="{{ url_for('fichajes.end_pause') }}" class="mt-2">
                             <input type="hidden" name="latitude" id="latitudePauseEnd">
                             <input type="hidden" name="longitude" id="longitudePauseEnd">
                             <input type="hidden" name="accuracy" id="accuracyPauseEnd">
-                            <button type="button" class="btn btn-success w-100 mb-2" onclick="enviarCheckIn('endPauseForm', 'latitudePauseEnd', 'longitudePauseEnd', 'accuracyPauseEnd')">
+                            <button type="button" class="btn btn-success w-100 mb-2" onclick="enviarCheckIn(this, 'endPauseForm', 'latitudePauseEnd', 'longitudePauseEnd', 'accuracyPauseEnd')">
                                 <i class="bi bi-play-circle"></i> Acabar Pausa
                             </button>
                         </form>
                     {% endif %}
                 {% else %}
                     <p class="text-muted">No hi ha registre actiu</p>
-                    <form id="checkInFormMain" method="POST" action="{{ url_for('check_in') }}">
+                    <form id="checkInFormMain" method="POST" action="{{ url_for('fichajes.check_in') }}">
                         <input type="hidden" name="latitude" id="latitudeMain">
                         <input type="hidden" name="longitude" id="longitudeMain">
                         <input type="hidden" name="accuracy" id="accuracyMain">
-                        <button type="button" class="btn btn-success w-100" onclick="enviarCheckIn('checkInFormMain', 'latitudeMain', 'longitudeMain', 'accuracyMain')">
+                        <button type="button" class="btn btn-success w-100" onclick="enviarCheckIn(this, 'checkInFormMain', 'latitudeMain', 'longitudeMain', 'accuracyMain')">
                             <i class="bi bi-box-arrow-in-right"></i> Registrar Entrada
                         </button>
                     </form>
@@ -91,76 +91,76 @@
                 <!-- Fi botons pausa -->
                  {% if current_user.role == 'admin' and current_user.empresa_id == 1 %}
                 <div class="mt-3">
-                    <a href="{{ url_for('generate_empresa_link') }}" class="btn btn-warning w-100">
+                    <a href="{{ url_for('empresa.generate_empresa_link') }}" class="btn btn-warning w-100">
                         <i class="bi bi-building-add"></i> Generar Enllaç per Crear Empresa
                     </a>
                 </div>
                 {% endif %}
 
                 <div class="mt-3">
-                    <a href="{{ url_for('generate_report') }}" class="btn btn-info w-100">
+                    <a href="{{ url_for('fichajes.generate_report') }}" class="btn btn-info w-100">
                         <i class="bi bi-file-earmark-pdf"></i> Generar Informe
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('calendario_laboral') }}" class="btn btn-info w-100">
+                    <a href="{{ url_for('calendario.calendario_laboral') }}" class="btn btn-info w-100">
                         <i class="bi bi-calendar-event"></i> Calendario Laboral
                     </a>
                 </div>
                 {% if current_user.role == 'admin' %}
                 <div class="mt-3">
-                    <a href="{{ url_for('llistar_usuaris') }}" class="btn btn-info w-100">
+                    <a href="{{ url_for('empresa.usuaris') }}" class="btn btn-info w-100">
                         <i class="bi bi-people"></i> Veure Usuaris
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('create_user', empresa_id=current_user.empresa_id) }}" class="btn btn-info w-100">
+                    <a href="{{ url_for('auth.create_user', empresa_id=current_user.empresa_id) }}" class="btn btn-info w-100">
                         <i class="bi bi-person-plus"></i> Afegir Usuari
                     </a>
                 </div>
                  <div class="mt-3">
-                    <a href="{{ url_for('create_admin' , empresa_id=current_user.empresa_id) }}" class="btn btn-info w-100">
+                    <a href="{{ url_for('auth.create_admin' , empresa_id=current_user.empresa_id) }}" class="btn btn-info w-100">
                         <i class="bi bi-star"></i> Afegir Administrador
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('llistar_treballadors') }}" class="btn btn-success w-100">
+                    <a href="{{ url_for('empresa.treballadors') }}" class="btn btn-success w-100">
                         <i class="bi bi-people-fill"></i> Veure Treballadors
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('create_treballador', empresa_id=current_user.empresa_id) }}" class="btn btn-success w-100">
+                    <a href="{{ url_for('empresa.create_treballador', empresa_id=current_user.empresa_id) }}" class="btn btn-success w-100">
                         <i class="bi bi-person-plus-fill"></i> Crear Treballador
                     </a>
                 </div>
                
                 <div class="mt-3">
-                    <a href="{{ url_for('llistar_comunitats') }}" class="btn btn-primary w-100">
+                    <a href="{{ url_for('empresa.comunitats') }}" class="btn btn-primary w-100">
                         <i class="bi bi-houses-fill"></i> Veure Comunitats
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('create_comunitat') }}" class="btn btn-primary w-100">
+                    <a href="{{ url_for('empresa.create_comunitat') }}" class="btn btn-primary w-100">
                         <i class="bi bi-house-add"></i> Afegir Comunitat
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('llistar_pagadors') }}" class="btn btn-outline-danger w-100">
+                    <a href="{{ url_for('empresa.pagadors') }}" class="btn btn-outline-danger w-100">
                         <i class="bi  bi-person-fill"></i> Veure Pagadors
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('create_pagador') }}" class="btn  btn-outline-danger w-100">
+                    <a href="{{ url_for('empresa.create_pagador') }}" class="btn  btn-outline-danger w-100">
                         <i class="bi  bi-person-plus-fill"></i> Afegir Pagador
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('llistar_factures') }}" class="btn btn-warning w-100">
+                    <a href="{{ url_for('facturas.llistar_factures') }}" class="btn btn-warning w-100">
                         <i class="bi bi-receipt-cutoff"></i> Veure Factures
                     </a>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ url_for('create_factura') }}" class="btn btn-warning w-100">
+                    <a href="{{ url_for('facturas.create_factura') }}" class="btn btn-warning w-100">
                         <i class="bi bi-file-earmark-plus"></i> Crear Factura
                     </a>
                 </div>
@@ -340,6 +340,8 @@
                             <th>Hora</th>
                             <th>Categoria</th>
                             <th>Descripció</th>
+                            <th>Lat/Lon Incidència</th>
+                            <th>Precisión (m)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -348,6 +350,22 @@
                             <td>{{ inc.time.strftime('%H:%M:%S') }}</td>
                             <td>{{ inc.category }}</td>
                             <td>{{ inc.description }}</td>
+                            <td>
+                                {% if inc.latitude and inc.longitude %}
+                                    <a href="https://www.google.com/maps?q={{ inc.latitude }},{{ inc.longitude }}" target="_blank">
+                                        {{ '%.5f' | format(inc.latitude) }}, {{ '%.5f' | format(inc.longitude) }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inc.accuracy %}
+                                    {{ '%.1f' | format(inc.accuracy) }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -366,7 +384,7 @@
         <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form method="POST" action="{{ url_for('report_incident') }}">
+              <form method="POST" action="{{ url_for('fichajes.report_incident') }}">
                 <div class="modal-header">
                   <h5 class="modal-title" id="incidenciaModalLabel">Registrar Incidència</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tanca"></button>
@@ -389,10 +407,13 @@
                     <label for="time" class="form-label">Hora</label>
                     <input type="time" class="form-control" id="time" name="time" value="{{ now.strftime('%H:%M:%S') }}">
                   </div>
+                  <input type="hidden" name="latitude" id="latitudeIncident">
+                  <input type="hidden" name="longitude" id="longitudeIncident">
+                  <input type="hidden" name="accuracy" id="accuracyIncident">
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·la</button>
-                  <button type="submit" class="btn btn-danger">Envia</button>
+                  <button type="button" class="btn btn-danger" onclick="reportIncident()">Envia</button>
                 </div>
               </form>
             </div>
@@ -402,7 +423,11 @@
         <!-- Historial de Pauses -->
 
 <script>
-function enviarCheckIn(formId, latId, lonId, accId) {
+function enviarCheckIn(button, formId, latId, lonId, accId) {
+    var originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-geo-alt"></i> Esperant GPS...';
+    
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             document.getElementById(latId).value = position.coords.latitude;
@@ -410,14 +435,48 @@ function enviarCheckIn(formId, latId, lonId, accId) {
             if (accId) {
                 document.getElementById(accId).value = position.coords.accuracy;
             }
+            button.disabled = false;
+            button.innerHTML = originalText;
             document.getElementById(formId).submit();
         }, function() {
             alert('No s\'ha pogut obtenir la ubicació.');
+            button.disabled = false;
+            button.innerHTML = originalText;
             document.getElementById(formId).submit();
         });
     } else {
         alert('El teu navegador no suporta geolocalització.');
+        button.disabled = false;
+        button.innerHTML = originalText;
         document.getElementById(formId).submit();
+    }
+}
+
+function reportIncident() {
+    var button = document.querySelector('#incidenciaModal .btn-danger');
+    var originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-geo-alt"></i> Esperant GPS...';
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById('latitudeIncident').value = position.coords.latitude;
+            document.getElementById('longitudeIncident').value = position.coords.longitude;
+            document.getElementById('accuracyIncident').value = position.coords.accuracy;
+            button.disabled = false;
+            button.innerHTML = originalText;
+            document.querySelector('#incidenciaModal form').submit();
+        }, function() {
+            alert('No s\'ha pogut obtenir la ubicació.');
+            button.disabled = false;
+            button.innerHTML = originalText;
+            document.querySelector('#incidenciaModal form').submit();
+        });
+    } else {
+        alert('El teu navegador no suporta geolocalització.');
+        button.disabled = false;
+        button.innerHTML = originalText;
+        document.querySelector('#incidenciaModal form').submit();
     }
 }
 

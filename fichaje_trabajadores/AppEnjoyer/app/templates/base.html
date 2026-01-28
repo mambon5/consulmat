@@ -35,8 +35,8 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='logo_maximil.png') }}" alt="Logo Maximiliam" width="200">
+            <a class="navbar-brand" href="{{ url_for('fichajes.index') }}">
+                <img src="{{ url_for('static', filename='logo_maximil.png') }}" alt="Logo Empresa" width="200">
             </a>
             {% if current_user.is_authenticated %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -46,24 +46,24 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         
-                            <a class="nav-link" href="{{ url_for('perfil_usuari', user_id=current_user.id) }}">
+                            <a class="nav-link" href="{{ url_for('empresa.usuari', user_id=current_user.id) }}">
                             <i class="bi bi-person-circle"></i> 
                             {{ current_user.name }}
                             </a>
                         
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('privacy_settings') }}">
+                        <a class="nav-link" href="{{ url_for('privacidad.privacy_settings') }}">
                             <i class="bi bi-shield-check"></i> Privacidad
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('aviso_legal') }}">
+                        <a class="nav-link" href="{{ url_for('privacidad.aviso_legal') }}">
                             <i class="bi bi-file-earmark-text"></i> Aviso Legal
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
                             <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                         </a>
                     </li>

@@ -1,17 +1,30 @@
-from app import app, db, User, bcrypt, Comunidad, Factura, Treballador, Pagador, Calendari, Empresa
-from datetime import datetime
-from zoneinfo import ZoneInfo
-from datetime import time
+# create_dades.py
+
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
+
+from app import create_app, db, bcrypt
+from app.models import (
+    User, Comunidad, Factura, Treballador, Pagador, Empresa, Calendari
+)
+from datetime import datetime, time
+
+# Crear instància de Flask amb la factory
+app = create_app()
 
 
+# -----------------------------
+# Funcions per crear dades
+# -----------------------------
 
 def create_empresa1():
-    num_fisc='B1278'  # numero fiscal inventat
+    num_fisc = 'B1278'
     with app.app_context():
         empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
         if empresa:
             print(f"La empresa amb número fiscal {num_fisc} ja existeix.")
-            return empresa   # <- en lloc de None
+            return empresa
 
         hashed_password = bcrypt.generate_password_hash('empresa123').decode('utf-8')
         empresa = Empresa(
@@ -20,26 +33,26 @@ def create_empresa1():
             numero_fiscal=num_fisc,
             adreca='Carrer duoda 21, 08020, Barcelona',
             correu_gerent='anamasdigital@gmail.com',
-            telefon_gerent=611648478
+            telefon_gerent='611648478'
         )
         db.session.add(empresa)
         try:
             db.session.commit()
-            empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
-            print(f"Empresa {empresa.nom} creada exitosamente")
-            return empresa   # <- retornem també si és nova
+            print(f"Empresa {empresa.nom} creada exitosament")
+            return empresa
         except Exception as e:
             db.session.rollback()
-            print(f"Error al crear la empresa admin: {e}")
+            print(f"Error al crear la empresa: {e}")
             return None
-        
+
+
 def create_empresa2():
-    num_fisc='B12345678'  # numero fiscal inventat
+    num_fisc = 'B12345678'
     with app.app_context():
         empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
         if empresa:
             print(f"La empresa amb número fiscal {num_fisc} ja existeix.")
-            return empresa   # <- en lloc de None
+            return empresa
 
         hashed_password = bcrypt.generate_password_hash('empresa123').decode('utf-8')
         empresa = Empresa(
@@ -48,17 +61,16 @@ def create_empresa2():
             numero_fiscal=num_fisc,
             adreca='Carrer de Joanot Martorell, 5, 08403 Granollers, Barcelona',
             correu_gerent='qmaxi@gmail.com',
-            telefon_gerent=647112622
+            telefon_gerent='647112622'
         )
         db.session.add(empresa)
         try:
             db.session.commit()
-            empresa = Empresa.query.filter_by(numero_fiscal=num_fisc).first()
-            print(f"Empresa {empresa.nom} creada exitosamente")
-            return empresa   # <- retornem també si és nova
+            print(f"Empresa {empresa.nom} creada exitosament")
+            return empresa
         except Exception as e:
             db.session.rollback()
-            print(f"Error al crear la empresa admin: {e}")
+            print(f"Error al crear la empresa: {e}")
             return None
 
 
@@ -69,7 +81,6 @@ def create_user(username, password, name, email, role, empresa_id, phone=None):
             return None
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
         user = User(
             username=username,
             password=hashed_password,
@@ -85,7 +96,6 @@ def create_user(username, password, name, email, role, empresa_id, phone=None):
         db.session.add(user)
         try:
             db.session.commit()
-            user = User.query.filter_by(username=username).first() # <- per assegurar que l'usuari existeix
             print(f"Usuario {role} '{username}' creado exitosamente.")
             return user
         except Exception as e:
@@ -94,7 +104,7 @@ def create_user(username, password, name, email, role, empresa_id, phone=None):
             return None
 
 
-# 👇 Creació d'un admin
+# Creació d’administradors
 def create_admin_user1(empresa_id):
     return create_user(
         username="admin",
@@ -105,6 +115,7 @@ def create_admin_user1(empresa_id):
         empresa_id=empresa_id,
         phone="611171"
     )
+
 def create_admin_user2(empresa_id):
     return create_user(
         username="jose",
@@ -117,23 +128,16 @@ def create_admin_user2(empresa_id):
     )
 
 
-# 👇 Creació d'un empleat
-def create_treballador(empresa_id, username="empleado1", password="empleado123",
-                       name="Juan Pérez", email="juan.perez@empresa.com", phone="600123456",
-                       departament='comunitats', adreca='Carrer València 200', ciutat='Barcelona',
-                       codi_postal=8002, sexe='m', nacionalitat='Espanyola', edat=35,
-                       carnet_conduir='si', vehicle_propi='no', role="employee"):
-    user = create_user(
-        username=username,
-        password=password,
-        name=name,
-        email=email,
-        role=role,
-        empresa_id=empresa_id,
-        phone=phone
-    )
+# Creació d’empleats
+def create_treballador(
+    empresa_id, username="empleado1", password="empleado123",
+    name="Juan Pérez", email="juan.perez@empresa.com", phone="600123456",
+    departament='comunitats', adreca='Carrer València 200', ciutat='Barcelona',
+    codi_postal=8002, sexe='m', nacionalitat='Espanyola', edat=35,
+    carnet_conduir='si', vehicle_propi='no', role="employee"
+):
+    user = create_user(username, password, name, email, role, empresa_id, phone)
     if user:
-        # 🔗 afegim també la taula Treballador (relació 1-1)
         treballador = Treballador(
             id_usuari=user.id,
             empresa_id=empresa_id,
@@ -156,7 +160,6 @@ def create_treballador(empresa_id, username="empleado1", password="empleado123",
             print(f"Error al crear treballador per usuari {user.username}: {e}")
 
 
-
 def create_pagador():
     with app.app_context():
         if Pagador.query.filter_by(email='pagador@exemple.com').first():
@@ -171,7 +174,6 @@ def create_pagador():
             ciutat='Barcelona',
             codi_postal=8001
         )
-
         db.session.add(pagador)
         try:
             db.session.commit()
@@ -179,6 +181,7 @@ def create_pagador():
         except Exception as e:
             db.session.rollback()
             print(f"Error al crear pagador: {e}")
+
 
 def create_comunitat():
     with app.app_context():
@@ -192,7 +195,6 @@ def create_comunitat():
             return
 
         data_alta = datetime.strptime('12/04/2025', '%d/%m/%Y').date()
-
         nova_comu = Comunidad(
             nombre='Portal Rosello amb passeig de gràcia',
             cif='H99983',
@@ -205,7 +207,6 @@ def create_comunitat():
             longitud=2.1620,
             id_pagador=pagador.id_pagador
         )
-
         db.session.add(nova_comu)
         try:
             db.session.commit()
@@ -213,6 +214,7 @@ def create_comunitat():
         except Exception as e:
             db.session.rollback()
             print(f"Error al crear comunitat: {e}")
+
 
 def create_factura():
     with app.app_context():
@@ -227,7 +229,6 @@ def create_factura():
             document_de_pago='transferencia bancaria',
             regimen_impuestos='IVA 21%'
         )
-
         db.session.add(factura)
         try:
             db.session.commit()
@@ -237,20 +238,15 @@ def create_factura():
             print(f"Error al crear factura: {e}")
 
 
-
 def create_calendari():
     with app.app_context():
         treballador = Treballador.query.first()
         comunitat = Comunidad.query.first()
 
-        if not treballador:
-            print("Cal crear un treballador abans.")
-            return
-        if not comunitat:
-            print("Cal crear una comunitat abans.")
+        if not treballador or not comunitat:
+            print("Cal crear primer un treballador i una comunitat.")
             return
 
-        # Exemple: assignem neteja dilluns i dimecres de 9 a 12h
         dies = ['Dll', 'Dx']
         hora_inici = time(9, 0)
         hora_fi = time(12, 0)
@@ -282,14 +278,20 @@ def create_calendari():
             print(f"Error al crear entrades de calendari: {e}")
 
 
-
-# if __name__ == '__main__':
-    # empresa = create_empresa()
-    # if empresa:
-    #     create_admin_user(empresa.id)
-    #     create_employee(empresa.id)
-    # create_pagador()
-    # create_comunitat()
-    # create_factura()
-    # create_treballador()
-    # create_calendari()
+# -----------------------------
+# Execució principal
+# -----------------------------
+if __name__ == '__main__':
+    empresa1 = create_empresa1()
+    if empresa1:
+        create_admin_user1(empresa1.id)
+        create_treballador(empresa1.id)
+    
+    empresa2 = create_empresa2()
+    if empresa2:
+        create_admin_user2(empresa2.id)
+    
+    create_pagador()
+    create_comunitat()
+    create_factura()
+    create_calendari()

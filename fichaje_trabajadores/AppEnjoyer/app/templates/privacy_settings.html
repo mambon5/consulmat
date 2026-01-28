@@ -29,7 +29,7 @@
                     <div class="mb-4">
                         <h5>Ejercer sus Derechos RGPD</h5>
                         <div class="list-group">
-                            <a href="{{ url_for('export_data') }}" class="list-group-item list-group-item-action">
+                            <a href="{{ url_for('privacidad.export_data') }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Descargar mis Datos</h6>
                                     <i class="bi bi-download"></i>
@@ -50,19 +50,19 @@
                     <div class="mb-4">
                         <h5>Enlaces Útiles</h5>
                         <div class="list-group">
-                            <a href="{{ url_for('privacy_policy') }}" class="list-group-item list-group-item-action">
+                            <a href="{{ url_for('privacidad.privacy_policy') }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Política de Privacidad</h6>
                                     <i class="bi bi-file-text"></i>
                                 </div>
                             </a>
-                            <a href="{{ url_for('aviso_legal') }}" class="list-group-item list-group-item-action">
+                            <a href="{{ url_for('privacidad.aviso_legal') }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Aviso Legal</h6>
                                     <i class="bi bi-file-earmark-text"></i>
                                 </div>
                             </a>
-                            <a href="{{ url_for('data_consent') }}" class="list-group-item list-group-item-action">
+                            <a href="{{ url_for('privacidad.data_consent') }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Actualizar Consentimientos</h6>
                                     <i class="bi bi-pencil"></i>
@@ -94,7 +94,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form method="POST" action="{{ url_for('delete_data') }}" id="deleteAccountForm">
+                <form method="POST" action="{{ url_for('privacidad.delete_data') }}" id="deleteAccountForm">
                     <input type="hidden" name="confirm" value="true">
                     <button type="submit" class="btn btn-danger" id="deleteAccountBtn" disabled>
                         Eliminar mi Cuenta

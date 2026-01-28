@@ -221,6 +221,11 @@ class EventoLaboral(db.Model):
         nullable=False,
         default='trabajo'
     )
+    
+    # 🔹 NOVES COLUMNES PER AL SISTEMA D'APROVACIÓ
+    aprovada = db.Column(db.Boolean, nullable=False, default=False)
+    fecha_solicitud = db.Column(db.DateTime, nullable=True, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")))
+    fecha_aprobacion = db.Column(db.DateTime, nullable=True)
 
     treballador = db.relationship('Treballador', backref='eventos_laborales')
     comunitat = db.relationship('Comunidad', backref='eventos_laborales')
@@ -233,5 +238,8 @@ class Incidencia(db.Model):
     time = db.Column(db.Time, nullable=False, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")).time())
     category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    accuracy = db.Column(db.Float)
     user = db.relationship('User', backref=db.backref('incidencies', lazy=True))
     time_record = db.relationship('TimeRecord', backref=db.backref('incidencies', lazy=True))
