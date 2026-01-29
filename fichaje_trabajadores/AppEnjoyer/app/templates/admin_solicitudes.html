@@ -5,53 +5,58 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-4">📋 Sol·licituds Pendents d'Absència i Teletreball</h2>
-            
+
             {% if solicitudes %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Treballador</th>
-                                <th>Tipus</th>
-                                <th>Data Inici</th>
-                                <th>Data Fi</th>
-                                <th>Dies</th>
-                                <th>Quan s'ha demanat?</th>
-                                <th>Accions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for sol in solicitudes %}
-                            <tr id="row-{{ sol.ids[0] }}">
-                                <td>
-                                    <strong>{{ sol.treballador_nom }}</strong>
-                                </td>
-                                <td>
-                                    <span class="badge" id="badge-{{ sol.ids[0] }}">
-                                        {{ sol.tipo_evento }}
-                                    </span>
-                                </td>
-                                <td>{{ sol.fecha_inicio }}</td>
-                                <td>{{ sol.fecha_fin }}</td>
-                                <td><span class="badge bg-info">{{ sol.dias }}</span></td>
-                                <td>{{ sol.fecha_solicitud }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-success" onclick="aprobar({{ sol.ids | tojson | safe }})">
-                                        ✅ Aprovar
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="denegar({{ sol.ids | tojson | safe }})">
-                                        ❌ Denegar
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Treballador</th>
+                            <th>Tipus</th>
+                            <th>Data Inici</th>
+                            <th>Data Fi</th>
+                            <th>Dies</th>
+                            <th>Quan s'ha demanat?</th>
+                            <th>Accions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sol in solicitudes %}
+                        <tr id="row-{{ sol.ids[0] }}">
+                            <td>
+                                <strong>{{ sol.treballador_nom }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                        {% if 'Vacances' in sol.tipo_evento %}badge-vacances
+                                        {% elif 'Baixa' in sol.tipo_evento %}badge-baixa
+                                        {% elif 'Assumptes' in sol.tipo_evento %}badge-assumptes
+                                        {% elif 'Teletreball' in sol.tipo_evento %}badge-teletreball
+                                        {% endif %}" id="badge-{{ sol.ids[0] }}">
+                                    {{ sol.tipo_evento }}
+                                </span>
+                            </td>
+                            <td>{{ sol.fecha_inicio }}</td>
+                            <td>{{ sol.fecha_fin }}</td>
+                            <td><span class="badge bg-info text-dark">{{ sol.dias }}</span></td>
+                            <td>{{ sol.fecha_solicitud }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-success" onclick="aprobar({{ sol.ids | tojson | safe }})">
+                                    ✅ Aprovar
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="denegar({{ sol.ids | tojson | safe }})">
+                                    ❌ Denegar
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-                <div class="alert alert-info" role="alert">
-                    ✔️ No hi ha sol·licituds pendents d'aprovació.
-                </div>
+            <div class="alert alert-info" role="alert">
+                ✔️ No hi ha sol·licituds pendents d'aprovació.
+            </div>
             {% endif %}
         </div>
     </div>
@@ -61,103 +66,110 @@
     .badge {
         padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
+        color: #212529 !important;
+        /* Font fosca */
+        font-weight: 600;
     }
-    
+
     .badge-vacances {
-        background-color: #43a047;
+        background-color: #a5d6a7;
+        /* Verd clar per a font fosca */
     }
-    
+
     .badge-baixa {
-        background-color: #fb8c00;
+        background-color: #ffccbc;
+        /* Taronja clar per a font fosca */
     }
-    
+
     .badge-assumptes {
-        background-color: #6d6d6d;
+        background-color: #eeeeee;
+        /* Gris clar per a font fosca */
     }
-    
+
     .badge-teletreball {
-        background-color: #1e88e5;
+        background-color: #bbdefb;
+        /* Blau clar per a font fosca */
     }
 </style>
 
 <script>
-async function aprobar(ids) {
-    if (!confirm('Estàs segur que vols aprovar aquesta sol·licitud?')) return;
-    
-    try {
-        // Si és un sol ID (versió antiga) convertir a array
-        const id_array = Array.isArray(ids) ? ids : [ids];
-        
-        const res = await fetch(`/api/absencias/aprobar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: id_array })
-        });
-        
-        const data = await res.json();
-        console.log('Aprobar response:', data);
-        
-        if (data.status === 'ok') {
-            alert(`✅ ${data.message}`);
-            // Eliminar la fila de la taula
-            const row = document.getElementById(`row-${id_array[0]}`);
-            if (row) {
-                row.remove();
-                // Si no queden més files, recarregar
-                const tbody = document.querySelector('tbody tr');
-                if (!tbody) {
-                    location.reload();
-                }
-            }
-        } else {
-            alert(`❌ Error: ${data.message}`);
-        }
-    } catch (err) {
-        console.error('Error al aprobar:', err);
-        alert('S\'ha produït un error al aprovar. Revisa la consola.');
-    }
-}
+    async function aprobar(ids) {
+        if (!confirm('Estàs segur que vols aprovar aquesta sol·licitud?')) return;
 
-async function denegar(ids) {
-    if (!confirm('Estàs segur que vols DENEGAR aquesta sol·licitud?')) return;
-    
-    try {
-        // Si és un sol ID (versió antiga) convertir a array
-        const id_array = Array.isArray(ids) ? ids : [ids];
-        
-        console.log('Denegant IDs:', id_array);
-        
-        const res = await fetch(`/api/absencias/denegar`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: id_array })
-        });
-        
-        console.log('Response status:', res.status);
-        const data = await res.json();
-        console.log('Denegar response:', data);
-        
-        if (data.status === 'ok') {
-            alert(`✅ ${data.message}`);
-            // Eliminar la fila de la taula
-            const row = document.getElementById(`row-${id_array[0]}`);
-            if (row) {
-                row.remove();
-                // Si no queden més files, recarregar
-                const tbody = document.querySelector('tbody tr');
-                if (!tbody) {
-                    location.reload();
+        try {
+            // Si és un sol ID (versió antiga) convertir a array
+            const id_array = Array.isArray(ids) ? ids : [ids];
+
+            const res = await fetch(`/api/absencias/aprobar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: id_array })
+            });
+
+            const data = await res.json();
+            console.log('Aprobar response:', data);
+
+            if (data.status === 'ok') {
+                alert(`✅ ${data.message}`);
+                // Eliminar la fila de la taula
+                const row = document.getElementById(`row-${id_array[0]}`);
+                if (row) {
+                    row.remove();
+                    // Si no queden més files, recarregar
+                    const tbody = document.querySelector('tbody tr');
+                    if (!tbody) {
+                        location.reload();
+                    }
                 }
+            } else {
+                alert(`❌ Error: ${data.message}`);
             }
-        } else {
-            const errorMsg = data.error || data.message || 'Error desconegut';
-            alert(`❌ Error: ${errorMsg}`);
+        } catch (err) {
+            console.error('Error al aprobar:', err);
+            alert('S\'ha produït un error al aprovar. Revisa la consola.');
         }
-    } catch (err) {
-        console.error('Error al denegar:', err);
-        alert('S\'ha produït un error al denegar. Revisa la consola (F12).');
     }
-}
+
+    async function denegar(ids) {
+        if (!confirm('Estàs segur que vols DENEGAR aquesta sol·licitud?')) return;
+
+        try {
+            // Si és un sol ID (versió antiga) convertir a array
+            const id_array = Array.isArray(ids) ? ids : [ids];
+
+            console.log('Denegant IDs:', id_array);
+
+            const res = await fetch(`/api/absencias/denegar`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: id_array })
+            });
+
+            console.log('Response status:', res.status);
+            const data = await res.json();
+            console.log('Denegar response:', data);
+
+            if (data.status === 'ok') {
+                alert(`✅ ${data.message}`);
+                // Eliminar la fila de la taula
+                const row = document.getElementById(`row-${id_array[0]}`);
+                if (row) {
+                    row.remove();
+                    // Si no queden més files, recarregar
+                    const tbody = document.querySelector('tbody tr');
+                    if (!tbody) {
+                        location.reload();
+                    }
+                }
+            } else {
+                const errorMsg = data.error || data.message || 'Error desconegut';
+                alert(`❌ Error: ${errorMsg}`);
+            }
+        } catch (err) {
+            console.error('Error al denegar:', err);
+            alert('S\'ha produït un error al denegar. Revisa la consola (F12).');
+        }
+    }
 </script>
 
 {% endblock %}

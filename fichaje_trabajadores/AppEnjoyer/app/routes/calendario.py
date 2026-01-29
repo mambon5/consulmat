@@ -387,11 +387,10 @@ def crear_absencia():
         lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
         
         if tipo_evento in lim:
-            # Contar els dies ja utilitzats (només els aprovats compten pel límit)
+            # Contar els dies ja sol·licitats (tant pendents com aprovats compten pel límit)
             absencies = EventoLaboral.query.filter_by(
                 id_treballador=current_user.treballador.id_treballador,
-                tipo_evento=tipo_evento,
-                aprovada=True
+                tipo_evento=tipo_evento
             ).all()
             dias_utilizados = len(absencies)
             dias_disponibles = lim[tipo_evento] - dias_utilizados
