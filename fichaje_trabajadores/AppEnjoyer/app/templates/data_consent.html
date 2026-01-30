@@ -13,12 +13,12 @@
                         Para utilizar el sistema de fichaje, necesitamos su consentimiento para el tratamiento de sus datos personales de acuerdo con el RGPD.
                     </div>
 
-                    <form method="POST" action="{{ url_for('data_consent') }}">
+                    <form method="POST" action="{{ url_for('privacidad.data_consent') }}">
                         <div class="mb-4">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="generalConsent" name="consent_type" value="general" required>
                                 <label class="form-check-label" for="generalConsent">
-                                    He leído y acepto la <a href="{{ url_for('privacy_policy') }}" target="_blank">Política de Privacidad</a>
+                                    He leído y acepto la <a href="{{ url_for('privacidad.privacy_policy') }}" target="_blank">Política de Privacidad</a>
                                     y doy mi consentimiento para el tratamiento de mis datos personales.
                                 </label>
                             </div>
@@ -48,7 +48,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-lg"></i> Aceptar y Continuar
                             </button>
-                            <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-x-lg"></i> Rechazar
                             </a>
                         </div>
