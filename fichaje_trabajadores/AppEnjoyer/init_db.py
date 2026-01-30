@@ -1,5 +1,6 @@
-from app import db, app
 from create_dades import (
+    app,
+    db,
     create_empresa1,
     create_empresa2,
     create_admin_user1, 
@@ -24,17 +25,17 @@ def init_database():
             if empresa:
                 create_admin_user1(empresa.id)
                 create_treballador(
-                    empresa.id, username="roma", password="roma1",
+                    empresa.id, username="roma", password="roma",
                     name="Romà Masana", email="roma.perez@empresa.com", phone="644443456",
                     departament='administració', adreca='Carrer Mireia 200', ciutat='Barcelona',
                     codi_postal=9302, sexe='m', nacionalitat='Catalunya', edat=33,
                     carnet_conduir='si', vehicle_propi='si', role="employee"
                 )
                 create_treballador(
-                    empresa.id, username="roma", password="roma1",
-                    name="Diego TO", email="roma.perez@empresa.com", phone="666666",
+                    empresa.id, username="diego", password="diego",
+                    name="Diego TO", email="diegoto@empresa.com", phone="666666",
                     departament='administració', adreca='Carrer Escocia 20', ciutat='Barcelona',
-                    codi_postal=90302, sexe='d', nacionalitat='Catalunya', edat=43,
+                    codi_postal=90302, sexe='m', nacionalitat='Catalunya', edat=43,
                     carnet_conduir='si', vehicle_propi='no', role="employee"
                 )
             else:
@@ -71,7 +72,7 @@ def init_database():
                     name="Laura Gómez",
                     email="laura.gomez@empresa.com",
                     phone="622345678",
-                    departament="administracio",
+                    departament="administració",
                     adreca="Carrer Provença 310",
                     ciutat="Barcelona",
                     codi_postal=8037,
