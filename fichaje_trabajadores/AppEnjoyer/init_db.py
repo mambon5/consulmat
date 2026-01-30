@@ -27,7 +27,7 @@ def init_database():
                     empresa.id, username="roma", password="roma1",
                     name="Romà Masana", email="roma.perez@empresa.com", phone="644443456",
                     departament='administració', adreca='Carrer Mireia 200', ciutat='Barcelona',
-                    codi_postal=09302, sexe='m', nacionalitat='Catalunya', edat=33,
+                    codi_postal=9302, sexe='m', nacionalitat='Catalunya', edat=33,
                     carnet_conduir='si', vehicle_propi='si', role="employee"
                 )
                 create_treballador(
