@@ -9,8 +9,9 @@ from create_dades import (
     create_pagador,
     create_factura,
     create_treballador,
-    create_calendari
-)
+    create_calendari,
+    create_solicituds
+)   
 
 def init_database():
     with app.app_context():
@@ -112,6 +113,7 @@ def init_database():
             create_comunitat()
             create_factura()
             create_calendari()
+            create_solicituds()
             
             print("Inicialización de la base de datos completada.")
         except Exception as e:

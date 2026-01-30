@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from app import create_app, db, bcrypt
 from app.models import (
-    User, Comunidad, Factura, Treballador, Pagador, Empresa, Calendari
+    User, Comunidad, Factura, Treballador, Pagador, Empresa, Calendari, EventoLaboral
 )
 from datetime import datetime, time
 
@@ -278,6 +278,64 @@ def create_calendari():
         print(f"Error al crear entrades de calendari: {e}")
 
 
+
+def create_solicituds():
+    # Llista de treballadors i els seus noms d'usuari
+    treballadors_data = [
+        ("roma", [
+            (datetime(2025, 8, 1).date(), 'vacances'),
+            (datetime(2025, 8, 15).date(), 'teletreball')
+        ]),
+        ("diego", [
+            (datetime(2025, 9, 10).date(), 'assumptes_propis'),
+            (datetime(2025, 9, 11).date(), 'assumptes_propis')
+        ]),
+        ("empleado1", [
+            (datetime(2025, 10, 5).date(), 'vacances'),
+            (datetime(2025, 10, 6).date(), 'vacances')
+        ]),
+        ("empleado2", [
+            (datetime(2025, 8, 2).date(), 'teletreball'),
+            (datetime(2025, 8, 9).date(), 'teletreball')
+        ]),
+        ("empleado3", [
+            (datetime(2025, 11, 20).date(), 'baixa_medica'),
+            (datetime(2025, 11, 21).date(), 'baixa_medica')
+        ]),
+        ("empleado4", [
+            (datetime(2025, 12, 1).date(), 'vacances'),
+            (datetime(2025, 12, 2).date(), 'vacances')
+        ])
+    ]
+
+    for username, requests in treballadors_data:
+        t = Treballador.query.join(User).filter(User.username == username).first()
+        if t:
+            for fecha, tipo in requests:
+                # Comprovar si ja existeix
+                existent = EventoLaboral.query.filter_by(
+                    id_treballador=t.id_treballador,
+                    fecha=fecha,
+                    tipo_evento=tipo
+                ).first()
+                if not existent:
+                    e = EventoLaboral(
+                        id_treballador=t.id_treballador,
+                        id_comunitat=1,
+                        fecha=fecha,
+                        tipo_evento=tipo,
+                        aprovada=False
+                    )
+                    db.session.add(e)
+    
+    try:
+        db.session.commit()
+        print("Sol·licituds de prova creades per a tots els treballadors.")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al crear sol·licituds: {e}")
+
+
 # -----------------------------
 # Execució principal
 # -----------------------------
@@ -296,3 +354,4 @@ if __name__ == '__main__':
         create_comunitat()
         create_factura()
         create_calendari()
+        create_solicituds()

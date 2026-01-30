@@ -20,13 +20,13 @@ def calendario_laboral():
 
     # Si es admin y selecciona trabajador, muestra ese calendario
     if current_user.role == 'admin':
-        # Si no se selecciona, muestra el primero
+        # Si no se selecciona, muestra el primero de su empresa
         if not treballador_id:
-            treballador = Treballador.query.first()
+            treballador = Treballador.query.filter_by(empresa_id=current_user.empresa_id).first()
         else:
-            treballador = Treballador.query.get(treballador_id)
+            treballador = Treballador.query.filter_by(id_treballador=treballador_id, empresa_id=current_user.empresa_id).first()
         # Para el desplegable de selección
-        treballadors = Treballador.query.all()
+        treballadors = Treballador.query.filter_by(empresa_id=current_user.empresa_id).all()
     else:
         # Si es trabajador, solo el suyo
         treballador = current_user.treballador
@@ -122,8 +122,11 @@ def admin_solicitudes():
         return redirect(url_for('index'))
     
     try:
-        # Obtenir totes les sol·licituds pendents
-        pendentes = EventoLaboral.query.filter_by(aprovada=False).order_by(
+        # Obtenir totes les sol·licituds pendents de la MEVA empresa
+        pendentes = EventoLaboral.query.join(Treballador).filter(
+            Treballador.empresa_id == current_user.empresa_id,
+            EventoLaboral.aprovada == False
+        ).order_by(
             EventoLaboral.id_treballador,
             EventoLaboral.tipo_evento,
             EventoLaboral.fecha
@@ -171,6 +174,7 @@ def admin_solicitudes():
             # 🔹 Crear registres agrupats
             treballador = eventos[0].treballador
             treballador_nom = treballador.user.name if treballador.user else 'Unknown'
+            empresa_nom = treballador.empresa.nom if treballador.empresa else 'Unknown'
             
             for grupo in grupos_consecutivos:
                 fecha_inicio = min(g.fecha for g in grupo)
@@ -181,6 +185,7 @@ def admin_solicitudes():
                     'ids': event_ids,  # Per a approvals múltiples
                     'id_treballador': treballador_id,
                     'treballador_nom': treballador_nom,
+                    'empresa_nom': empresa_nom,
                     'tipo_evento': tipo_evento.replace('_', ' ').capitalize(),
                     'fecha_inicio': fecha_inicio.strftime('%d/%m/%Y'),
                     'fecha_fin': fecha_fin.strftime('%d/%m/%Y'),
@@ -201,8 +206,11 @@ def solicitudes_pendentes():
         return jsonify({"error": "Només els admins poden veure aquest contingut"}), 403
     
     try:
-        # Obtenir sol·licituds pendents d'aprovació
-        pendentes = EventoLaboral.query.filter_by(aprovada=False).all()
+        # Obtenir sol·licituds pendents d'aprovació de la MEVA empresa
+        pendentes = EventoLaboral.query.join(Treballador).filter(
+            Treballador.empresa_id == current_user.empresa_id,
+            EventoLaboral.aprovada == False
+        ).all()
         
         data = []
         for evento in pendentes:
@@ -229,6 +237,10 @@ def aprobar_absencia(event_id):
     
     try:
         evento = EventoLaboral.query.get_or_404(event_id)
+        
+        # Verificar que el treballador pertany a la mateixa empresa que l'admin
+        if evento.treballador.empresa_id != current_user.empresa_id:
+            return jsonify({"error": "No tens permís per aprovar aquesta sol·licitud"}), 403
         
         # Marcar com aprovada
         # Llegir el nom del treballador abans de fer commit per evitar lazy-load després
@@ -264,6 +276,9 @@ def aprobar_absencias_grupo():
             joinedload(EventoLaboral.treballador).joinedload(Treballador.user)
         ).filter(EventoLaboral.id.in_(event_ids)).all()
         
+        # Filtrar només els que pertanyen a l'empresa de l'admin
+        eventos = [e for e in eventos if e.treballador and e.treballador.empresa_id == current_user.empresa_id]
+        
         if not eventos:
             return jsonify({"error": "No events found"}), 404
         
@@ -296,6 +311,10 @@ def denegar_absencia(event_id):
     
     try:
         evento = EventoLaboral.query.get_or_404(event_id)
+        
+        # Verificar empresa
+        if evento.treballador.empresa_id != current_user.empresa_id:
+            return jsonify({"error": "No tens permís per denegar aquesta sol·licitud"}), 403
         
         # Eliminar la sol·licitud si no està aprovada
         if evento.aprovada:
@@ -332,6 +351,9 @@ def denegar_absencias_grupo():
             return jsonify({"status": "error", "error": "No event IDs provided"}), 400
         
         eventos = EventoLaboral.query.filter(EventoLaboral.id.in_(event_ids)).all()
+        
+        # Filtrar per empresa
+        eventos = [e for e in eventos if e.treballador and e.treballador.empresa_id == current_user.empresa_id]
         
         print(f"🔍 Eventos encontrados: {len(eventos)}")
         
@@ -482,13 +504,13 @@ def calendari():
 
     # Si es admin y selecciona trabajador, muestra ese calendario
     if current_user.role == 'admin':
-        # Si no se selecciona, muestra el primero
+        # Si no se selecciona, muestra el primero de la empresa del admin
         if not treballador_id:
-            treballador = Treballador.query.first()
+            treballador = Treballador.query.filter_by(empresa_id=current_user.empresa_id).first()
         else:
-            treballador = Treballador.query.get(treballador_id)
+            treballador = Treballador.query.filter_by(id_treballador=treballador_id, empresa_id=current_user.empresa_id).first()
         # Para el desplegable de selección
-        treballadors = Treballador.query.all()
+        treballadors = Treballador.query.filter_by(empresa_id=current_user.empresa_id).all()
     else:
         # Si es trabajador, solo el suyo
         treballador = current_user.treballador
