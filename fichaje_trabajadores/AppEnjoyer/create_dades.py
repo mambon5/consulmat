@@ -285,7 +285,7 @@ if __name__ == '__main__':
     empresa1 = create_empresa1()
     if empresa1:
         create_admin_user1(empresa1.id)
-        create_treballador(empresa1.id)
+
     
     empresa2 = create_empresa2()
     if empresa2:

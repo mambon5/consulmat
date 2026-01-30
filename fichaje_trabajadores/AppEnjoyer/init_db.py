@@ -23,6 +23,20 @@ def init_database():
             empresa = create_empresa1()
             if empresa:
                 create_admin_user1(empresa.id)
+                create_treballador(
+                    empresa.id, username="roma", password="roma1",
+                    name="Romà Masana", email="roma.perez@empresa.com", phone="644443456",
+                    departament='administració', adreca='Carrer Mireia 200', ciutat='Barcelona',
+                    codi_postal=09302, sexe='m', nacionalitat='Catalunya', edat=33,
+                    carnet_conduir='si', vehicle_propi='si', role="employee"
+                )
+                create_treballador(
+                    empresa.id, username="roma", password="roma1",
+                    name="Diego TO", email="roma.perez@empresa.com", phone="666666",
+                    departament='administració', adreca='Carrer Escocia 20', ciutat='Barcelona',
+                    codi_postal=90302, sexe='d', nacionalitat='Catalunya', edat=43,
+                    carnet_conduir='si', vehicle_propi='no', role="employee"
+                )
             else:
                 print("No se pudo crear la empresa. No se crearán usuarios ni trabajadores.")
 

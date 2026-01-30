@@ -8,6 +8,7 @@
         <tr>
             <th>Nombre completo</th>
             <th>Email</th>
+            <th>Empresa</th>
             <th>Departamento</th>
             <th>Ciudad</th>
             <th>Código Postal</th>
@@ -17,6 +18,7 @@
             <th>Vehículo Propio</th>
             <th>Carnet de Conducir</th>
             <th>Fecha de alta</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +26,7 @@
         <tr>
             <td>{{ treballador.user.name }}</td>
             <td>{{ treballador.user.email }}</td>
+            <td>{{ treballador.empresa.nom if treballador.empresa else '—' }}</td>
             <td>{{ treballador.departament }}</td>
             <td>{{ treballador.ciutat or '—' }}</td>
             <td>{{ treballador.codi_postal or '—' }}</td>
@@ -33,6 +36,12 @@
             <td>{{ treballador.vehicle_propi or '—' }}</td>
             <td>{{ treballador.carnet_conduir or '—' }}</td>
             <td>{{ treballador.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>
+                <a href="{{ url_for('calendario.calendario_laboral', treballador_id=treballador.id_treballador) }}"
+                    class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-calendar-date"></i> Ver Calendario
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

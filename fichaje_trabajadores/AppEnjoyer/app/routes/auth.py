@@ -19,7 +19,7 @@ def send_verification_email(email, code):
 
 def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
                       template_name='create_user.html', page_title="Crear Usuario",
-                      show_role_dropdown=True):
+                      show_role_dropdown=True, **kwargs):
     email_sent = False
 
     empresa = None
@@ -54,14 +54,29 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
                 db.session.commit()
 
                 # Si és treballador, crear entrada a Treballador
-                if reg_data['role'] == "employee" and extra_fields:
-                    nou_treballador = Treballador(
-                        id_usuari=user.id,
-                        empresa_id=empresa_id,
-                        **extra_fields
-                    )
-                    db.session.add(nou_treballador)
-                    db.session.commit()
+                # 🔹 ARA BUSQUEM ELS EXTRA_FIELDS A LA SESSIO TAMBÉ
+                session_extra_fields = reg_data.get('extra_fields', {})
+                if reg_data['role'] == "employee":
+                    # Si tenim dades a la sessió, les usem (ja que el segon POST no en tindrà o seran buides)
+                    fields_to_use = session_extra_fields if session_extra_fields else extra_fields
+                    
+                    if fields_to_use:
+                        # Convertir dates si cal, encara que datetime.utcnow() es guarda com string a sessió a vegades
+                        # Però aquí extra_fields en teoria té datetime.utcnow() del primer pas.
+                        # Flask sessions serialitzen a JSON, així que 'created_at' serà una string.
+                        if 'created_at' in fields_to_use and isinstance(fields_to_use['created_at'], str):
+                             try:
+                                 fields_to_use['created_at'] = datetime.fromisoformat(fields_to_use['created_at'])
+                             except:
+                                 fields_to_use['created_at'] = datetime.utcnow()
+
+                        nou_treballador = Treballador(
+                            id_usuari=user.id,
+                            empresa_id=empresa_id,
+                            **fields_to_use
+                        )
+                        db.session.add(nou_treballador)
+                        db.session.commit()
 
                 session.pop('reg_data', None)
                 flash(f'Cuenta creada correctamente como {reg_data["role"]}.', 'success')
@@ -71,7 +86,7 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
                 email_sent = True
                 return render_template(template_name, email_sent=email_sent,
                                        page_title=page_title, empresa=empresa,
-                                       role=role, show_role_dropdown=show_role_dropdown)
+                                       role=role, show_role_dropdown=show_role_dropdown, **kwargs)
 
         # Primer pas: registre
         username = request.form['username']
@@ -88,17 +103,18 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
             flash('El email ya está registrado.', 'danger')
             return render_template(template_name, username=username, name=name, phone=phone,
                                    page_title=page_title, empresa=empresa,
-                                   role=role, show_role_dropdown=show_role_dropdown)
+                                   role=role, show_role_dropdown=show_role_dropdown, **kwargs)
 
         if User.query.filter_by(username=username).first():
             flash('El nombre de usuario ya existe.', 'danger')
             return render_template(template_name, name=name, email=email, phone=phone,
                                    page_title=page_title, empresa=empresa,
-                                   role=role, show_role_dropdown=show_role_dropdown)
+                                   role=role, show_role_dropdown=show_role_dropdown, **kwargs)
 
         # Generar codi de verificació
         email_code = str(random.randint(100000, 999999))
 
+        # 🔹 GUARDEM TAMBÉ ELS EXTRA_FIELDS A LA SESSIÓ
         session['reg_data'] = {
             'username': username,
             'password': password,
@@ -106,7 +122,8 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
             'email': email,
             'phone': phone,
             'email_code': email_code,
-            'role': role
+            'role': role,
+            'extra_fields': extra_fields
         }
 
         send_verification_email(email, email_code)
@@ -114,12 +131,12 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
         flash('Se ha enviado un email de verificación a tu correo.', 'info')
         return render_template(template_name, email_sent=email_sent,
                                page_title=page_title, empresa=empresa,
-                               role=role, show_role_dropdown=show_role_dropdown)
+                               role=role, show_role_dropdown=show_role_dropdown, **kwargs)
 
     # GET
     return render_template(template_name, email_sent=email_sent,
                            page_title=page_title, empresa=empresa,
-                           role=role, show_role_dropdown=show_role_dropdown)
+                           role=role, show_role_dropdown=show_role_dropdown, **kwargs)
 
 @auth_bp.route('/create_user/<int:empresa_id>', methods=['GET', 'POST'])
 @login_required

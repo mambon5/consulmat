@@ -451,6 +451,10 @@ def eliminar_absencia(event_id):
     if evento.id_treballador != current_user.treballador.id_treballador:
         return jsonify({"status": "error", "message": "No autoritzat"}), 403
     
+    # 🔹 Si l'absència ja està aprovada, el treballador no la pot eliminar (només admins)
+    if evento.aprovada and current_user.role != 'admin':
+        return jsonify({"status": "error", "message": "No pots eliminar una sol·licitud que ja ha estat aprovada"}), 400
+    
     # 🔹 Permetre eliminar qualsevol tipus d'absència (vacances, baixa, assumptes, teletreball)
     if evento.tipo_evento not in ['vacances', 'baixa_medica', 'assumptes_propis', 'teletreball']:
         return jsonify({"status": "error", "message": "No pots eliminar aquest tipus d'event"}), 400

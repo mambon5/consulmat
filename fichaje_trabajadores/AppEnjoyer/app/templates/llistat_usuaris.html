@@ -8,6 +8,8 @@
         <tr>
             <th>Nombre completo</th>
             <th>Email</th>
+            <th>Teléfono</th>
+            <th>Empresa</th>
             <th>Rol</th>
             <th>Fecha de alta</th>
         </tr>
@@ -17,6 +19,8 @@
         <tr>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user.phone or '—' }}</td>
+            <td>{{ user.empresa.nom if user.empresa else '—' }}</td>
             <td>{{ user.role }}</td>
             <td>{{ user.consent_date.strftime('%d/%m/%Y %H:%M') if user.consent_date else '—' }}</td>
         </tr>

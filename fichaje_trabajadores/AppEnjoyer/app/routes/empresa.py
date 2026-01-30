@@ -153,7 +153,8 @@ def create_treballador(empresa_id):
         flash('No tienes permisos para crear trabajadores.', 'danger')
         return redirect(url_for('fichajes.index'))
 
-    paisos = [{'code': country.alpha_2, 'name': country.name} for country in pycountry.countries]
+    # Obtenir i ordenar països alfabèticament
+    paisos = sorted([{'code': country.alpha_2, 'name': country.name} for country in pycountry.countries], key=lambda x: x['name'])
 
     extra_fields = None
     if request.method == 'POST':
@@ -175,7 +176,8 @@ def create_treballador(empresa_id):
                              extra_fields=extra_fields,
                              template_name='create_treballador.html',
                              page_title="Crear Treballador",
-                             show_role_dropdown=False)  # ✅ no mostrar dropdown
+                             show_role_dropdown=False,
+                             paisos=paisos)  # ✅ Passar la llista de països
 
 @empresa_bp.route('/create_comunitat', methods=['GET', 'POST'])
 @login_required
@@ -281,13 +283,25 @@ def usuaris():
         flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
         return redirect(url_for('fichajes.index'))
 
-    usuaris = User.query.order_by(User.name.asc()).all()
+    query = User.query.options(db.joinedload(User.empresa))
+    
+    # 🔹 Superadmin logic: 'Anamas digital' sees everything
+    if current_user.empresa.nom != 'Anamas digital':
+        query = query.filter_by(empresa_id=current_user.empresa_id)
+        
+    usuaris = query.order_by(User.name.asc()).all()
     return render_template('llistat_usuaris.html', usuaris=usuaris)
 
 @empresa_bp.route('/treballadors')
 @login_required
 def treballadors():
-    treballadors = Treballador.query.all()
+    query = Treballador.query.options(db.joinedload(Treballador.empresa))
+    
+    # 🔹 Superadmin logic: 'Anamas digital' sees everything
+    if current_user.empresa.nom != 'Anamas digital':
+        query = query.filter_by(empresa_id=current_user.empresa_id)
+        
+    treballadors = query.all()
     return render_template("llistat_treballadors.html", treballadors=treballadors)
 
 @empresa_bp.route('/usuari/<int:user_id>')
