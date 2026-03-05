@@ -78,10 +78,20 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
         telefon_gerent = request.form.get('telefon_gerent')
         password = request.form.get('password')
 
-        # Validar unicitat NIF
-        if Empresa.query.filter_by(numero_fiscal=numero_fiscal).first():
-            flash('Ya existe una empresa con ese número fiscal.', 'danger')
-            return render_template(template_name, page_title=page_title)
+        # Validar unicitat de nom i número fiscal
+        existing_empresa = Empresa.query.filter(
+            (Empresa.nom == nom_empresa) | (Empresa.numero_fiscal == numero_fiscal)
+        ).first()
+
+        if existing_empresa:
+            if existing_empresa.nom == nom_empresa:
+                flash('Ya existe una empresa con ese nombre.', 'danger')
+            else:
+                flash('Ya existe una empresa con ese número fiscal.', 'danger')
+            return render_template(template_name, page_title=page_title, 
+                                   nom_empresa=nom_empresa, numero_fiscal=numero_fiscal,
+                                   adreca=adreca, correu_gerent=correu_gerent,
+                                   telefon_gerent=telefon_gerent)
 
         # Generar codi de verificació
         email_code = str(random.randint(100000, 999999))

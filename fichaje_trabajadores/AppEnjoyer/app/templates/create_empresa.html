@@ -8,52 +8,57 @@
                 <div class="card-header">
                     <h3 class="text-center">
                         {% if email_sent %}
-                            Verifica el correo de la empresa
+                        Verifica el correo de la empresa
                         {% else %}
-                            Registrar Nueva Empresa
+                        Registrar Nueva Empresa
                         {% endif %}
                     </h3>
                 </div>
                 <div class="card-body">
                     <form method="POST">
                         {% if email_sent %}
-                            <div class="form-group mb-3">
-                                <label for="email_code">Código de Verificación</label>
-                                <input type="text" class="form-control" id="email_code" name="email_code" required>
-                            </div>
+                        <div class="form-group mb-3">
+                            <label for="email_code">Código de Verificación</label>
+                            <input type="text" class="form-control" id="email_code" name="email_code" required>
+                        </div>
                         {% else %}
-                            <div class="form-group mb-3">
-                                <label for="nom_empresa">Nombre de la Empresa</label>
-                                <input type="text" class="form-control" id="nom_empresa" name="nom_empresa" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="numero_fiscal">Número Fiscal</label>
-                                <input type="text" class="form-control" id="numero_fiscal" name="numero_fiscal" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="adreca">Dirección Física / Sede Social</label>
-                                <input type="text" class="form-control" id="adreca" name="adreca">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="correu_gerent">Correo Electrónico del Gerente</label>
-                                <input type="email" class="form-control" id="correu_gerent" name="correu_gerent" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="telefon_gerent">Teléfono del Gerente</label>
-                                <input type="tel" class="form-control" id="telefon_gerent" name="telefon_gerent">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="password">Contraseña de la Empresa (clave secreta)</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
+                        <div class="form-group mb-3">
+                            <label for="nom_empresa">Nombre de la Empresa</label>
+                            <input type="text" class="form-control" id="nom_empresa" name="nom_empresa"
+                                value="{{ nom_empresa or '' }}" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="numero_fiscal">Número Fiscal</label>
+                            <input type="text" class="form-control" id="numero_fiscal" name="numero_fiscal"
+                                value="{{ numero_fiscal or '' }}" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="adreca">Dirección Física / Sede Social</label>
+                            <input type="text" class="form-control" id="adreca" name="adreca"
+                                value="{{ adreca or '' }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="correu_gerent">Correo Electrónico del Gerente</label>
+                            <input type="email" class="form-control" id="correu_gerent" name="correu_gerent"
+                                value="{{ correu_gerent or '' }}" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="telefon_gerent">Teléfono del Gerente</label>
+                            <input type="tel" class="form-control" id="telefon_gerent" name="telefon_gerent"
+                                value="{{ telefon_gerent or '' }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password">Contraseña de la Empresa (clave secreta)</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
                         {% endif %}
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">
                                 {% if email_sent %}
-                                    Verificar
+                                Verificar
                                 {% else %}
-                                    Registrar Empresa
+                                Registrar Empresa
                                 {% endif %}
                             </button>
                             <a href="{{ url_for('fichajes.index') }}" class="btn btn-secondary">Cancelar</a>
