@@ -59,6 +59,10 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
                 db.session.commit()
 
                 session.pop('empresa_reg_data', None)
+                # Flag to skip verification for the first admin since the company email was just verified
+                session['admin_email_verified'] = True
+                session['admin_prefill_email'] = reg_data['correu_gerent']
+                
                 flash('Empresa creada correctamente. Ahora puedes registrar el primer administrador.', 'success')
                 return redirect(url_for('auth.register_first_admin', empresa_id=nova_empresa.id))
             else:

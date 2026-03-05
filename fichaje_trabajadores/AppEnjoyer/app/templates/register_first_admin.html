@@ -17,7 +17,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" name="email" required>
+                    <input type="email" class="form-control" name="email" value="{{ prefilled_email if prefilled_email else '' }}" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="phone">Telèfon</label>
