@@ -109,6 +109,8 @@ def generate_pdf_report(records, user, report_type):
 @fichajes_bp.route("/")
 @login_required
 def index():
+    if current_user.role == 'admin':
+        return redirect(url_for('admin.dashboard'))
     records = TimeRecord.query.filter_by(user_id=current_user.id).order_by(TimeRecord.check_in.desc()).all()
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     today = datetime.now(ZoneInfo("Europe/Madrid")).date()

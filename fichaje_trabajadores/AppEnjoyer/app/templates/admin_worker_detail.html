@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex align-items-center justify-content-between">
+            <h2 class="mb-0">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none text-secondary">
+                    <i class="bi bi-arrow-left-circle me-2"></i>
+                </a>
+                Detall del Treballador: {{ user.name or user.username }}
+            </h2>
+            <div>
+                {% if status == 'green' %}
+                <span class="badge rounded-pill bg-success fs-5 px-3 py-2"><i class="bi bi-circle-fill"></i> Treballant
+                    Ara</span>
+                {% elif status == 'yellow' %}
+                <span class="badge rounded-pill bg-warning text-dark fs-5 px-3 py-2"><i
+                        class="bi bi-pause-circle-fill"></i> En Pausa</span>
+                {% else %}
+                <span class="badge rounded-pill bg-danger fs-5 px-3 py-2"><i class="bi bi-circle-fill"></i>
+                    Inactiu</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- INFO BÀSICA -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Dades Personals</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Departament:</strong> {{ treballador.departament }}</li>
+                    <li class="list-group-item"><strong>Correu:</strong> <a href="mailto:{{ user.email }}">{{ user.email
+                            }}</a></li>
+                    <li class="list-group-item"><strong>Telèfon:</strong> {{ user.phone or '-' }}</li>
+                    <li class="list-group-item"><strong>Adreça:</strong> {{ treballador.adreca or '-' }}, {{
+                        treballador.ciutat or '-' }}</li>
+                    <li class="list-group-item"><strong>Nacionalitat:</strong> {{ treballador.nacionalitat or '-' }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALENDARI I ABSCÈNCIES (REQUESTS) -->
+    <div class="col-md-8 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Sol·licituds d'Abscència (Calendari)</h5>
+            </div>
+            <div class="card-body">
+                {% if eventos %}
+                <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Data Sol·licitud</th>
+                                <th>Data Abscència</th>
+                                <th>Tipus</th>
+                                <th class="text-center">Estat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ev in eventos %}
+                            <tr>
+                                <td>{{ ev.fecha_solicitud.strftime('%d/%m/%Y') if ev.fecha_solicitud else '-' }}</td>
+                                <td><strong>{{ ev.fecha.strftime('%d/%m/%Y') }}</strong></td>
+                                <td>{{ ev.tipo_evento.replace('_', ' ').title() }}</td>
+                                <td class="text-center">
+                                    {% if ev.aprovada %}
+                                    <span class="badge bg-success">Concedida</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Pendent</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center pt-5">No hi ha sol·licituds registrades.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- ÚLTIMS FITXATGES I PAUSES -->
+    <div class="col-md-8 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Historial de Fitxatges (Últims 50)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Data</th>
+                                <th>Entrada</th>
+                                <th>Sortida</th>
+                                <th>Total Treballat</th>
+                                <th>Pausa Acumulada</th>
+                                <th>Torns de Pausa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rec in records %}
+                            <tr>
+                                <td>{{ rec.check_in.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ rec.check_in.strftime('%H:%M:%S') }}</td>
+                                <td>
+                                    {% if rec.check_out %}
+                                    {{ rec.check_out.strftime('%H:%M:%S') }}
+                                    {% else %}
+                                    <span class="text-primary"><i class="bi bi-record-circle"></i> En curs</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if rec.check_out %}
+                                    {% set dur = rec.check_out - rec.check_in %}
+                                    {{ '%d:%02d' | format(dur.seconds//3600, (dur.seconds//60)%60) }}h
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if rec.total_pause_seconds > 0 %}
+                                    {{ rec.total_pause_hms }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if rec.pauses %}
+                                    <ul class="mb-0 list-unstyled" style="font-size: 0.85em;">
+                                        {% for p in rec.pauses %}
+                                        <li>
+                                            {{ p.pause_start.strftime('%H:%M') }} -
+                                            {{ p.pause_end.strftime('%H:%M') if p.pause_end else 'Activa' }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">Sense registres horaris.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORIAL D'INCIDÈNCIES -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100 border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Incidències (Últimes)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                    {% for inc in incidencias %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 fw-bold">{{ inc.category }}</h6>
+                            <small class="text-muted">{{ inc.date.strftime('%d/%m/%y') }} {{ inc.time.strftime('%H:%M')
+                                }}</small>
+                        </div>
+                        <p class="mb-1 text-secondary" style="font-size: 0.9em;">{{ inc.description }}</p>
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">Aquest treballador no té incidències.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
