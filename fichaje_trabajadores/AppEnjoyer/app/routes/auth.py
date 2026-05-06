@@ -17,6 +17,11 @@ def send_verification_email(email, code):
     msg.body = f'Tu código de verificación es: {code}'
     mail.send(msg)
 
+def send_recovery_email(email, code):
+    msg = Message('Recuperación de contraseña', sender=mail.sender, recipients=[email])
+    msg.body = f'Tu código de recuperación es: {code}. Úsalo en la pantalla de recuperación para cambiar tu contraseña.'
+    mail.send(msg)
+
 def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
                       template_name='create_user.html', page_title="Crear Usuario",
                       show_role_dropdown=True, skip_verification=False, prefilled_email=None, **kwargs):
@@ -223,3 +228,62 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
+
+@auth_bp.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('fichajes.index'))
+    
+    if request.method == "POST":
+        identifier = request.form.get('identifier')
+        user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
+        
+        if user:
+            code = str(random.randint(100000, 999999))
+            user.email_code = code
+            db.session.commit()
+            send_recovery_email(user.email, code)
+            flash('S\'ha enviat un codi de recuperació al teu email.', 'info')
+            return redirect(url_for('auth.reset_password', email=user.email))
+        else:
+            flash('No s\'ha trobat cap usuari amb aquest email o nom d\'usuari.', 'danger')
+            
+    return render_template("forgot_password.html")
+
+@auth_bp.route("/api/verify-recovery-code", methods=["POST"])
+def verify_recovery_code():
+    data = request.get_json()
+    email = data.get('email')
+    code = data.get('code')
+    
+    user = User.query.filter_by(email=email, email_code=code).first()
+    if user:
+        return jsonify({"status": "ok", "message": "Codi correcte"})
+    else:
+        return jsonify({"status": "error", "message": "Codi incorrecte"}), 400
+
+@auth_bp.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+    email = request.args.get('email')
+    if request.method == "POST":
+        email = request.form.get('email')
+        code = request.form.get('code')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            flash('Les contrasenyes no coincideixen.', 'danger')
+            return render_template("reset_password.html", email=email, code=code)
+            
+        user = User.query.filter_by(email=email, email_code=code).first()
+        if user:
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            user.password = hashed_password
+            user.email_code = None  # Clear code after use
+            db.session.commit()
+            flash('Contrasenya actualitzada correctament. Ja pots iniciar sessió.', 'success')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Codi de recuperació incorrecte o expirat.', 'danger')
+            
+    return render_template("reset_password.html", email=email)

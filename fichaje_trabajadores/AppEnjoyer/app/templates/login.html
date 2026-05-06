@@ -32,7 +32,16 @@
                                 <i class="bi bi-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="password" name="password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
                         </div>
+                    </div>
+                    
+                    <div class="mb-4 text-end">
+                        <a href="{{ url_for('auth.forgot_password') }}" class="text-decoration-none">
+                            <small>¿Has olvidado tu contraseña?</small>
+                        </a>
                     </div>
                     
                     <div class="d-grid">
@@ -56,4 +65,17 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function (e) {
+        const password = document.getElementById('password');
+        const icon = this.querySelector('i');
+        if (password.type === 'password') {
+            password.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            password.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    });
+</script>
 {% endblock %}

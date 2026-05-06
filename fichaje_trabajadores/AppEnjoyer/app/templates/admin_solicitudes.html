@@ -18,6 +18,7 @@
                             <th>Data Fi</th>
                             <th>Dies</th>
                             <th>Quan s'ha demanat?</th>
+                            <th>Justificant</th>
                             <th>Accions</th>
                         </tr>
                     </thead>
@@ -42,6 +43,15 @@
                             <td>{{ sol.fecha_fin }}</td>
                             <td><span class="badge bg-info text-dark">{{ sol.dias }}</span></td>
                             <td>{{ sol.fecha_solicitud }}</td>
+                            <td>
+                                {% if sol.justificante_path %}
+                                <a href="{{ url_for('static', filename=sol.justificante_path) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-file-earmark-text"></i> Veure
+                                </a>
+                                {% else %}
+                                <span class="text-muted small">-</span>
+                                {% endif %}
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-success" onclick='aprobar({{ sol.ids | tojson }})'>
                                     ✅ Aprovar

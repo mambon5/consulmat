@@ -271,3 +271,63 @@ def report_incident():
     db.session.commit()
     flash('Incidència registrada correctament.', 'success')
     return redirect(url_for('fichajes.index'))
+
+@fichajes_bp.route("/manual_check_in", methods=['POST'])
+@login_required
+def manual_check_in():
+    date_str = request.form.get('date')
+    check_in_str = request.form.get('check_in')
+    check_out_str = request.form.get('check_out')
+    pause_hours = request.form.get('pause_hours', 0)
+
+    if not date_str or not check_in_str or not check_out_str:
+        flash('Falten dades per al registre manual.', 'danger')
+        return redirect(url_for('fichajes.index'))
+
+    try:
+        check_in_dt = datetime.strptime(f"{date_str} {check_in_str}", '%Y-%m-%d %H:%M')
+        check_out_dt = datetime.strptime(f"{date_str} {check_out_str}", '%Y-%m-%d %H:%M')
+        
+        # Si la sortida és abans que l'entrada, assumim que és el dia següent (o error)
+        if check_out_dt <= check_in_dt:
+            # En un fichatge manual del mateix dia, l'usuari potser s'ha equivocat.
+            flash('L\'hora de sortida ha de ser posterior a l\'hora d\'entrada.', 'danger')
+            return redirect(url_for('fichajes.index'))
+
+        record = TimeRecord(
+            user_id=current_user.id,
+            check_in=check_in_dt,
+            check_out=check_out_dt,
+            fitxatge_amb_retard=True
+        )
+        db.session.add(record)
+        db.session.flush() # Per tenir l'ID
+
+        # Afegir la pausa si n'hi ha
+        try:
+            pause_val = float(pause_hours)
+            if pause_val > 0:
+                pause_start = check_in_dt + (check_out_dt - check_in_dt) / 2
+                pause_end = pause_start + timedelta(hours=pause_val)
+                
+                # Verificar que la pausa no superi el temps total
+                if pause_end > check_out_dt:
+                    pause_end = check_out_dt
+                
+                pause = PauseRecord(
+                    time_record_id=record.id,
+                    pause_start=pause_start,
+                    pause_end=pause_end,
+                    pause_date=check_in_dt.date()
+                )
+                db.session.add(pause)
+        except:
+            pass
+
+        db.session.commit()
+        flash('Registre manual creat correctament.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al crear el registre: {str(e)}', 'danger')
+
+    return redirect(url_for('fichajes.index'))

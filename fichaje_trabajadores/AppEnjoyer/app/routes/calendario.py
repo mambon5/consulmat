@@ -6,6 +6,7 @@ from app import db
 from datetime import datetime, date
 from calendar import monthrange
 from zoneinfo import ZoneInfo
+import os
 
 calendario_bp = Blueprint("calendario", __name__)
 
@@ -181,6 +182,8 @@ def admin_solicitudes():
                 fecha_fin = max(g.fecha for g in grupo)
                 event_ids = [g.id for g in grupo]
                 
+                justificante_path = next((g.justificante_path for g in grupo if g.justificante_path), None)
+
                 solicitudes_agrupadas.append({
                     'ids': event_ids,  # Per a approvals múltiples
                     'id_treballador': treballador_id,
@@ -190,7 +193,8 @@ def admin_solicitudes():
                     'fecha_inicio': fecha_inicio.strftime('%d/%m/%Y'),
                     'fecha_fin': fecha_fin.strftime('%d/%m/%Y'),
                     'dias': len(grupo),
-                    'fecha_solicitud': min(g.fecha_solicitud for g in grupo).strftime('%d/%m/%Y %H:%M') if grupo[0].fecha_solicitud else '-'
+                    'fecha_solicitud': min(g.fecha_solicitud for g in grupo).strftime('%d/%m/%Y %H:%M') if grupo[0].fecha_solicitud else '-',
+                    'justificante_path': justificante_path
                 })
         
         return render_template('admin_solicitudes.html', solicitudes=solicitudes_agrupadas)
@@ -491,13 +495,12 @@ def crear_absencia():
 @calendario_bp.route('/api/absencia/<int:event_id>', methods=['DELETE'])
 @login_required
 def eliminar_absencia(event_id):
-    if not current_user.treballador:
-        return jsonify({"error": "No tens un perfil de treballador associat."}), 400
-    
     evento = EventoLaboral.query.get_or_404(event_id)
-    
-    # 🔹 Verificar que és el treballador propietari de l'absència
-    if evento.id_treballador != current_user.treballador.id_treballador:
+    # 🔹 Verificar permisos
+    is_owner = current_user.treballador and evento.id_treballador == current_user.treballador.id_treballador
+    is_admin_same_company = current_user.role == 'admin' and evento.treballador.empresa_id == current_user.empresa_id
+
+    if not is_owner and not is_admin_same_company:
         return jsonify({"status": "error", "message": "No autoritzat"}), 403
     
     # 🔹 Si l'absència ja està aprovada, només la pot eliminar un administrador
