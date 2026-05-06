@@ -396,7 +396,11 @@ def crear_absencia():
     if not current_user.treballador:
         return jsonify({"error": "No tens un perfil de treballador associat. Contacta amb l'administrador."}), 400
     
-    data = request.get_json(silent=True)
+    if request.is_json:
+        data = request.get_json(silent=True)
+    else:
+        data = request.form
+
     if not data or 'fecha' not in data or 'tipo_evento' not in data:
         return jsonify({"error": "Falten dades (fecha o tipo_evento)"}), 400
 
@@ -444,12 +448,35 @@ def crear_absencia():
         # NO necessites aprovació: festius (son automàtics)
         require_approval = tipo_evento in ['vacances', 'baixa_medica', 'assumptes_propis', 'teletreball']
         
+        # 🔹 Handle File Upload for Baixa Mèdica
+        justificante_path = None
+        if tipo_evento == 'baixa_medica' and 'justificante' in request.files:
+            file = request.files['justificante']
+            if file and file.filename != '':
+                # Check size (2MB = 2 * 1024 * 1024 bytes)
+                file.seek(0, os.SEEK_END)
+                size = file.tell()
+                file.seek(0)
+                if size > 2 * 1024 * 1024:
+                    return jsonify({"error": "L'arxiu és massa gran (màxim 2MB)"}), 400
+                
+                # Check extension
+                ext = file.filename.rsplit('.', 1)[1].lower() if '.' in file.filename else ''
+                if ext not in ['pdf', 'jpg', 'jpeg', 'png']:
+                    return jsonify({"error": "Format no permès (només PDF, JPG, PNG)"}), 400
+
+                filename = f"{current_user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+                save_path = os.path.join('app/static/uploads/justificants', filename)
+                file.save(save_path)
+                justificante_path = f"uploads/justificants/{filename}"
+
         dia = EventoLaboral(
             id_treballador=current_user.treballador.id_treballador,
             id_comunitat=data.get('id_comunitat', 1),
             fecha=fecha,
             tipo_evento=tipo_evento,
-            aprovada=not require_approval  # False per absències, True per festius
+            aprovada=not require_approval,  # False per absències, True per festius
+            justificante_path=justificante_path
         )
         db.session.add(dia)
         db.session.commit()
@@ -473,11 +500,14 @@ def eliminar_absencia(event_id):
     if evento.id_treballador != current_user.treballador.id_treballador:
         return jsonify({"status": "error", "message": "No autoritzat"}), 403
     
-    # 🔹 Si l'absència ja està aprovada, el treballador no la pot eliminar (només admins)
+    # 🔹 Si l'absència ja està aprovada, només la pot eliminar un administrador
     if evento.aprovada and current_user.role != 'admin':
-        return jsonify({"status": "error", "message": "No pots eliminar una sol·licitud que ja ha estat aprovada"}), 400
+        return jsonify({"status": "error", "message": "No pots eliminar una sol·licitud que ja ha estat aprovada. Contacta amb l'administrador."}), 403
     
-    # 🔹 Permetre eliminar qualsevol tipus d'absència (vacances, baixa, assumptes, teletreball)
+    # 🔹 Si és un treballador eliminant la seva pròpia sol·licitud (encara que sigui una absència de qualsevol tipus)
+    # El requeriment diu: "Un cop aprovada una baixa qualssevol solicitud d'absència laboral del tipus que sigui, que només la pugui esborrar un administrador."
+    # Ja hem posat el check de 'evento.aprovada and role != admin'.
+    
     if evento.tipo_evento not in ['vacances', 'baixa_medica', 'assumptes_propis', 'teletreball']:
         return jsonify({"status": "error", "message": "No pots eliminar aquest tipus d'event"}), 400
     

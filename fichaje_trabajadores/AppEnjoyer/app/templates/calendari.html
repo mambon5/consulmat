@@ -27,6 +27,15 @@
                     <label class="form-check-label" for="radio_tele">Teletreball</label>
                 </div>
 
+                <!-- 📂 Secció Justificant (només visible per baixa mèdica) -->
+                <div id="justificant_section" class="mt-3 d-none">
+                    <button type="button" class="btn btn-outline-primary btn-sm w-100 mb-2" onclick="document.getElementById('justificante_file').click()">
+                        <i class="bi bi-file-earmark-plus"></i> Afegir justificant
+                    </button>
+                    <input type="file" id="justificante_file" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
+                    <div id="file_info" class="small text-muted text-center"> Cap arxiu seleccionat (màx 2MB) </div>
+                </div>
+
                 <hr>
                 <h6 class="fw-bold mb-2">Resum d'absències</h6>
                 <ul class="list-unstyled small">
@@ -135,6 +144,35 @@
     // Executar al carregar
     updateRadioState();
 
+    // 🔹 Mostrar/Ocultar secció justificat
+    document.querySelectorAll('input[name="tipo_evento"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const section = document.getElementById('justificant_section');
+            if (this.value === 'baixa_medica') {
+                section.classList.remove('d-none');
+            } else {
+                section.classList.add('d-none');
+            }
+        });
+    });
+
+    // 🔹 Mostrar nom de l'arxiu seleccionat
+    document.getElementById('justificante_file').addEventListener('change', function() {
+        const info = document.getElementById('file_info');
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert("❌ L'arxiu és massa gran. El màxim permès són 2MB.");
+                this.value = '';
+                info.innerText = "Cap arxiu seleccionat (màx 2MB)";
+                return;
+            }
+            info.innerText = `📂 ${file.name}`;
+        } else {
+            info.innerText = "Cap arxiu seleccionat (màx 2MB)";
+        }
+    });
+
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -182,11 +220,26 @@
 
         for (const date of dates) {
             try {
-                const res = await fetch('/api/absencia', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fecha: date, tipo_evento })
-                });
+                let res;
+                const fileInput = document.getElementById('justificante_file');
+                
+                if (tipo_evento === 'baixa_medica' && fileInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('fecha', date);
+                    formData.append('tipo_evento', tipo_evento);
+                    formData.append('justificante', fileInput.files[0]);
+                    
+                    res = await fetch('/api/absencia', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    res = await fetch('/api/absencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fecha: date, tipo_evento })
+                    });
+                }
 
                 const data = await res.json();
 

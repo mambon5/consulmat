@@ -146,6 +146,7 @@ class TimeRecord(db.Model):
     check_out_latitude = db.Column(db.Float, nullable=True)
     check_out_longitude = db.Column(db.Float, nullable=True)
     check_out_accuracy = db.Column(db.Float, nullable=True)
+    fitxatge_amb_retard = db.Column(db.Boolean, default=False, nullable=False)
 
      # 🔽 afegim propietats
     @property
@@ -226,6 +227,7 @@ class EventoLaboral(db.Model):
     aprovada = db.Column(db.Boolean, nullable=False, default=False)
     fecha_solicitud = db.Column(db.DateTime, nullable=True, default=lambda: datetime.now(ZoneInfo("Europe/Madrid")))
     fecha_aprobacion = db.Column(db.DateTime, nullable=True)
+    justificante_path = db.Column(db.String(255), nullable=True)
 
     treballador = db.relationship('Treballador', backref='eventos_laborales')
     comunitat = db.relationship('Comunidad', backref='eventos_laborales')
