@@ -10,6 +10,76 @@ import os
 
 calendario_bp = Blueprint("calendario", __name__)
 
+def group_consecutive_events(eventos):
+    """
+    Agrupa una llista d'esdeveniments per (treballador_id, tipus) i per dies consecutius.
+    Retorna una llista de dicts amb la informació agrupada.
+    """
+    if not eventos:
+        return []
+        
+    # Dict per guardar grups: (treballador_id, tipo_evento) -> lista de eventos
+    grupos = {}
+    for evento in eventos:
+        key = (evento.id_treballador, evento.tipo_evento)
+        if key not in grupos:
+            grupos[key] = []
+        grupos[key].append(evento)
+    
+    solicitudes_agrupadas = []
+    
+    for (treballador_id, tipo_evento), evs in grupos.items():
+        # Ordenar per data
+        evs.sort(key=lambda e: e.fecha)
+        
+        # Agrupar dies consecutius
+        grupos_consecutivos = []
+        if evs:
+            grupo_actual = [evs[0]]
+            
+            for i in range(1, len(evs)):
+                evento_anterior = evs[i-1]
+                evento_actual = evs[i]
+                
+                # Calcular diferència en dies
+                diff = (evento_actual.fecha - evento_anterior.fecha).days
+                
+                if diff == 1:
+                    grupo_actual.append(evento_actual)
+                else:
+                    grupos_consecutivos.append(grupo_actual)
+                    grupo_actual = [evento_actual]
+            
+            grupos_consecutivos.append(grupo_actual)
+            
+            # Crear registres agrupats
+            for grupo in grupos_consecutivos:
+                treballador = grupo[0].treballador
+                treballador_nom = treballador.user.name if treballador and treballador.user else 'Unknown'
+                empresa_nom = treballador.empresa.nom if treballador and treballador.empresa else 'Unknown'
+                
+                fecha_inicio = min(g.fecha for g in grupo)
+                fecha_fin = max(g.fecha for g in grupo)
+                event_ids = [g.id for g in grupo]
+                aprovada = all(g.aprovada for g in grupo)
+                
+                solicitudes_agrupadas.append({
+                    'ids': event_ids,
+                    'id_treballador': treballador_id,
+                    'treballador_nom': treballador_nom,
+                    'empresa_nom': empresa_nom,
+                    'tipo_evento': tipo_evento.replace('_', ' ').capitalize(),
+                    'fecha_inicio': fecha_inicio.strftime('%d/%m/%Y'),
+                    'fecha_fin': fecha_fin.strftime('%d/%m/%Y'),
+                    'dias': len(grupo),
+                    'fecha_solicitud': min(g.fecha_solicitud for g in grupo).strftime('%d/%m/%Y %H:%M') if grupo[0].fecha_solicitud else '-',
+                    'aprovada': aprovada
+                })
+    
+    # Ordenar el resultat final per data d'inici descendent
+    solicitudes_agrupadas.sort(key=lambda x: datetime.strptime(x['fecha_inicio'], '%d/%m/%Y'), reverse=True)
+    return solicitudes_agrupadas
+
 @calendario_bp.route("/calendario-laboral")
 @login_required
 def calendario_laboral():
@@ -182,8 +252,6 @@ def admin_solicitudes():
                 fecha_fin = max(g.fecha for g in grupo)
                 event_ids = [g.id for g in grupo]
                 
-                justificante_path = next((g.justificante_path for g in grupo if g.justificante_path), None)
-
                 solicitudes_agrupadas.append({
                     'ids': event_ids,  # Per a approvals múltiples
                     'id_treballador': treballador_id,
@@ -193,8 +261,7 @@ def admin_solicitudes():
                     'fecha_inicio': fecha_inicio.strftime('%d/%m/%Y'),
                     'fecha_fin': fecha_fin.strftime('%d/%m/%Y'),
                     'dias': len(grupo),
-                    'fecha_solicitud': min(g.fecha_solicitud for g in grupo).strftime('%d/%m/%Y %H:%M') if grupo[0].fecha_solicitud else '-',
-                    'justificante_path': justificante_path
+                    'fecha_solicitud': min(g.fecha_solicitud for g in grupo).strftime('%d/%m/%Y %H:%M') if grupo[0].fecha_solicitud else '-'
                 })
         
         return render_template('admin_solicitudes.html', solicitudes=solicitudes_agrupadas)
@@ -523,6 +590,47 @@ def eliminar_absencia(event_id):
         db.session.rollback()
         print(f"❌ Error a /api/absencia DELETE: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
+
+# 🔹 RUTA PER ALS USUARIS: Cancel·lar múltiples sol·licituds (propis)
+@calendario_bp.route('/api/absencias/cancelar', methods=['DELETE'])
+@login_required
+def cancelar_absencias_propis():
+    if not current_user.treballador:
+        return jsonify({"status": "error", "error": "No tens un perfil de treballador associat."}), 400
+    
+    try:
+        data = request.get_json(silent=True)
+        event_ids = data.get('ids', []) if data else []
+        
+        if not event_ids:
+            return jsonify({"status": "error", "error": "No event IDs provided"}), 400
+        
+        eventos = EventoLaboral.query.filter(EventoLaboral.id.in_(event_ids)).all()
+        
+        # Filtrar que siguin propis
+        eventos = [e for e in eventos if e.id_treballador == current_user.treballador.id_treballador]
+        
+        if not eventos:
+            return jsonify({"status": "error", "error": "No s'han trobat les sol·licituds o no et pertanyen"}), 404
+        
+        # Verificar que NO estiguin aprovades
+        if any(e.aprovada for e in eventos):
+            return jsonify({"status": "error", "error": "No pots cancel·lar sol·licituds que ja han estat aprovades"}), 400
+
+        # Eliminar totes
+        for evento in eventos:
+            db.session.delete(evento)
+
+        db.session.commit()
+
+        return jsonify({
+            "status": "ok",
+            "message": f"Sol·licitud cancel·lada correctament ({len(eventos)} dies)"
+        })
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error a /api/absencias/cancelar: {e}")
+        return jsonify({"status": "error", "error": str(e)}), 500
 
 # 🔹 Mantenir ruta antiga per compatibilitat
 @calendario_bp.route('/api/vacances/<int:event_id>', methods=['DELETE'])

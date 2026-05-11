@@ -223,8 +223,64 @@ def login():
     return render_template("login.html")
 
 
+@auth_bp.route("/forgot_password", methods=["GET", "POST"])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('fichajes.index'))
+    
+    if request.method == "POST":
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Generar codi de verificació
+            email_code = str(random.randint(100000, 999999))
+            session['reset_email'] = email
+            session['reset_code'] = email_code
+            
+            send_verification_email(email, email_code)
+            flash('Se ha enviado un código de seguridad a tu email.', 'info')
+            return redirect(url_for('auth.reset_password'))
+        else:
+            # Per seguretat, no confirmem si l'email existeix o no, però en aquest cas
+            # l'usuari demana transparència sovint. Mostrem error si no existeix.
+            flash('No se ha encontrado ninguna cuenta con ese email.', 'danger')
+            
+    return render_template("forgot_password.html")
+
+@auth_bp.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('fichajes.index'))
+
+    if 'reset_email' not in session or 'reset_code' not in session:
+        flash('Sesión expirada o inválida.', 'danger')
+        return redirect(url_for('auth.forgot_password'))
+
+    if request.method == "POST":
+        input_code = request.form.get('email_code')
+        new_password = request.form.get('new_password')
+        
+        if input_code == session['reset_code']:
+            user = User.query.filter_by(email=session['reset_email']).first()
+            if user:
+                hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+                user.password = hashed_password
+                db.session.commit()
+                
+                session.pop('reset_email', None)
+                session.pop('reset_code', None)
+                
+                flash('Contraseña actualizada correctamente. Ya puedes iniciar sesión.', 'success')
+                return redirect(url_for('auth.login'))
+            else:
+                flash('Usuario no encontrado.', 'danger')
+        else:
+            flash('Código de verificación incorrecto.', 'danger')
+            
+    return render_template("reset_password.html")
+
 @auth_bp.route("/logout")
-@login_required
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))

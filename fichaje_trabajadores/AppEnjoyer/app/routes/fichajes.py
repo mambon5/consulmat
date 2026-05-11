@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, send_file
 from flask_login import login_required, current_user
-from app.models import TimeRecord, Incidencia, PauseRecord, db
+from app.models import TimeRecord, Incidencia, PauseRecord, EventoLaboral, db
+from app.routes.calendario import group_consecutive_events
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from reportlab.lib import colors
@@ -115,7 +116,15 @@ def index():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     today = datetime.now(ZoneInfo("Europe/Madrid")).date()
     today_incidencies = Incidencia.query.filter_by(user_id=current_user.id, date=today).order_by(Incidencia.time.desc()).all()
-    return render_template('index.html', records=records, active_record=active_record, today_incidencies=today_incidencies)
+    
+    # Obtenir i agrupar absències de l'usuari
+    absencies_agrupades = []
+    if current_user.treballador:
+        absencies = EventoLaboral.query.filter_by(id_treballador=current_user.treballador.id_treballador).all()
+        absencies_agrupades = group_consecutive_events(absencies)
+        
+    return render_template('index.html', records=records, active_record=active_record, 
+                           today_incidencies=today_incidencies, absencies=absencies_agrupades)
 
 @fichajes_bp.route("/check_in", methods=['POST'])
 @login_required

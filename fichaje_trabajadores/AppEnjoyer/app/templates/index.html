@@ -193,6 +193,58 @@
     </div>
 
     <div class="col-md-8">
+        <!-- Absències i Sol·licituds -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Les meves Sol·licituds d'Absència</h4>
+                {% if absencies %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tipus</th>
+                                <th>Inici</th>
+                                <th>Fi</th>
+                                <th>Dies</th>
+                                <th>Estat</th>
+                                <th>Acció</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sol in absencies %}
+                            <tr id="abs-row-{{ sol.ids[0] }}">
+                                <td>{{ sol.tipo_evento }}</td>
+                                <td>{{ sol.fecha_inicio }}</td>
+                                <td>{{ sol.fecha_fin }}</td>
+                                <td><span class="badge bg-info text-dark">{{ sol.dias }}</span></td>
+                                <td>
+                                    {% if sol.aprovada %}
+                                    <span class="badge bg-success">Aprovada</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Pendent</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not sol.aprovada %}
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        onclick='cancelarSolicitud({{ sol.ids | tojson }})'>
+                                        <i class="bi bi-x-circle"></i> Cancel·lar
+                                    </button>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No tens sol·licituds d'absència registrades.</p>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card shadow">
             <div class="card-body">
                 <h4 class="card-title">Historial de Pauses</h4>
@@ -546,6 +598,30 @@
             button.disabled = false;
             button.innerHTML = originalText;
             document.querySelector('#incidenciaModal form').submit();
+        }
+    }
+
+    async function cancelarSolicitud(ids) {
+        if (!confirm('Estàs segur que vols cancel·lar aquesta sol·licitud?')) return;
+
+        try {
+            const res = await fetch(`/api/absencias/cancelar`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: ids })
+            });
+
+            const data = await res.json();
+            if (data.status === 'ok') {
+                alert(`✅ ${data.message}`);
+                const row = document.getElementById(`abs-row-${ids[0]}`);
+                if (row) row.remove();
+            } else {
+                alert(`❌ Error: ${data.error || data.message}`);
+            }
+        } catch (err) {
+            console.error('Error al cancel·lar:', err);
+            alert('S\'ha produït un error al cancel·lar.');
         }
     }
 
