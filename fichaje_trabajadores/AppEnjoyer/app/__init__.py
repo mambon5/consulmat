@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
 from datetime import datetime
@@ -47,6 +48,7 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@example.com')
 
     db.init_app(app)
+    migrate = Migrate(app, db)
     login_manager.init_app(app)
     mail.init_app(app)
     bcrypt.init_app(app)

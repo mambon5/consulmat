@@ -9,6 +9,7 @@
     - [Com crear una branca nova amb diferent informació](#com-crear-una-branca-nova-amb-diferent-informació)
     - [Esquema de branques per maxilim i organitzar el codi](#esquema-de-branques-per-maxilim-i-organitzar-el-codi)
   - [Crear base de dades i usuari mysql](#crear-base-de-dades-i-usuari-mysql)
+  - [Gestió de la Base de Dades (Migracions)](#gestió-de-la-base-de-dades-migracions)
 - [Desenvolupament de la app](#desenvolupament-de-la-app)
 # Employee Time Tracker
 
@@ -28,6 +29,7 @@ Una aplicación web desarrollada con Flask para el seguimiento del tiempo de los
 - Python 3.x
 - Flask
 - SQLAlchemy
+- Flask-Migrate
 - Flask-Login
 - ReportLab
 - PostgreSQL (producción)
@@ -236,6 +238,34 @@ Tindrem dues branques principals. `estable` i `dev`
     Create database "whatever"
     CREATE USER 'user'@'localhost' IDENTIFIED BY 'passi';
     GRANT ALL PRIVILEGES ON meva_base.* TO 'nou_usuari'@'localhost';
+
+## Gestió de la Base de Dades (Migracions)
+
+Per gestionar els canvis en l'estructura de la base de dades (afegir columnes, crear taules, etc.) sense perdre les dades existents, fem servir **Flask-Migrate**.
+
+### 1. Inicialitzar el repositori de migracions
+Només cal fer-ho una vegada al principi del projecte:
+```bash
+flask db init
+```
+
+### 2. Generar una migració
+Cada vegada que facis un canvi als models (`app/models.py`), has de generar un fitxer de migració:
+```bash
+flask db migrate -m "Descripció dels canvis (ex: afegir columna telèfon)"
+```
+
+### 3. Aplicar els canvis a la base de dades
+Perquè els canvis siguin efectius a la base de dades real:
+```bash
+flask db upgrade
+```
+
+### 4. Desfer canvis (opcional)
+Si t'has equivocat i vols tornar enrere a la versió anterior:
+```bash
+flask db downgrade
+```
 
 
 # Desenvolupament de la app
