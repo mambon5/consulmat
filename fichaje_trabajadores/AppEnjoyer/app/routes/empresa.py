@@ -1,3 +1,4 @@
+from flask_babel import _
 from flask import Blueprint, render_template, request, redirect, flash, url_for, session
 from flask_login import login_required, current_user
 from app.models import Empresa, User, Treballador, Comunidad, Pagador
@@ -42,7 +43,7 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
         if 'email_code' in request.form:
             reg_data = session.get('empresa_reg_data')
             if not reg_data:
-                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                flash(_('Sesión expirada. Por favor, regístrate de nuevo.'), 'danger')
                 return redirect(request.url)
 
             if request.form['email_code'] == reg_data['email_code']:
@@ -63,10 +64,10 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
                 session['admin_email_verified'] = True
                 session['admin_prefill_email'] = reg_data['correu_gerent']
                 
-                flash('Empresa creada correctamente. Ahora puedes registrar el primer administrador.', 'success')
+                flash(_('Empresa creada correctamente. Ahora puedes registrar el primer administrador.'), 'success')
                 return redirect(url_for('auth.register_first_admin', empresa_id=nova_empresa.id))
             else:
-                flash('Código de verificación incorrecto.', 'danger')
+                flash(_('Código de verificación incorrecto.'), 'danger')
                 email_sent = True
                 return render_template(template_name, email_sent=email_sent, page_title=page_title)
 
@@ -85,9 +86,9 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
 
         if existing_empresa:
             if existing_empresa.nom == nom_empresa:
-                flash('Ya existe una empresa con ese nombre.', 'danger')
+                flash(_('Ya existe una empresa con ese nombre.'), 'danger')
             else:
-                flash('Ya existe una empresa con ese número fiscal.', 'danger')
+                flash(_('Ya existe una empresa con ese número fiscal.'), 'danger')
             return render_template(template_name, page_title=page_title, 
                                    nom_empresa=nom_empresa, numero_fiscal=numero_fiscal,
                                    adreca=adreca, correu_gerent=correu_gerent,
@@ -109,7 +110,7 @@ def create_empresa_logic(template_name='create_empresa.html', page_title="Crear 
         from app.routes.auth import send_verification_email
         send_verification_email(correu_gerent, email_code)
         email_sent = True
-        flash('Se ha enviado un email de verificación al correo del gerente.', 'info')
+        flash(_('Se ha enviado un email de verificación al correo del gerente.'), 'info')
         return render_template(template_name, email_sent=email_sent, page_title=page_title)
 
     # GET
@@ -126,7 +127,7 @@ def create_empresa():
 def generate_empresa_link():
     # ✅ Només admins de l'empresa amb id=1
     if current_user.role != 'admin' or current_user.empresa_id != 1:
-        flash("No tens permisos per generar enllaços.", "danger")
+        flash(_('No tens permisos per generar enllaços.'), "danger")
         return redirect(url_for('fichajes.index'))
 
     if request.method == 'POST':
@@ -151,10 +152,10 @@ def create_empresa_with_token(token):
     try:
         data = s.loads(token, max_age=86400)  # token vàlid 24h
         if data.get("action") != "create_empresa":
-            flash("Enllaç invàlid.", "danger")
+            flash(_('Enllaç invàlid.'), "danger")
             return redirect(url_for('auth.login'))
     except Exception:
-        flash("L'enllaç no és vàlid o ha caducat.", "danger")
+        flash(_('L'enllaç no és vàlid o ha caducat.'), "danger")
         return redirect(url_for('auth.login'))
 
     # Reutilitzar la lògica de creació d'empresa
@@ -164,7 +165,7 @@ def create_empresa_with_token(token):
 @login_required
 def create_treballador(empresa_id):
     if current_user.role != 'admin':
-        flash('No tienes permisos para crear trabajadores.', 'danger')
+        flash(_('No tienes permisos para crear trabajadores.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     # Obtenir i ordenar països alfabèticament
@@ -197,7 +198,7 @@ def create_treballador(empresa_id):
 @login_required
 def create_comunitat():
     if current_user.role != 'admin':
-        flash('No tienes permisos para crear comunidades.', 'danger')
+        flash(_('No tienes permisos para crear comunidades.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     if request.method == 'POST':
@@ -212,7 +213,7 @@ def create_comunitat():
         longitud = request.form.get('longitud')
 
         if Comunidad.query.filter_by(cif=cif).first():
-            flash('Ya existe una comunidad con ese CIF.', 'danger')
+            flash(_('Ya existe una comunidad con ese CIF.'), 'danger')
             return redirect(url_for('empresa.create_comunitat'))
 
         nueva_comunidad = Comunidad(
@@ -230,7 +231,7 @@ def create_comunitat():
         try:
             db.session.add(nueva_comunidad)
             db.session.commit()
-            flash('Comunidad creada exitosamente.', 'success')
+            flash(_('Comunidad creada exitosamente.'), 'success')
             return redirect(url_for('fichajes.index'))
         except Exception as e:
             db.session.rollback()
@@ -244,7 +245,7 @@ def create_comunitat():
 @login_required
 def create_pagador():
     if current_user.role != 'admin':
-        flash('No tens permisos per crear pagadors.', 'danger')
+        flash(_('No tens permisos per crear pagadors.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     if request.method == 'POST':
@@ -256,7 +257,7 @@ def create_pagador():
         codi_postal = request.form.get('codi_postal')
 
         if Pagador.query.filter_by(email=email).first():
-            flash('Ja existeix un pagador amb aquest correu.', 'danger')
+            flash(_('Ja existeix un pagador amb aquest correu.'), 'danger')
             return redirect(url_for('empresa.create_pagador'))
 
         nou_pagador = Pagador(
@@ -271,7 +272,7 @@ def create_pagador():
         try:
             db.session.add(nou_pagador)
             db.session.commit()
-            flash('Pagador creat correctament.', 'success')
+            flash(_('Pagador creat correctament.'), 'success')
             return redirect(url_for('empresa.pagadors'))
         except Exception as e:
             db.session.rollback()
@@ -284,7 +285,7 @@ def create_pagador():
 @login_required
 def pagadors():
     if current_user.role != 'admin':
-        flash('No tens permisos per veure aquesta pàgina.', 'danger')
+        flash(_('No tens permisos per veure aquesta pàgina.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     pagadors = Pagador.query.order_by(Pagador.nom_pagador.asc()).all()
@@ -294,7 +295,7 @@ def pagadors():
 @login_required
 def usuaris():
     if current_user.role != 'admin':
-        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        flash(_('No tens permisos per accedir a aquesta pàgina.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     query = User.query.options(db.joinedload(User.empresa))
@@ -329,7 +330,7 @@ def usuari(user_id):
 @login_required
 def comunitats():
     if current_user.role != 'admin':
-        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        flash(_('No tens permisos per accedir a aquesta pàgina.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     comunitats = Comunidad.query.order_by(Comunidad.fecha_alta.asc()).all()

@@ -31,7 +31,7 @@
     <div class="col-md-4 mb-4">
         <div class="card shadow h-100">
             <div class="card-header bg-white">
-                <h5 class="card-title mb-0">Dades Personals</h5>
+                <h5 class="card-title mb-0">{{ _('Dades Personals') }}</h5>
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
@@ -52,7 +52,7 @@
     <div class="col-md-8 mb-4">
         <div class="card shadow h-100">
             <div class="card-header bg-white">
-                <h5 class="card-title mb-0">Sol·licituds d'Abscència (Calendari)</h5>
+                <h5 class="card-title mb-0">{{ _('Sol·licituds d'Abscència (Calendari)') }}</h5>
             </div>
             <div class="card-body">
                 {% if eventos %}
@@ -61,9 +61,9 @@
                         <thead class="table-light sticky-top">
                             <tr>
                                 <th>Data Sol·licitud</th>
-                                <th>Data Abscència</th>
-                                <th>Tipus</th>
-                                <th class="text-center">Estat</th>
+                                <th>{{ _('Data Abscència') }}</th>
+                                <th>{{ _('Tipus') }}</th>
+                                <th class="text-center">{{ _('Estat') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,9 +74,9 @@
                                 <td>{{ ev.tipo_evento.replace('_', ' ').title() }}</td>
                                 <td class="text-center">
                                     {% if ev.aprovada %}
-                                    <span class="badge bg-success">Concedida</span>
+                                    <span class="badge bg-success">{{ _('Concedida') }}</span>
                                     {% else %}
-                                    <span class="badge bg-warning text-dark">Pendent</span>
+                                    <span class="badge bg-warning text-dark">{{ _('Pendent') }}</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -85,7 +85,7 @@
                     </table>
                 </div>
                 {% else %}
-                <p class="text-muted text-center pt-5">No hi ha sol·licituds registrades.</p>
+                <p class="text-muted text-center pt-5">{{ _('No hi ha sol·licituds registrades.') }}</p>
                 {% endif %}
             </div>
         </div>
@@ -97,7 +97,7 @@
     <div class="col-md-8 mb-4">
         <div class="card shadow h-100">
             <div class="card-header bg-white">
-                <h5 class="card-title mb-0">Historial de Fitxatges (Últims 50)</h5>
+                <h5 class="card-title mb-0">{{ _('Historial de Fitxatges (Últims 50)') }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -105,12 +105,12 @@
                         <thead class="table-light sticky-top">
                             <tr>
                                 <th>Data</th>
-                                <th>Entrada</th>
-                                <th>Sortida</th>
-                                <th>Total Treballat</th>
-                                <th>Pausa Acumulada</th>
-                                <th>Torns de Pausa</th>
-                                <th>Tipus</th>
+                                <th>{{ _('Entrada') }}</th>
+                                <th>{{ _('Sortida') }}</th>
+                                <th>{{ _('Total Treballat') }}</th>
+                                <th>{{ _('Pausa Acumulada') }}</th>
+                                <th>{{ _('Torns de Pausa') }}</th>
+                                <th>{{ _('Tipus') }}</th>
                             </tr>
                         </thead>
                         <tbody>

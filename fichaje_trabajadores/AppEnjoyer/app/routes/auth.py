@@ -1,3 +1,4 @@
+from flask_babel import _
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
@@ -38,12 +39,12 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
         if 'email_code' in request.form:
             reg_data = session.get('reg_data')
             if not reg_data:
-                flash('Sesión expirada. Por favor, regístrate de nuevo.', 'danger')
+                flash(_('Sesión expirada. Por favor, regístrate de nuevo.'), 'danger')
                 return redirect(request.url)
             if request.form['email_code'] == reg_data['email_code']:
                 return finalize_user_creation(reg_data, empresa_id, extra_fields)
             else:
-                flash('Código de verificación incorrecto.', 'danger')
+                flash(_('Código de verificación incorrecto.'), 'danger')
                 email_sent = True
                 return render_template(template_name, email_sent=email_sent,
                                        page_title=page_title, empresa=empresa,
@@ -65,14 +66,14 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
 
         # Validacions
         if User.query.filter_by(email=email).first():
-            flash('El email ya está registrado.', 'danger')
+            flash(_('El email ya está registrado.'), 'danger')
             return render_template(template_name, username=username, name=name, phone=phone, email=email,
                                    page_title=page_title, empresa=empresa,
                                    role=role, show_role_dropdown=show_role_dropdown,
                                    prefilled_email=prefilled_email, extra_fields=extra_fields, **kwargs)
 
         if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.', 'danger')
+            flash(_('El nombre de usuario ya existe.'), 'danger')
             return render_template(template_name, name=name, email=email, phone=phone, username=username,
                                    page_title=page_title, empresa=empresa,
                                    role=role, show_role_dropdown=show_role_dropdown,
@@ -81,7 +82,7 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
         # Validar contrasenya d'empresa si es demana
         if empresa and empresa_password:
             if not bcrypt.check_password_hash(empresa.password, empresa_password):
-                flash('La contraseña de la empresa es incorrecta.', 'danger')
+                flash(_('La contraseña de la empresa es incorrecta.'), 'danger')
                 return render_template(template_name, username=username, name=name, phone=phone,
                                        page_title=page_title, empresa=empresa, email=email,
                                        role=role, show_role_dropdown=show_role_dropdown,
@@ -109,7 +110,7 @@ def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
 
         send_verification_email(email, email_code)
         email_sent = True
-        flash('Se ha enviado un email de verificación a tu correo.', 'info')
+        flash(_('Se ha enviado un email de verificación a tu correo.'), 'info')
         return render_template(template_name, email_sent=email_sent,
                                page_title=page_title, empresa=empresa,
                                role=role, show_role_dropdown=show_role_dropdown,
@@ -178,7 +179,7 @@ def create_user(empresa_id):
 @login_required
 def create_admin(empresa_id):
     if current_user.role != 'admin':
-        flash('No tienes permisos para crear administradores.', 'danger')
+        flash(_('No tienes permisos para crear administradores.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     return create_user_logic(role="admin", empresa_id=empresa_id,
@@ -208,7 +209,7 @@ def login():
         password = request.form.get('password')
         
         if not username or not password:
-            flash('Por favor, introduce usuario y contraseña.', 'danger')
+            flash(_('Por favor, introduce usuario y contraseña.'), 'danger')
             return redirect(url_for('auth.login'))
         
         user = User.query.filter_by(username=username).first()
@@ -218,7 +219,7 @@ def login():
             flash(f'Bienvenido/a, {user.name}', 'success')
             return redirect(url_for('fichajes.index'))
         else:
-            flash('Usuario o contraseña incorrectos.', 'danger')
+            flash(_('Usuario o contraseña incorrectos.'), 'danger')
             
     return render_template("login.html")
 
@@ -244,10 +245,10 @@ def forgot_password():
             user.email_code = code
             db.session.commit()
             send_recovery_email(user.email, code)
-            flash('S\'ha enviat un codi de recuperació al teu email.', 'info')
+            flash(_('S\'ha enviat un codi de recuperació al teu email.'), 'info')
             return redirect(url_for('auth.reset_password', email=user.email))
         else:
-            flash('No s\'ha trobat cap usuari amb aquest email o nom d\'usuari.', 'danger')
+            flash(_('No s\'ha trobat cap usuari amb aquest email o nom d\'usuari.'), 'danger')
             
     return render_template("forgot_password.html")
 
@@ -273,7 +274,7 @@ def reset_password():
         confirm_password = request.form.get('confirm_password')
         
         if password != confirm_password:
-            flash('Les contrasenyes no coincideixen.', 'danger')
+            flash(_('Les contrasenyes no coincideixen.'), 'danger')
             return render_template("reset_password.html", email=email, code=code)
             
         user = User.query.filter_by(email=email, email_code=code).first()
@@ -282,9 +283,9 @@ def reset_password():
             user.password = hashed_password
             user.email_code = None  # Clear code after use
             db.session.commit()
-            flash('Contrasenya actualitzada correctament. Ja pots iniciar sessió.', 'success')
+            flash(_('Contrasenya actualitzada correctament. Ja pots iniciar sessió.'), 'success')
             return redirect(url_for('auth.login'))
         else:
-            flash('Codi de recuperació incorrecte o expirat.', 'danger')
+            flash(_('Codi de recuperació incorrecte o expirat.'), 'danger')
             
     return render_template("reset_password.html", email=email)

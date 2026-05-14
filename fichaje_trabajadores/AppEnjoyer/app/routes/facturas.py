@@ -1,3 +1,4 @@
+from flask_babel import _
 from flask import Blueprint, render_template, request, redirect, flash, url_for, send_file
 from flask_login import login_required, current_user
 from app.models import Factura, Comunidad
@@ -12,7 +13,7 @@ facturas_bp = Blueprint("facturas", __name__)
 @login_required
 def llistar_factures():
     if current_user.role != 'admin':
-        flash('No tens permisos per accedir a aquesta pàgina.', 'danger')
+        flash(_('No tens permisos per accedir a aquesta pàgina.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     factures = Factura.query.order_by(Factura.id_factura.desc()).all()
@@ -22,7 +23,7 @@ def llistar_factures():
 @login_required
 def download_factura(factura_id):
     if current_user.role != 'admin':
-        flash('No tens permisos per descarregar factures.', 'danger')
+        flash(_('No tens permisos per descarregar factures.'), 'danger')
         return redirect(url_for('facturas.llistar_factures'))
 
     factura = Factura.query.get_or_404(factura_id)
@@ -59,7 +60,7 @@ def download_factura(factura_id):
 @login_required
 def create_factura():
     if not current_user.role == 'admin':
-        flash('No tienes permisos para crear facturas.', 'danger')
+        flash(_('No tienes permisos para crear facturas.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     if request.method == 'POST':
@@ -78,11 +79,11 @@ def create_factura():
         db.session.add(nova_factura)
         try:
             db.session.commit()
-            flash('Factura creada exitosamente.', 'success')
+            flash(_('Factura creada exitosamente.'), 'success')
             return redirect(url_for('facturas.llistar_factures'))
         except Exception as e:
             db.session.rollback()
-            flash('Error al crear la factura.', 'danger')
+            flash(_('Error al crear la factura.'), 'danger')
             return redirect(url_for('facturas.create_factura'))
 
     comunitats = Comunidad.query.order_by(Comunidad.nombre.asc()).all()

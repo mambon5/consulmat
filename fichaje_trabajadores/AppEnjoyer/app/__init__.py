@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, request, session
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_babel import Babel
 import os
 from dotenv import load_dotenv
 from datetime import datetime
@@ -14,6 +15,11 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
 bcrypt = Bcrypt()
+babel = Babel()
+
+def get_locale():
+    # If the user has set a language, use that
+    return session.get('language', 'es')
 
 def create_app():
     app = Flask(__name__, 
@@ -52,6 +58,7 @@ def create_app():
     login_manager.init_app(app)
     mail.init_app(app)
     bcrypt.init_app(app)
+    babel.init_app(app, locale_selector=get_locale)
 
     login_manager.login_view = 'auth.login'
 

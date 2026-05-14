@@ -1,3 +1,4 @@
+from flask_babel import _
 from flask import Blueprint, render_template, redirect, url_for, request, flash, send_file
 from flask_login import login_required, current_user
 from app.models import TimeRecord, Incidencia, PauseRecord, EventoLaboral, db
@@ -131,7 +132,7 @@ def index():
 def check_in():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if active_record:
-        flash('Ya tienes un registro activo', 'warning')
+        flash(_('Ya tienes un registro activo'), 'warning')
     else:
         latitude = request.form.get('latitude')
         longitude = request.form.get('longitude')
@@ -145,7 +146,7 @@ def check_in():
         )
         db.session.add(record)
         db.session.commit()
-        flash('Registro de entrada exitoso', 'success')
+        flash(_('Registro de entrada exitoso'), 'success')
     return redirect(url_for('fichajes.index'))
 
 @fichajes_bp.route("/check_out", methods=['POST'])
@@ -161,9 +162,9 @@ def check_out():
         active_record.check_out_longitude = float(longitude) if longitude else None
         active_record.check_out_accuracy = float(accuracy) if accuracy else None
         db.session.commit()
-        flash('Registro de salida exitoso', 'success')
+        flash(_('Registro de salida exitoso'), 'success')
     else:
-        flash('No tienes un registro activo', 'warning')
+        flash(_('No tienes un registro activo'), 'warning')
     return redirect(url_for('fichajes.index'))
 
 @fichajes_bp.route('/generate_report', methods=['GET', 'POST'])
@@ -205,11 +206,11 @@ def generate_report():
 def start_pause():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if not active_record:
-        flash('No tienes un registro activo para pausar.', 'warning')
+        flash(_('No tienes un registro activo para pausar.'), 'warning')
         return redirect(url_for('fichajes.index'))
     open_pause = PauseRecord.query.filter_by(time_record_id=active_record.id, pause_end=None).first()
     if open_pause:
-        flash('Ya tienes una pausa activa.', 'warning')
+        flash(_('Ya tienes una pausa activa.'), 'warning')
         return redirect(url_for('fichajes.index'))
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
@@ -224,7 +225,7 @@ def start_pause():
     )
     db.session.add(pause)
     db.session.commit()
-    flash('Pausa iniciada.', 'success')
+    flash(_('Pausa iniciada.'), 'success')
     return redirect(url_for('fichajes.index'))
 
 @fichajes_bp.route('/end_pause', methods=['POST'])
@@ -232,11 +233,11 @@ def start_pause():
 def end_pause():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if not active_record:
-        flash('No tienes un registro activo.', 'warning')
+        flash(_('No tienes un registro activo.'), 'warning')
         return redirect(url_for('fichajes.index'))
     open_pause = PauseRecord.query.filter_by(time_record_id=active_record.id, pause_end=None).first()
     if not open_pause:
-        flash('No tienes una pausa activa.', 'warning')
+        flash(_('No tienes una pausa activa.'), 'warning')
         return redirect(url_for('fichajes.index'))
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
@@ -246,7 +247,7 @@ def end_pause():
     open_pause.pause_longitude = float(longitude) if longitude else open_pause.pause_longitude
     open_pause.pause_accuracy = float(accuracy) if accuracy else open_pause.pause_accuracy
     db.session.commit()
-    flash('Pausa finalitzada.', 'success')
+    flash(_('Pausa finalitzada.'), 'success')
     return redirect(url_for('fichajes.index'))
 
 @fichajes_bp.route('/report_incident', methods=['POST'])
@@ -254,7 +255,7 @@ def end_pause():
 def report_incident():
     active_record = TimeRecord.query.filter_by(user_id=current_user.id, check_out=None).first()
     if not active_record:
-        flash('Has d\'estar registrat per reportar una incidència.', 'warning')
+        flash(_('Has d\'estar registrat per reportar una incidència.'), 'warning')
         return redirect(url_for('fichajes.index'))
     category = request.form.get('category')
     description = request.form.get('description')
@@ -278,7 +279,7 @@ def report_incident():
     )
     db.session.add(incidencia)
     db.session.commit()
-    flash('Incidència registrada correctament.', 'success')
+    flash(_('Incidència registrada correctament.'), 'success')
     return redirect(url_for('fichajes.index'))
 
 @fichajes_bp.route("/manual_check_in", methods=['POST'])
@@ -290,7 +291,7 @@ def manual_check_in():
     pause_hours = request.form.get('pause_hours', 0)
 
     if not date_str or not check_in_str or not check_out_str:
-        flash('Falten dades per al registre manual.', 'danger')
+        flash(_('Falten dades per al registre manual.'), 'danger')
         return redirect(url_for('fichajes.index'))
 
     try:
@@ -300,7 +301,7 @@ def manual_check_in():
         # Si la sortida és abans que l'entrada, assumim que és el dia següent (o error)
         if check_out_dt <= check_in_dt:
             # En un fichatge manual del mateix dia, l'usuari potser s'ha equivocat.
-            flash('L\'hora de sortida ha de ser posterior a l\'hora d\'entrada.', 'danger')
+            flash(_('L\'hora de sortida ha de ser posterior a l\'hora d\'entrada.'), 'danger')
             return redirect(url_for('fichajes.index'))
 
         record = TimeRecord(
@@ -334,7 +335,7 @@ def manual_check_in():
             pass
 
         db.session.commit()
-        flash('Registre manual creat correctament.', 'success')
+        flash(_('Registre manual creat correctament.'), 'success')
     except Exception as e:
         db.session.rollback()
         flash(f'Error al crear el registre: {str(e)}', 'danger')

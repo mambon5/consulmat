@@ -1,3 +1,4 @@
+from flask_babel import _
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.models import DataProcessingConsent, TimeRecord
@@ -39,7 +40,7 @@ def data_consent():
         db.session.add(consent)
         db.session.commit()
         
-        flash('Preferencias de privacidad actualizadas', 'success')
+        flash(_('Preferencias de privacidad actualizadas'), 'success')
         return redirect(url_for('privacidad.privacy_settings'))
         
     return render_template('data_consent.html')
@@ -88,10 +89,10 @@ def delete_data():
         db.session.commit()
         from flask_login import logout_user
         logout_user()
-        flash('Tu cuenta y todos tus datos han sido eliminados', 'success')
+        flash(_('Tu cuenta y todos tus datos han sido eliminados'), 'success')
         return redirect(url_for('auth.login'))
     
-    flash('Confirmación requerida para eliminar datos', 'error')
+    flash(_('Confirmación requerida para eliminar datos'), 'error')
 
 @privacidad_bp.route("/privacy")
 @login_required

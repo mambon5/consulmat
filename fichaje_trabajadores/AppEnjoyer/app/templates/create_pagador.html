@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Crear nou pagador</h2>
+<h2>{{ _('Crear nou pagador') }}</h2>
 
 <form method="post">
     <div class="form-group">
-        <label>Nom del pagador</label>
+        <label>{{ _('Nom del pagador') }}</label>
         <input type="text" class="form-control" name="nom_pagador" required>
     </div>
     <div class="form-group">
-        <label>Telèfon</label>
+        <label>{{ _('Telèfon') }}</label>
         <input type="text" class="form-control" name="telefon">
     </div>
     <div class="form-group">
-        <label>Correu electrònic</label>
+        <label>{{ _('Correu electrònic') }}</label>
         <input type="email" class="form-control" name="email" required>
     </div>
     <div class="form-group">
-        <label>Direcció</label>
+        <label>{{ _('Direcció') }}</label>
         <input type="text" class="form-control" name="direccio">
     </div>
     <div class="form-group">
-        <label>Ciutat</label>
+        <label>{{ _('Ciutat') }}</label>
         <input type="text" class="form-control" name="ciutat">
     </div>
     <div class="form-group">
-        <label>Codi Postal</label>
+        <label>{{ _('Codi Postal') }}</label>
         <input type="number" class="form-control" name="codi_postal">
     </div>
     <br>
-    <button type="submit" class="btn btn-primary">Crear pagador</button>
+    <button type="submit" class="btn btn-primary">{{ _('Crear pagador') }}</button>
 </form>
 {% endblock %}

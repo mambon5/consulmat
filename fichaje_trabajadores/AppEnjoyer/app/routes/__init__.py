@@ -5,6 +5,7 @@ from .calendario import calendario_bp
 from .empresa import empresa_bp
 from .facturas import facturas_bp
 from .admin_views import admin_bp
+from .core import core_bp
 
 def register_blueprints(app):
     app.register_blueprint(auth_bp)
@@ -14,3 +15,4 @@ def register_blueprints(app):
     app.register_blueprint(empresa_bp)
     app.register_blueprint(facturas_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(core_bp)

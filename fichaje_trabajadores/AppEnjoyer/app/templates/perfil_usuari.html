@@ -14,15 +14,15 @@
              <p><strong>Empresa:</strong> {{ user.empresa.nom if user.empresa else '-' }}</p>
             <p><strong>Rol:</strong>
                 {% if user.role == 'admin' %}
-                    <span class="badge bg-danger">Administrador</span>
+                    <span class="badge bg-danger">{{ _('Administrador') }}</span>
                 {% else %}
-                    <span class="badge bg-secondary">Empleat</span>
+                    <span class="badge bg-secondary">{{ _('Empleat') }}</span>
                 {% endif %}
             </p>
              
              {% if treballador %}
             <hr>
-            <h5>Dades laborals</h5>
+            <h5>{{ _('Dades laborals') }}</h5>
             <p><strong>Teléfono:</strong> {{ treballador.telefon or '-' }}</p>
             <p><strong>Departament:</strong> {{ treballador.departament|capitalize }}</p>
             <p><strong>Adreça:</strong> {{ treballador.adreca or '-' }}</p>

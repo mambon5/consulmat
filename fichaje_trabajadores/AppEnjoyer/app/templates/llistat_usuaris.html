@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Listado de usuarios registrados</h2>
+<h2>{{ _('Listado de usuarios registrados') }}</h2>
 
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Nombre completo</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Empresa</th>
-            <th>Rol</th>
-            <th>Fecha de alta</th>
+            <th>{{ _('Email') }}</th>
+            <th>{{ _('Teléfono') }}</th>
+            <th>{{ _('Empresa') }}</th>
+            <th>{{ _('Rol') }}</th>
+            <th>{{ _('Fecha de alta') }}</th>
         </tr>
     </thead>
     <tbody>
