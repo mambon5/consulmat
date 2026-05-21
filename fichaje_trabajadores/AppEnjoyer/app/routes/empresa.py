@@ -155,7 +155,7 @@ def create_empresa_with_token(token):
             flash(_('Enllaç invàlid.'), "danger")
             return redirect(url_for('auth.login'))
     except Exception:
-        flash(_('L'enllaç no és vàlid o ha caducat.'), "danger")
+        flash(_("L'enllaç no és vàlid o ha caducat."), "danger")
         return redirect(url_for('auth.login'))
 
     # Reutilitzar la lògica de creació d'empresa
