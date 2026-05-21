@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ _('Llistat de Factures') }}</h2>
+<h2>{{ _("Llistat de Factures") }}</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
-            <th>{{ _('Comunitat') }}</th>
-            <th>{{ _('Tipus de feina') }}</th>
-            <th>{{ _('Document de pagament') }}</th>
-            <th>{{ _('Règim d’impostos') }}</th>
-            <th>{{ _('Accions') }}</th>
+            <th>{{ _("Comunitat") }}</th>
+            <th>{{ _("Tipus de feina") }}</th>
+            <th>{{ _("Document de pagament") }}</th>
+            <th>{{ _("Règim d’impostos") }}</th>
+            <th>{{ _("Accions") }}</th>
         </tr>
     </thead>
     <tbody>
@@ -22,11 +22,11 @@
             <td>{{ factura.document_de_pago }}</td>
             <td>{{ factura.regimen_impuestos or '-' }}</td>
             <td>
-                <a href="{{ url_for('facturas.download_factura', factura_id=factura.id_factura) }}" class="btn btn-success btn-sm">{{ _('Descarregar PDF') }}</a>
+                <a href="{{ url_for('facturas.download_factura', factura_id=factura.id_factura) }}" class="btn btn-success btn-sm">{{ _("Descarregar PDF") }}</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{{ url_for('facturas.create_factura') }}" class="btn btn-primary">{{ _('Crear Nova Factura') }}</a>
+<a href="{{ url_for('facturas.create_factura') }}" class="btn btn-primary">{{ _("Crear Nova Factura") }}</a>
 {% endblock %}

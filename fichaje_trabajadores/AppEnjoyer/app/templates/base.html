@@ -51,15 +51,15 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarLang" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-globe"></i> {{ _('Idioma') }}
+                            <i class="bi bi-globe"></i> {{ _("Idioma") }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLang">
                             <li><a class="dropdown-item" href="{{ url_for('core.set_language', lang='ca') }}">{{
-                                    _('Català') }}</a></li>
+                                    _("Català") }}</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('core.set_language', lang='es') }}">{{
-                                    _('Español') }}</a></li>
+                                    _("Español") }}</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('core.set_language', lang='en') }}">{{
-                                    _('English') }}</a></li>
+                                    _("English") }}</a></li>
                         </ul>
                     </li>
                     {% if current_user.is_authenticated %}

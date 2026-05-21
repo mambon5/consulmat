@@ -2,7 +2,7 @@
 
 {% block extra_fields %}
 <div class="form-group mb-3">
-    <label for="departament">{{ _('Departament') }}</label>
+    <label for="departament">{{ _("Departament") }}</label>
     <select name="departament" id="departament" class="form-control" required>
         <option value="">Selecciona...</option>
         <option value="parkings" {% if extra_fields and extra_fields.departament=='parkings' %}selected{% endif %}>
@@ -15,25 +15,25 @@
 </div>
 
 <div class="form-group mb-3">
-    <label for="adreca">{{ _('Adreça') }}</label>
+    <label for="adreca">{{ _("Adreça") }}</label>
     <input type="text" class="form-control" id="adreca" name="adreca"
         value="{{ extra_fields.adreca if extra_fields and extra_fields.adreca else '' }}">
 </div>
 
 <div class="form-group mb-3">
-    <label for="ciutat">{{ _('Ciutat') }}</label>
+    <label for="ciutat">{{ _("Ciutat") }}</label>
     <input type="text" class="form-control" id="ciutat" name="ciutat"
         value="{{ extra_fields.ciutat if extra_fields and extra_fields.ciutat else '' }}">
 </div>
 
 <div class="form-group mb-3">
-    <label for="codi_postal">{{ _('Codi Postal') }}</label>
+    <label for="codi_postal">{{ _("Codi Postal") }}</label>
     <input type="text" class="form-control" id="codi_postal" name="codi_postal"
         value="{{ extra_fields.codi_postal if extra_fields and extra_fields.codi_postal else '' }}">
 </div>
 
 <div class="form-group mb-3">
-    <label for="sexe">{{ _('Sexe') }}</label>
+    <label for="sexe">{{ _("Sexe") }}</label>
     <select name="sexe" id="sexe" class="form-control">
         <option value="">Selecciona...</option>
         <option value="f" {% if extra_fields and extra_fields.sexe=='f' %}selected{% endif %}>Femení</option>
@@ -43,7 +43,7 @@
 </div>
 
 <div class="form-group mb-3">
-    <label for="nacionalitat">{{ _('Nacionalitat') }}</label>
+    <label for="nacionalitat">{{ _("Nacionalitat") }}</label>
     <select name="nacionalitat" id="nacionalitat" class="form-control">
         {% for pais in paisos %}
         <option value="{{ pais.name }}" {% if extra_fields and extra_fields.nacionalitat==pais.name %}selected{% endif
@@ -53,13 +53,13 @@
 </div>
 
 <div class="form-group mb-3">
-    <label for="edat">{{ _('Edat') }}</label>
+    <label for="edat">{{ _("Edat") }}</label>
     <input type="number" class="form-control" id="edat" name="edat"
         value="{{ extra_fields.edat if extra_fields and extra_fields.edat else '' }}">
 </div>
 
 <div class="form-group mb-3">
-    <label for="carnet_conduir">{{ _('Carnet de Conduir') }}</label>
+    <label for="carnet_conduir">{{ _("Carnet de Conduir") }}</label>
     <select name="carnet_conduir" id="carnet_conduir" class="form-control">
         <option value="">Selecciona...</option>
         <option value="si" {% if extra_fields and extra_fields.carnet_conduir=='si' %}selected{% endif %}>Sí</option>
@@ -68,7 +68,7 @@
 </div>
 
 <div class="form-group mb-3">
-    <label for="vehicle_propi">{{ _('Vehicle propi') }}</label>
+    <label for="vehicle_propi">{{ _("Vehicle propi") }}</label>
     <select name="vehicle_propi" id="vehicle_propi" class="form-control">
         <option value="">Selecciona...</option>
         <option value="si" {% if extra_fields and extra_fields.vehicle_propi=='si' %}selected{% endif %}>Sí</option>

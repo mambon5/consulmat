@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">{{ _('📋 Sol·licituds Pendents d'Absència i Teletreball') }}</h2>
+            <h2 class="mb-4">{{ _("📋 Sol·licituds Pendents d'Absència i Teletreball") }}</h2>
 
             {% if solicitudes %}
             <div class="table-responsive">
@@ -12,14 +12,14 @@
                     <thead class="table-dark">
                         <tr>
                             <th>Treballador</th>
-                            <th>{{ _('Empresa') }}</th>
-                            <th>{{ _('Tipus') }}</th>
-                            <th>{{ _('Data Inici') }}</th>
-                            <th>{{ _('Data Fi') }}</th>
-                            <th>{{ _('Dies') }}</th>
-                            <th>{{ _('Quan s'ha demanat?') }}</th>
-                            <th>{{ _('Justificant') }}</th>
-                            <th>{{ _('Accions') }}</th>
+                            <th>{{ _("Empresa") }}</th>
+                            <th>{{ _("Tipus") }}</th>
+                            <th>{{ _("Data Inici") }}</th>
+                            <th>{{ _("Data Fi") }}</th>
+                            <th>{{ _("Dies") }}</th>
+                            <th>{{ _("Quan s'ha demanat?") }}</th>
+                            <th>{{ _("Justificant") }}</th>
+                            <th>{{ _("Accions") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,8 +53,8 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-success" onclick='aprobar({{ sol.ids | tojson }})'>{{ _('✅ Aprovar') }}</button>
-                                <button class="btn btn-sm btn-danger" onclick='denegar({{ sol.ids | tojson }})'>{{ _('❌ Denegar') }}</button>
+                                <button class="btn btn-sm btn-success" onclick='aprobar({{ sol.ids | tojson }})'>{{ _("✅ Aprovar") }}</button>
+                                <button class="btn btn-sm btn-danger" onclick='denegar({{ sol.ids | tojson }})'>{{ _("❌ Denegar") }}</button>
                             </td>
                         </tr>
                         {% endfor %}

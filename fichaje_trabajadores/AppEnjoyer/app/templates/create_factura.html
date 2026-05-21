@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ _('Crear Nova Factura') }}</h2>
+<h2>{{ _("Crear Nova Factura") }}</h2>
 
 <form method="POST">
     <div class="mb-3">
-        <label for="id_comunitat" class="form-label">{{ _('Comunitat') }}</label>
+        <label for="id_comunitat" class="form-label">{{ _("Comunitat") }}</label>
         <select name="id_comunitat" class="form-select" required>
             {% for comunitat in comunitats %}
             <option value="{{ comunitat.id }}">{{ comunitat.nombre }}</option>
@@ -13,20 +13,20 @@
     </div>
 
     <div class="mb-3">
-        <label for="tipus_feina" class="form-label">{{ _('Tipus de Feina') }}</label>
+        <label for="tipus_feina" class="form-label">{{ _("Tipus de Feina") }}</label>
         <input type="text" class="form-control" name="tipus_feina" required>
     </div>
 
     <div class="mb-3">
-        <label for="document_de_pago" class="form-label">{{ _('Document de Pagament') }}</label>
+        <label for="document_de_pago" class="form-label">{{ _("Document de Pagament") }}</label>
         <input type="text" class="form-control" name="document_de_pago" required>
     </div>
 
     <div class="mb-3">
-        <label for="regimen_impuestos" class="form-label">{{ _('Règim d’Impostos (opcional)') }}</label>
+        <label for="regimen_impuestos" class="form-label">{{ _("Règim d’Impostos (opcional)") }}</label>
         <input type="text" class="form-control" name="regimen_impuestos">
     </div>
 
-    <button type="submit" class="btn btn-success">{{ _('Crear Factura') }}</button>
+    <button type="submit" class="btn btn-success">{{ _("Crear Factura") }}</button>
 </form>
 {% endblock %}

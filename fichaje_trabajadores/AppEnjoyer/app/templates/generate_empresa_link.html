@@ -6,16 +6,16 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4>{{ _('Generar enllaç de registre d'empresa') }}</h4>
+                    <h4>{{ _("Generar enllaç de registre d'empresa") }}</h4>
                 </div>
                 <div class="card-body">
                     <form method="POST">
                         <div class="form-group mb-3">
-                            <label for="email">{{ _('Correu electrònic destinatari') }}</label>
+                            <label for="email">{{ _("Correu electrònic destinatari") }}</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">{{ _('Enviar enllaç') }}</button>
-                        <a href="{{ url_for('fichajes.index') }}" class="btn btn-secondary">{{ _('Cancel·lar') }}</a>
+                        <button type="submit" class="btn btn-primary">{{ _("Enviar enllaç") }}</button>
+                        <a href="{{ url_for('fichajes.index') }}" class="btn btn-secondary">{{ _("Cancel·lar") }}</a>
                     </form>
                 </div>
             </div>
