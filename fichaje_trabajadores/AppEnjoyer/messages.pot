@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-14 20:05+0200\n"
+"POT-Creation-Date: 2026-05-28 13:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,821 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/templates/aviso_legal.html:9 app/templates/privacy_settings.html:61
+#: app/routes/admin_views.py:16 app/routes/admin_views.py:179
+#: app/routes/admin_views.py:185
+msgid "No autorizado"
+msgstr ""
+
+#: app/routes/admin_views.py:47
+msgid " (Pendent)"
+msgstr ""
+
+#: app/routes/auth.py:17
+msgid "Código de verificación"
+msgstr ""
+
+#: app/routes/auth.py:18
+#, python-format
+msgid "Tu código de verificación es: %(code)s"
+msgstr ""
+
+#: app/routes/auth.py:22
+msgid "Recuperación de contraseña"
+msgstr ""
+
+#: app/routes/auth.py:23
+#, python-format
+msgid ""
+"Tu código de recuperación es: %(code)s. Úsalo en la pantalla de "
+"recuperación para cambiar tu contraseña."
+msgstr ""
+
+#: app/routes/auth.py:42 app/routes/empresa.py:44
+msgid "Sesión expirada. Por favor, regístrate de nuevo."
+msgstr ""
+
+#: app/routes/auth.py:47 app/routes/empresa.py:68
+msgid "Código de verificación incorrecto."
+msgstr ""
+
+#: app/routes/auth.py:69
+msgid "El email ya está registrado."
+msgstr ""
+
+#: app/routes/auth.py:76
+msgid "El nombre de usuario ya existe."
+msgstr ""
+
+#: app/routes/auth.py:85
+msgid "La contraseña de la empresa es incorrecta."
+msgstr ""
+
+#: app/routes/auth.py:113
+msgid "Se ha enviado un email de verificación a tu correo."
+msgstr ""
+
+#: app/routes/auth.py:167
+#, python-format
+msgid "Cuenta creada correctamente como %(role)s."
+msgstr ""
+
+#: app/routes/auth.py:182
+msgid "No tienes permisos para crear administradores."
+msgstr ""
+
+#: app/routes/auth.py:212
+msgid "Por favor, introduce usuario y contraseña."
+msgstr ""
+
+#: app/routes/auth.py:219
+#, python-format
+msgid "Bienvenido/a, %(name)s"
+msgstr ""
+
+#: app/routes/auth.py:222
+msgid "Usuario o contraseña incorrectos."
+msgstr ""
+
+#: app/routes/auth.py:248
+msgid "S'ha enviat un codi de recuperació al teu email."
+msgstr ""
+
+#: app/routes/auth.py:251
+msgid "No s'ha trobat cap usuari amb aquest email o nom d'usuari."
+msgstr ""
+
+#: app/routes/auth.py:263
+msgid "Codi correcte"
+msgstr ""
+
+#: app/routes/auth.py:265
+msgid "Codi incorrecte"
+msgstr ""
+
+#: app/routes/auth.py:277
+msgid "Les contrasenyes no coincideixen."
+msgstr ""
+
+#: app/routes/auth.py:286
+msgid "Contrasenya actualitzada correctament. Ja pots iniciar sessió."
+msgstr ""
+
+#: app/routes/auth.py:289
+msgid "Codi de recuperació incorrecte o expirat."
+msgstr ""
+
+#: app/routes/calendario.py:271 app/routes/calendario.py:301
+#: app/routes/calendario.py:407 app/routes/calendario.py:463
+msgid "Error interno del servidor"
+msgstr ""
+
+#: app/routes/calendario.py:278
+msgid "Només els admins poden veure aquest contingut"
+msgstr ""
+
+#: app/routes/calendario.py:315
+msgid "No tens permís per aprovar aquesta sol·licitud"
+msgstr ""
+
+#: app/routes/calendario.py:326
+#, python-format
+msgid "%(event)s aprovat per %(name)s"
+msgstr ""
+
+#: app/routes/calendario.py:370
+#, python-format
+msgid "%(event)s aprovat per %(name)s (%(days)s dies)"
+msgstr ""
+
+#: app/routes/calendario.py:508
+msgid "Ja existeix una absència per aquest dia"
+msgstr ""
+
+#: app/routes/calendario.py:516
+msgid "Ja existeix un teletreball per aquest dia"
+msgstr ""
+
+#: app/routes/calendario.py:533
+msgid "L'arxiu és massa gran (màxim 2MB)"
+msgstr ""
+
+#: app/routes/calendario.py:538
+msgid "Format no permès (només PDF, JPG, PNG)"
+msgstr ""
+
+#: app/routes/empresa.py:19
+msgid "Enllaç per registrar la teva empresa"
+msgstr ""
+
+#: app/routes/empresa.py:23
+#, python-format
+msgid ""
+"Hola,\n"
+"\n"
+"S'ha generat un enllaç únic per registrar la teva empresa.\n"
+"Pots utilitzar-lo per crear la teva empresa al sistema:\n"
+"\n"
+"%(link)s\n"
+"\n"
+"Aquest enllaç caduca en 24 hores.\n"
+"\n"
+"Salutacions,\n"
+"L'equip de Consulmat"
+msgstr ""
+
+#: app/routes/empresa.py:65
+msgid ""
+"Empresa creada correctamente. Ahora puedes registrar el primer "
+"administrador."
+msgstr ""
+
+#: app/routes/empresa.py:87
+msgid "Ya existe una empresa con ese nombre."
+msgstr ""
+
+#: app/routes/empresa.py:89
+msgid "Ya existe una empresa con ese número fiscal."
+msgstr ""
+
+#: app/routes/empresa.py:111
+msgid "Se ha enviado un email de verificación al correo del gerente."
+msgstr ""
+
+#: app/routes/empresa.py:128
+msgid "No tens permisos per generar enllaços."
+msgstr ""
+
+#: app/routes/empresa.py:142
+#, python-format
+msgid "S'ha enviat un enllaç de registre a %(email)s"
+msgstr ""
+
+#: app/routes/empresa.py:153
+msgid "Enllaç invàlid."
+msgstr ""
+
+#: app/routes/empresa.py:156
+msgid "L'enllaç no és vàlid o ha caducat."
+msgstr ""
+
+#: app/routes/empresa.py:166
+msgid "No tienes permisos para crear trabajadores."
+msgstr ""
+
+#: app/routes/empresa.py:199
+msgid "No tienes permisos para crear comunidades."
+msgstr ""
+
+#: app/routes/empresa.py:214
+msgid "Ya existe una comunidad con ese CIF."
+msgstr ""
+
+#: app/routes/empresa.py:232
+msgid "Comunidad creada exitosamente."
+msgstr ""
+
+#: app/routes/empresa.py:236
+#, python-format
+msgid "Error al crear la comunidad: %(error)s"
+msgstr ""
+
+#: app/routes/empresa.py:246
+msgid "No tens permisos per crear pagadors."
+msgstr ""
+
+#: app/routes/empresa.py:258
+msgid "Ja existeix un pagador amb aquest correu."
+msgstr ""
+
+#: app/routes/empresa.py:273
+msgid "Pagador creat correctament."
+msgstr ""
+
+#: app/routes/empresa.py:277
+#, python-format
+msgid "Error al crear el pagador: %(error)s"
+msgstr ""
+
+#: app/routes/empresa.py:286
+msgid "No tens permisos per veure aquesta pàgina."
+msgstr ""
+
+#: app/routes/empresa.py:296 app/routes/empresa.py:331
+#: app/routes/facturas.py:16
+msgid "No tens permisos per accedir a aquesta pàgina."
+msgstr ""
+
+#: app/routes/facturas.py:26
+msgid "No tens permisos per descarregar factures."
+msgstr ""
+
+#: app/routes/facturas.py:35
+#, python-format
+msgid "Factura ID: %(id)s"
+msgstr ""
+
+#: app/routes/facturas.py:39
+#, python-format
+msgid "Comunitat: %(comunidad)s"
+msgstr ""
+
+#: app/routes/facturas.py:41
+#, python-format
+msgid "Tipus de feina: %(trabajo)s"
+msgstr ""
+
+#: app/routes/facturas.py:43
+#, python-format
+msgid "Document de pagament: %(documento)s"
+msgstr ""
+
+#: app/routes/facturas.py:45
+#, python-format
+msgid "Règim d’impostos: %(impuestos)s"
+msgstr ""
+
+#: app/routes/facturas.py:63
+msgid "No tienes permisos para crear facturas."
+msgstr ""
+
+#: app/routes/facturas.py:82
+msgid "Factura creada exitosamente."
+msgstr ""
+
+#: app/routes/facturas.py:86
+msgid "Error al crear la factura."
+msgstr ""
+
+#: app/routes/fichajes.py:41
+msgid "INFORME DE REGISTRO HORARIO"
+msgstr ""
+
+#: app/routes/fichajes.py:50
+#, python-format
+msgid "Empleado: %(name)s"
+msgstr ""
+
+#: app/routes/fichajes.py:52
+msgid "Última Semana"
+msgstr ""
+
+#: app/routes/fichajes.py:53
+msgid "Último Mes"
+msgstr ""
+
+#: app/routes/fichajes.py:54
+msgid "Último Año"
+msgstr ""
+
+#: app/routes/fichajes.py:56
+#, python-format
+msgid "Periodo: %(period)s"
+msgstr ""
+
+#: app/routes/fichajes.py:57
+#, python-format
+msgid "Fecha de generación: %(date)s"
+msgstr ""
+
+#: app/routes/fichajes.py:103
+#, python-format
+msgid "Total de horas trabajadas: %(hours)s"
+msgstr ""
+
+#: app/routes/fichajes.py:107
+msgid ""
+"Este informe ha sido generado automáticamente por el sistema de control "
+"horario.\n"
+"    Los datos mostrados están sujetos a la política de privacidad y "
+"protección de datos de la empresa."
+msgstr ""
+
+#: app/routes/fichajes.py:140
+msgid "Ya tienes un registro activo"
+msgstr ""
+
+#: app/routes/fichajes.py:154
+msgid "Registro de entrada exitoso"
+msgstr ""
+
+#: app/routes/fichajes.py:170
+msgid "Registro de salida exitoso"
+msgstr ""
+
+#: app/routes/fichajes.py:172
+msgid "No tienes un registro activo"
+msgstr ""
+
+#: app/routes/fichajes.py:214
+msgid "No tienes un registro activo para pausar."
+msgstr ""
+
+#: app/routes/fichajes.py:218
+msgid "Ya tienes una pausa activa."
+msgstr ""
+
+#: app/routes/fichajes.py:233
+msgid "Pausa iniciada."
+msgstr ""
+
+#: app/routes/fichajes.py:241
+msgid "No tienes un registro activo."
+msgstr ""
+
+#: app/routes/fichajes.py:245
+msgid "No tienes una pausa activa."
+msgstr ""
+
+#: app/routes/fichajes.py:255
+msgid "Pausa finalitzada."
+msgstr ""
+
+#: app/routes/fichajes.py:263
+msgid "Has d'estar registrat per reportar una incidència."
+msgstr ""
+
+#: app/routes/fichajes.py:287
+msgid "Incidència registrada correctament."
+msgstr ""
+
+#: app/routes/fichajes.py:299
+msgid "Falten dades per al registre manual."
+msgstr ""
+
+#: app/routes/fichajes.py:309
+msgid "No es pot crear un registre per a una data futura."
+msgstr ""
+
+#: app/routes/fichajes.py:315
+msgid "L'hora de sortida ha de ser posterior a l'hora d'entrada."
+msgstr ""
+
+#: app/routes/fichajes.py:349
+msgid "Registre manual creat correctament."
+msgstr ""
+
+#: app/routes/fichajes.py:352
+#, python-format
+msgid "Error al crear el registre: %(error)s"
+msgstr ""
+
+#: app/routes/privacidad.py:43
+msgid "Preferencias de privacidad actualizadas"
+msgstr ""
+
+#: app/routes/privacidad.py:92
+msgid "Tu cuenta y todos tus datos han sido eliminados"
+msgstr ""
+
+#: app/routes/privacidad.py:95
+msgid "Confirmación requerida para eliminar datos"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:9
+msgid "Menú Administrador"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:14
+msgid "Generar Enllaç Empresa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:21 app/templates/index.html:112
+#: app/templates/report.html:8
+msgid "Generar Informe"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:26 app/templates/index.html:117
+msgid "Calendario Laboral"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:32 app/templates/index.html:123
+msgid "Veure Usuaris"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:38 app/templates/index.html:129
+msgid "Afegir Usuari"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:44 app/templates/index.html:135
+msgid "Afegir Administrador"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:49 app/templates/index.html:140
+msgid "Veure Treballadors"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:55 app/templates/index.html:146
+msgid "Crear Treballador"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:62 app/templates/index.html:153
+msgid "Opcions Avançades"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:69 app/templates/index.html:160
+msgid "Veure Comunitats"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:74 app/templates/index.html:165
+msgid "Afegir Comunitat"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:79 app/templates/index.html:170
+msgid "Veure Pagadors"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:85 app/templates/index.html:175
+msgid "Afegir Pagador"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:90 app/templates/index.html:180
+msgid "Veure Factures"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:95 app/templates/create_factura.html:30
+#: app/templates/index.html:185
+msgid "Crear Factura"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:111
+msgid "Estat Actual (Temps Real)"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:124
+msgid " Treballant"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:127
+msgid " En pausa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:130
+msgid " No treballant"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:145
+msgid "Sol·licituds (Últimes 10)"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:147
+msgid "Veure totes"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:159
+msgid "Tipus:"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:163 app/templates/index.html:221
+msgid "Aprovada"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:165
+#: app/templates/admin_worker_detail.html:82 app/templates/index.html:223
+msgid "Pendent"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:172
+msgid ""
+"Mostrar\n"
+"                                10\n"
+"                                més"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:177
+msgid "No hi ha sol·licituds recents."
+msgstr ""
+
+#: app/templates/admin_dashboard.html:187
+msgid "Calendari de l'Empresa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:197
+msgid "Resum d'Estadístiques"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:200
+msgid "Gener"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:201
+msgid "Febrer"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:202
+msgid "Març"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:203
+msgid "Abril"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:204
+msgid "Maig"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:205
+msgid "Juny"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:206
+msgid "Juliol"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:207
+msgid "Agost"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:208
+msgid "Setembre"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:209
+msgid "Octubre"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:210
+msgid "Novembre"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:211
+msgid "Desembre"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:217
+msgid "Actualitzar"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:225
+#: app/templates/admin_dashboard.html:254
+msgid "Treballador"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:226
+msgid "Dies Treballats"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:227
+msgid "Dies de Festa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:228
+msgid "Dies Baixa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:233
+msgid "Carregant dades..."
+msgstr ""
+
+#: app/templates/admin_dashboard.html:244
+msgid "Incidències de l'empresa"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:252 app/templates/index.html:475
+msgid "Data"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:253 app/templates/index.html:538
+msgid "Hora"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:255 app/templates/index.html:421
+#: app/templates/index.html:525
+msgid "Categoria"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:256 app/templates/index.html:422
+#: app/templates/index.html:534
+msgid "Descripció"
+msgstr ""
+
+#: app/templates/admin_dashboard.html:273
+msgid "No hi ha incidències recents."
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:7
+msgid "📋 Sol·licituds Pendents d'Absència i Teletreball"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:15
+#: app/templates/llistat_treballadors.html:11
+#: app/templates/llistat_usuaris.html:12
+msgid "Empresa"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:16
+#: app/templates/admin_worker_detail.html:68
+#: app/templates/admin_worker_detail.html:116 app/templates/index.html:204
+msgid "Tipus"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:17
+msgid "Data Inici"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:18
+msgid "Data Fi"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:19 app/templates/index.html:207
+msgid "Dies"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:20
+msgid "Quan s'ha demanat?"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:21
+msgid "Justificant"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:22
+#: app/templates/llistat_factures.html:13
+msgid "Accions"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:57
+msgid ""
+"✅\n"
+"                                    Aprovar"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:59
+msgid ""
+"❌\n"
+"                                    Denegar"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:108
+msgid "Estàs segur que vols aprovar aquesta sol·licitud?"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:140
+msgid "S'ha produït un error al aprovar. Revisa la consola."
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:145 app/templates/calendari.html:307
+msgid "Estàs segur que vols DENEGAR aquesta sol·licitud?"
+msgstr ""
+
+#: app/templates/admin_solicitudes.html:181
+msgid "S'ha produït un error al denegar. Revisa la consola (F12)."
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:11
+msgid "Detall del Treballador:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:16
+msgid "Treballant Ara"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:19
+msgid "En Pausa"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:22
+msgid "Inactiu"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:34
+msgid "Dades Personals"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:38
+#: app/templates/perfil_usuari.html:27
+msgid "Departament:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:40
+msgid "Correu:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:43
+msgid "Telèfon:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:44
+#: app/templates/perfil_usuari.html:28
+msgid "Adreça:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:46
+#: app/templates/perfil_usuari.html:42
+msgid "Nacionalitat:"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:58
+msgid "Sol·licituds d'Abscència (Calendari)"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:66
+msgid "Data Sol·licitud"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:67
+msgid "Data Abscència"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:69 app/templates/index.html:208
+msgid "Estat"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:80
+msgid "Concedida"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:91
+msgid "No hi ha sol·licituds registrades."
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:103
+msgid "Historial de Fitxatges (Últims 50)"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:111 app/templates/index.html:321
+msgid "Entrada"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:112
+msgid "Sortida"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:113
+msgid "Total Treballat"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:114
+msgid "Pausa Acumulada"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:115
+msgid "Torns de Pausa"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:128
+msgid "En curs"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:153
+msgid "Activa"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:164
+msgid "Sense registres horaris."
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:179
+msgid ""
+"Incidències\n"
+"                    (Últimes)"
+msgstr ""
+
+#: app/templates/admin_worker_detail.html:194
+msgid "Aquest treballador no té incidències."
+msgstr ""
+
+#: app/templates/aviso_legal.html:9 app/templates/base.html:81
+#: app/templates/privacy_settings.html:61
 msgid "Aviso Legal"
 msgstr ""
 
@@ -247,6 +1061,167 @@ msgid ""
 "domicilio del USUARIO o el lugar del cumplimiento de la obligación."
 msgstr ""
 
+#: app/templates/base.html:7
+msgid "Maxilim - Control Horario"
+msgstr ""
+
+#: app/templates/base.html:54
+msgid "Idioma"
+msgstr ""
+
+#: app/templates/base.html:58
+msgid "Català"
+msgstr ""
+
+#: app/templates/base.html:60
+msgid "Español"
+msgstr ""
+
+#: app/templates/base.html:62
+msgid "English"
+msgstr ""
+
+#: app/templates/base.html:76
+msgid "Privacidad"
+msgstr ""
+
+#: app/templates/base.html:86
+msgid "Cerrar Sesión"
+msgstr ""
+
+#: app/templates/base.html:113
+msgid "Maxilim S.L. - Sistema de Control Horario"
+msgstr ""
+
+#: app/templates/calendari.html:9
+msgid "Tipus d'absència:"
+msgstr ""
+
+#: app/templates/calendari.html:13
+msgid "Vacances"
+msgstr ""
+
+#: app/templates/calendari.html:18
+msgid "Baixa mèdica"
+msgstr ""
+
+#: app/templates/calendari.html:23
+msgid "Assumptes propis"
+msgstr ""
+
+#: app/templates/calendari.html:27
+msgid "Teletreball"
+msgstr ""
+
+#: app/templates/calendari.html:34
+msgid "Afegir justificant"
+msgstr ""
+
+#: app/templates/calendari.html:37 app/templates/calendari.html:170
+msgid "Cap arxiu seleccionat (màx 2MB)"
+msgstr ""
+
+#: app/templates/calendari.html:42
+msgid "Resum d'absències"
+msgstr ""
+
+#: app/templates/calendari.html:44
+msgid "Vacances:"
+msgstr ""
+
+#: app/templates/calendari.html:45 app/templates/calendari.html:48
+#: app/templates/calendari.html:50
+msgid "restants"
+msgstr ""
+
+#: app/templates/calendari.html:46
+msgid "Baixa mèdica:"
+msgstr ""
+
+#: app/templates/calendari.html:49
+msgid "Assumptes propis:"
+msgstr ""
+
+#: app/templates/calendari.html:59
+msgid "Calendari Laboral"
+msgstr ""
+
+#: app/templates/calendari.html:61
+msgid "📋 Veure Sol·licituds Pendents"
+msgstr ""
+
+#: app/templates/calendari.html:69
+msgid "Selecciona treballador:"
+msgstr ""
+
+#: app/templates/calendari.html:85
+msgid ""
+"🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-"
+"la."
+msgstr ""
+
+#: app/templates/calendari.html:86
+msgid "🔹 Fes clic sobre un dia d'absència per eliminar-lo."
+msgstr ""
+
+#: app/templates/calendari.html:88
+msgid "Admin:"
+msgstr ""
+
+#: app/templates/calendari.html:88
+msgid ""
+"Fes clic en una sol·licitud pendent per\n"
+"                        aprovar-la o denegar-la."
+msgstr ""
+
+#: app/templates/calendari.html:168
+msgid "❌ L'arxiu és massa gran. El màxim permès són 2MB."
+msgstr ""
+
+#: app/templates/calendari.html:195
+msgid "⚠️ Selecciona primer un tipus d'absència."
+msgstr ""
+
+#: app/templates/calendari.html:207
+msgid "❌ No tens dies disponibles de"
+msgstr ""
+
+#: app/templates/calendari.html:207
+msgid "S'ha exhaurit el límit de"
+msgstr ""
+
+#: app/templates/calendari.html:207
+msgid "dies."
+msgstr ""
+
+#: app/templates/calendari.html:219
+msgid "Vols marcar"
+msgstr ""
+
+#: app/templates/calendari.html:219
+msgid "dies"
+msgstr ""
+
+#: app/templates/calendari.html:262
+msgid "❌ Algunes dates NO s'han pogut afegir:"
+msgstr ""
+
+#: app/templates/calendari.html:268
+msgid "dia(es) demanats correctament"
+msgstr ""
+
+#: app/templates/calendari.html:322
+msgid "S'ha produït un error."
+msgstr ""
+
+#: app/templates/calendari.html:352
+msgid "❌ Error: "
+msgstr ""
+
+#: app/templates/calendari.html:356
+msgid "S'ha produït un error al eliminar l'absència."
+msgstr ""
+
 #: app/templates/create_comunitat.html:9
 msgid "Crear Nueva Comunidad"
 msgstr ""
@@ -393,10 +1368,6 @@ msgstr ""
 msgid "Règim d’Impostos (opcional)"
 msgstr ""
 
-#: app/templates/create_factura.html:30
-msgid "Crear Factura"
-msgstr ""
-
 #: app/templates/create_pagador.html:4
 msgid "Crear nou pagador"
 msgstr ""
@@ -406,6 +1377,7 @@ msgid "Nom del pagador"
 msgstr ""
 
 #: app/templates/create_pagador.html:12 app/templates/llistat_pagadors.html:10
+#: app/templates/register_first_admin.html:23
 msgid "Telèfon"
 msgstr ""
 
@@ -459,6 +1431,10 @@ msgstr ""
 
 #: app/templates/create_treballador.html:71
 msgid "Vehicle propi"
+msgstr ""
+
+#: app/templates/create_user.html:11
+msgid "Verifica tu correo electrónico"
 msgstr ""
 
 #: app/templates/create_user.html:24
@@ -517,16 +1493,237 @@ msgstr ""
 msgid "Volver al Inicio"
 msgstr ""
 
+#: app/templates/generate_empresa_link.html:9
+msgid "Generar enllaç de registre d'empresa"
+msgstr ""
+
+#: app/templates/generate_empresa_link.html:14
+msgid "Correu electrònic destinatari"
+msgstr ""
+
+#: app/templates/generate_empresa_link.html:17
+msgid "Enviar enllaç"
+msgstr ""
+
+#: app/templates/generate_empresa_link.html:18 app/templates/index.html:230
+msgid "Cancel·lar"
+msgstr ""
+
+#: app/templates/index.html:8
+msgid "Recordatori"
+msgstr ""
+
+#: app/templates/index.html:9
+msgid " Tanca"
+msgstr ""
+
+#: app/templates/index.html:12 app/templates/index.html:30
+#: app/templates/index.html:666
+msgid "No has registrat la teva entrada avui."
+msgstr ""
+
+#: app/templates/index.html:19 app/templates/index.html:37
+msgid "Registrar Entrada Ara"
+msgstr ""
+
+#: app/templates/index.html:30
+msgid "Recordatori:"
+msgstr ""
+
+#: app/templates/index.html:44
+msgid "Estat Actual"
+msgstr ""
+
+#: app/templates/index.html:48
+msgid "Entrada registrada:"
+msgstr ""
+
+#: app/templates/index.html:56
+msgid "Registrar Sortida"
+msgstr ""
+
+#: app/templates/index.html:70
+msgid "Començar Pausa"
+msgstr ""
+
+#: app/templates/index.html:81
+msgid "Acabar Pausa"
+msgstr ""
+
+#: app/templates/index.html:86
+msgid "No hi ha registre actiu"
+msgstr ""
+
+#: app/templates/index.html:100
+msgid "¿Has olvidado registrar tu entrada?"
+msgstr ""
+
+#: app/templates/index.html:105
+msgid "Generar Enllaç per Crear Empresa"
+msgstr ""
+
+#: app/templates/index.html:198
+msgid "Les meves Sol·licituds d'Absència"
+msgstr ""
+
+#: app/templates/index.html:205
+msgid "Inici"
+msgstr ""
+
+#: app/templates/index.html:206 app/templates/index.html:257
+msgid "Fi"
+msgstr ""
+
+#: app/templates/index.html:209
+msgid "Acció"
+msgstr ""
+
+#: app/templates/index.html:242
+msgid "No tens sol·licituds d'absència registrades."
+msgstr ""
+
+#: app/templates/index.html:249
+msgid "Historial de Pauses"
+msgstr ""
+
+#: app/templates/index.html:255
+msgid "Dia Inici"
+msgstr ""
+
+#: app/templates/index.html:256 app/templates/llistar_calendari.html:12
+msgid "Hora Inici"
+msgstr ""
+
+#: app/templates/index.html:258
+msgid "Duració"
+msgstr ""
+
+#: app/templates/index.html:259
+msgid "Lat/Lon Inici"
+msgstr ""
+
+#: app/templates/index.html:260 app/templates/index.html:424
+msgid "Precisión (m)"
+msgstr ""
+
+#: app/templates/index.html:315
+msgid "Historial de Registros"
+msgstr ""
+
+#: app/templates/index.html:320
+msgid "Fecha"
+msgstr ""
+
+#: app/templates/index.html:322
+msgid "Salida"
+msgstr ""
+
+#: app/templates/index.html:323
+msgid "Duración"
+msgstr ""
+
+#: app/templates/index.html:324
+msgid "Lat/Lon Entrada"
+msgstr ""
+
+#: app/templates/index.html:325
+msgid "Precisión Entrada (m)"
+msgstr ""
+
+#: app/templates/index.html:326
+msgid "Lat/Lon Salida"
+msgstr ""
+
+#: app/templates/index.html:327
+msgid "Precisión Salida (m)"
+msgstr ""
+
+#: app/templates/index.html:328
+msgid "Hores Pausa"
+msgstr ""
+
+#: app/templates/index.html:415
+msgid "Incidències registrades avui"
+msgstr ""
+
+#: app/templates/index.html:423
+msgid "Lat/Lon Incidència"
+msgstr ""
+
+#: app/templates/index.html:454
+msgid "No s'ha registrat cap incidència avui."
+msgstr ""
+
+#: app/templates/index.html:458 app/templates/index.html:520
+msgid "Registrar Incidència"
+msgstr ""
+
+#: app/templates/index.html:470
+msgid "Fitxatge Manual (Retard)"
+msgstr ""
+
+#: app/templates/index.html:481
+msgid "Hora Entrada"
+msgstr ""
+
+#: app/templates/index.html:485
+msgid "Hora Sortida"
+msgstr ""
+
+#: app/templates/index.html:490
+msgid "Hores de Pausa (total)"
+msgstr ""
+
+#: app/templates/index.html:501
+msgid "Selecciona el temps total de pausa."
+msgstr ""
+
+#: app/templates/index.html:505 app/templates/index.html:547
+msgid "Cancel·la"
+msgstr ""
+
+#: app/templates/index.html:507
+msgid "Crear Registre"
+msgstr ""
+
+#: app/templates/index.html:527
+msgid "Retard"
+msgstr ""
+
+#: app/templates/index.html:528
+msgid "Problema tècnic"
+msgstr ""
+
+#: app/templates/index.html:529
+msgid "Incidència laboral"
+msgstr ""
+
+#: app/templates/index.html:530
+msgid "Altres"
+msgstr ""
+
+#: app/templates/index.html:549
+msgid "Envia"
+msgstr ""
+
+#: app/templates/index.html:617
+msgid "Estàs segur que vols cancel·lar aquesta sol·licitud?"
+msgstr ""
+
+#: app/templates/index.html:636
+msgid "S'ha produït un error al cancel·lar."
+msgstr ""
+
+#: app/templates/index.html:674 app/templates/index.html:678
+msgid "Recordatori de Fichatge"
+msgstr ""
+
 #: app/templates/llistar_calendari.html:4
 msgid "Calendari de Treballadors"
 msgstr ""
 
 #: app/templates/llistar_calendari.html:10
 msgid "Dia Setmana"
-msgstr ""
-
-#: app/templates/llistar_calendari.html:12
-msgid "Hora Inici"
 msgstr ""
 
 #: app/templates/llistar_calendari.html:13
@@ -561,10 +1758,6 @@ msgstr ""
 msgid "Règim d’impostos"
 msgstr ""
 
-#: app/templates/llistat_factures.html:13
-msgid "Accions"
-msgstr ""
-
 #: app/templates/llistat_factures.html:25
 msgid "Descarregar PDF"
 msgstr ""
@@ -576,16 +1769,12 @@ msgstr ""
 #: app/templates/llistat_pagadors.html:11
 #: app/templates/llistat_treballadors.html:10
 #: app/templates/llistat_usuaris.html:10
+#: app/templates/register_first_admin.html:19
 msgid "Email"
 msgstr ""
 
 #: app/templates/llistat_treballadors.html:4
 msgid "Listado de trabajadores registrados"
-msgstr ""
-
-#: app/templates/llistat_treballadors.html:11
-#: app/templates/llistat_usuaris.html:12
-msgid "Empresa"
 msgstr ""
 
 #: app/templates/llistat_treballadors.html:12
@@ -636,6 +1825,46 @@ msgstr ""
 msgid "Usuario"
 msgstr ""
 
+#: app/templates/login.html:45
+msgid "Acceder"
+msgstr ""
+
+#: app/templates/login.html:51
+msgid "¿Has perdido tu contraseña?"
+msgstr ""
+
+#: app/templates/login.html:59
+msgid "¿Problemas para acceder? Contacte con su supervisor"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:7
+msgid "Perfil de"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:10
+msgid "Nombre de usuario:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:11
+msgid "Email:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:12 app/templates/perfil_usuari.html:26
+msgid "Teléfono:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:13
+msgid "Nombre completo:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:14
+msgid "Empresa:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:15
+msgid "Rol:"
+msgstr ""
+
 #: app/templates/perfil_usuari.html:17
 msgid "Administrador"
 msgstr ""
@@ -646,6 +1875,58 @@ msgstr ""
 
 #: app/templates/perfil_usuari.html:25
 msgid "Dades laborals"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:29
+msgid "Ciutat:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:30
+msgid "Codi postal:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:31
+msgid "Sexe:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:33
+msgid "Home"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:35
+msgid "Dona"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:37
+msgid "No ho vol dir"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:43
+msgid "Edat:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:45
+msgid "anys"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:50
+msgid "Carnet de conduir:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:52 app/templates/perfil_usuari.html:61
+msgid "Sí"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:54 app/templates/perfil_usuari.html:63
+msgid "No"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:59
+msgid "Vehicle propi:"
+msgstr ""
+
+#: app/templates/perfil_usuari.html:73
+msgid "Tornar"
 msgstr ""
 
 #: app/templates/privacy_policy.html:11
@@ -804,11 +2085,47 @@ msgstr ""
 msgid "ELIMINAR"
 msgstr ""
 
-#: app/templates/report.html:8
-msgid "Generar Informe"
+#: app/templates/register_first_admin.html:11
+msgid "Nom d'usuari"
+msgstr ""
+
+#: app/templates/register_first_admin.html:15
+msgid "Nom complet"
+msgstr ""
+
+#: app/templates/register_first_admin.html:27
+msgid "Contrasenya d’accés (usuari)"
+msgstr ""
+
+#: app/templates/register_first_admin.html:31
+msgid "Contrasenya de l’empresa"
+msgstr ""
+
+#: app/templates/register_first_admin.html:34
+msgid "Crear administrador"
 msgstr ""
 
 #: app/templates/report.html:11
 msgid "Seleccione el periodo del informe:"
+msgstr ""
+
+#: app/templates/reset_password.html:8 app/templates/reset_password.html:37
+msgid "Nova Contrasenya"
+msgstr ""
+
+#: app/templates/reset_password.html:9
+msgid "Verifica el codi rebut i posa la teva nova contrasenya."
+msgstr ""
+
+#: app/templates/reset_password.html:18
+msgid "Codi d'Activació"
+msgstr ""
+
+#: app/templates/reset_password.html:24
+msgid "######"
+msgstr ""
+
+#: app/templates/reset_password.html:50
+msgid "Repeteix la Contrasenya"
 msgstr ""
 

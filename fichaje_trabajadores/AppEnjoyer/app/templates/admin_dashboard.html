@@ -11,88 +11,88 @@
                 {% if current_user.empresa_id == 1 %}
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.generate_empresa_link') }}" class="btn btn-warning w-100 text-start">
-                        <i class="bi bi-building-add"></i> Generar Enllaç Empresa
+                        <i class="bi bi-building-add"></i> {{ _("Generar Enllaç Empresa") }}
                     </a>
                 </div>
                 {% endif %}
 
                 <div class="mt-3">
                     <a href="{{ url_for('fichajes.generate_report') }}" class="btn btn-info w-100 text-start">
-                        <i class="bi bi-file-earmark-pdf"></i> Generar Informe
+                        <i class="bi bi-file-earmark-pdf"></i> {{ _("Generar Informe") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('calendario.calendario_laboral') }}" class="btn btn-info w-100 text-start">
-                        <i class="bi bi-calendar-event"></i> Calendario Laboral
+                        <i class="bi bi-calendar-event"></i> {{ _("Calendario Laboral") }}
                     </a>
                 </div>
 
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.usuaris') }}" class="btn btn-info w-100 text-start">
-                        <i class="bi bi-people"></i> Veure Usuaris
+                        <i class="bi bi-people"></i> {{ _("Veure Usuaris") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('auth.create_user', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100 text-start">
-                        <i class="bi bi-person-plus"></i> Afegir Usuari
+                        <i class="bi bi-person-plus"></i> {{ _("Afegir Usuari") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('auth.create_admin', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100 text-start">
-                        <i class="bi bi-star"></i> Afegir Administrador
+                        <i class="bi bi-star"></i> {{ _("Afegir Administrador") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.treballadors') }}" class="btn btn-success w-100 text-start">
-                        <i class="bi bi-people-fill"></i> Veure Treballadors
+                        <i class="bi bi-people-fill"></i> {{ _("Veure Treballadors") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.create_treballador', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-success w-100 text-start">
-                        <i class="bi bi-person-plus-fill"></i> Crear Treballador
+                        <i class="bi bi-person-plus-fill"></i> {{ _("Crear Treballador") }}
                     </a>
                 </div>
 
                 <div class="mt-3">
                     <button class="btn btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse"
                         data-bs-target="#opcionsAvancades" aria-expanded="false" aria-controls="opcionsAvancades">
-                        <i class="bi bi-gear-fill"></i> Opcions Avançades
+                        <i class="bi bi-gear-fill"></i> {{ _("Opcions Avançades") }}
                     </button>
                 </div>
 
                 <div class="collapse" id="opcionsAvancades">
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.comunitats') }}" class="btn btn-primary w-100 text-start">
-                            <i class="bi bi-houses-fill"></i> Veure Comunitats
+                            <i class="bi bi-houses-fill"></i> {{ _("Veure Comunitats") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.create_comunitat') }}" class="btn btn-primary w-100 text-start">
-                            <i class="bi bi-house-add"></i> Afegir Comunitat
+                            <i class="bi bi-house-add"></i> {{ _("Afegir Comunitat") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.pagadors') }}" class="btn btn-outline-danger w-100 text-start">
-                            <i class="bi  bi-person-fill"></i> Veure Pagadors
+                            <i class="bi  bi-person-fill"></i> {{ _("Veure Pagadors") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.create_pagador') }}"
                             class="btn btn-outline-danger w-100 text-start">
-                            <i class="bi  bi-person-plus-fill"></i> Afegir Pagador
+                            <i class="bi  bi-person-plus-fill"></i> {{ _("Afegir Pagador") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('facturas.llistar_factures') }}" class="btn btn-warning w-100 text-start">
-                            <i class="bi bi-receipt-cutoff"></i> Veure Factures
+                            <i class="bi bi-receipt-cutoff"></i> {{ _("Veure Factures") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('facturas.create_factura') }}" class="btn btn-warning w-100 text-start">
-                            <i class="bi bi-file-earmark-plus"></i> Crear Factura
+                            <i class="bi bi-file-earmark-plus"></i> {{ _("Crear Factura") }}
                         </a>
                     </div>
                 </div>
@@ -121,13 +121,13 @@
                                 </div>
                                 <div>
                                     {% if ws.status == 'green' %}
-                                    <span class="badge rounded-pill bg-success" title="{{ _("Treballant") }}"><i
+                                    <span class="badge rounded-pill bg-success" title="{{ _(" Treballant") }}"><i
                                             class="bi bi-circle-fill"></i> Treballant</span>
                                     {% elif ws.status == 'yellow' %}
-                                    <span class="badge rounded-pill bg-warning text-dark" title="{{ _("En pausa") }}"><i
-                                            class="bi bi-pause-circle-fill"></i> Pausa</span>
+                                    <span class="badge rounded-pill bg-warning text-dark" title="{{ _(" En pausa")
+                                        }}"><i class="bi bi-pause-circle-fill"></i> Pausa</span>
                                     {% else %}
-                                    <span class="badge rounded-pill bg-danger" title="{{ _("No treballant") }}"><i
+                                    <span class="badge rounded-pill bg-danger" title="{{ _(" No treballant") }}"><i
                                             class="bi bi-circle-fill"></i> Inactiu</span>
                                     {% endif %}
                                 </div>
@@ -156,7 +156,7 @@
                                     <small class="text-muted">{{ s.fecha.strftime('%d/%m/%Y') }}</small>
                                 </div>
                                 <p class="mb-1" style="font-size: 0.9em;">
-                                    Tipus: <strong>{{ s.tipo_evento.replace('_', ' ').title() }}</strong>
+                                    {{ _("Tipus:") }} <strong>{{ s.tipo_evento.replace('_', ' ').title() }}</strong>
                                 </p>
                                 <small>
                                     {% if s.aprovada %}
@@ -197,18 +197,18 @@
                 <h5 class="card-title mb-0">{{ _("Resum d'Estadístiques") }}</h5>
                 <div class="d-flex gap-2">
                     <select id="statsMonth" class="form-select form-select-sm" style="width: 120px;">
-                        <option value="1">Gener</option>
-                        <option value="2">Febrer</option>
-                        <option value="3">Març</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maig</option>
-                        <option value="6">Juny</option>
-                        <option value="7">Juliol</option>
-                        <option value="8">Agost</option>
-                        <option value="9">Setembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Novembre</option>
-                        <option value="12">Desembre</option>
+                        <option value="1">{{ _("Gener") }}</option>
+                        <option value="2">{{ _("Febrer") }}</option>
+                        <option value="3">{{ _("Març") }}</option>
+                        <option value="4">{{ _("Abril") }}</option>
+                        <option value="5">{{ _("Maig") }}</option>
+                        <option value="6">{{ _("Juny") }}</option>
+                        <option value="7">{{ _("Juliol") }}</option>
+                        <option value="8">{{ _("Agost") }}</option>
+                        <option value="9">{{ _("Setembre") }}</option>
+                        <option value="10">{{ _("Octubre") }}</option>
+                        <option value="11">{{ _("Novembre") }}</option>
+                        <option value="12">{{ _("Desembre") }}</option>
                     </select>
                     <select id="statsYear" class="form-select form-select-sm" style="width: 100px;">
                         <option value="{{ today.year }}">{{ today.year }}</option>
@@ -222,7 +222,7 @@
                     <table class="table table-hover align-middle" id="statsTable">
                         <thead>
                             <tr>
-                                <th>Treballador</th>
+                                <th>{{ _("Treballador") }}</th>
                                 <th class="text-center">{{ _("Dies Treballats") }}</th>
                                 <th class="text-center">{{ _("Dies de Festa") }}</th>
                                 <th class="text-center">{{ _("Dies Baixa") }}</th>
@@ -230,7 +230,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Carregant dades...</td>
+                                <td colspan="4" class="text-center text-muted">{{ _("Carregant dades...") }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -249,7 +249,7 @@
                     <table class="table table-sm table-hover">
                         <thead>
                             <tr>
-                                <th>Data</th>
+                                <th>{{ _("Data") }}</th>
                                 <th>{{ _("Hora") }}</th>
                                 <th>{{ _("Treballador") }}</th>
                                 <th>{{ _("Categoria") }}</th>

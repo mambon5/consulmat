@@ -29,22 +29,25 @@
 
                 <!-- 📂 Secció Justificant (només visible per baixa mèdica) -->
                 <div id="justificant_section" class="mt-3 d-none">
-                    <button type="button" class="btn btn-outline-primary btn-sm w-100 mb-2" onclick="document.getElementById('justificante_file').click()">
-                        <i class="bi bi-file-earmark-plus"></i> Afegir justificant
+                    <button type="button" class="btn btn-outline-primary btn-sm w-100 mb-2"
+                        onclick="document.getElementById('justificante_file').click()">
+                        <i class="bi bi-file-earmark-plus"></i> {{ _("Afegir justificant") }}
                     </button>
                     <input type="file" id="justificante_file" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
-                    <div id="file_info" class="small text-muted text-center"> Cap arxiu seleccionat (màx 2MB) </div>
+                    <div id="file_info" class="small text-muted text-center"> {{ _("Cap arxiu seleccionat (màx 2MB)") }}
+                    </div>
                 </div>
 
                 <hr>
                 <h6 class="fw-bold mb-2">{{ _("Resum d'absències") }}</h6>
                 <ul class="list-unstyled small">
-                    <li>🏖️ Vacances: {{ stats.vacances }} / {{ restants.vacances + stats.vacances }} ({{
-                        restants.vacances }} restants)</li>
-                    <li>🤒 Baixa mèdica: {{ stats.baixa_medica }} / {{ restants.baixa_medica + stats.baixa_medica }} ({{
-                        restants.baixa_medica }} restants)</li>
-                    <li>📋 Assumptes propis: {{ stats.assumptes_propis }} / {{ restants.assumptes_propis +
-                        stats.assumptes_propis }} ({{ restants.assumptes_propis }} restants)</li>
+                    <li>🏖️ {{ _("Vacances:") }} {{ stats.vacances }} / {{ restants.vacances + stats.vacances }} ({{
+                        restants.vacances }} {{ _("restants") }})</li>
+                    <li>🤒 {{ _("Baixa mèdica:") }} {{ stats.baixa_medica }} / {{ restants.baixa_medica +
+                        stats.baixa_medica }} ({{
+                        restants.baixa_medica }} {{ _("restants") }})</li>
+                    <li>📋 {{ _("Assumptes propis:") }} {{ stats.assumptes_propis }} / {{ restants.assumptes_propis +
+                        stats.assumptes_propis }} ({{ restants.assumptes_propis }} {{ _("restants") }})</li>
                 </ul>
             </div>
         </div>
@@ -55,7 +58,8 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">{{ _("Calendari Laboral") }}</h3>
                     {% if current_user.role == 'admin' %}
-                    <a href="/admin/solicitudes" class="btn btn-primary btn-sm">{{ _("📋 Veure Sol·licituds Pendents") }}</a>
+                    <a href="/admin/solicitudes" class="btn btn-primary btn-sm">{{ _("📋 Veure Sol·licituds Pendents")
+                        }}</a>
                     {% endif %}
                 </div>
                 <div class="card-body">
@@ -78,10 +82,11 @@
 
                     <div id="calendar"></div>
                     <p class="mt-3 text-muted small">
-                        🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-la.<br>
-                        🔹 Fes clic sobre un dia d'absència per eliminar-lo.
+                        {{ _("🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-la.") }}<br>
+                        {{ _("🔹 Fes clic sobre un dia d'absència per eliminar-lo.") }}
                         {% if current_user.role == 'admin' %}
-                        <br>🔹 <strong>Admin:</strong> Fes clic en una sol·licitud pendent per aprovar-la o denegar-la.
+                        <br>🔹 <strong>{{ _("Admin:") }}</strong> {{ _("Fes clic en una sol·licitud pendent per
+                        aprovar-la o denegar-la.") }}
                         {% endif %}
                     </p>
                 </div>
@@ -144,7 +149,7 @@
 
     // 🔹 Mostrar/Ocultar secció justificat
     document.querySelectorAll('input[name="tipo_evento"]').forEach(radio => {
-        radio.addEventListener('change', function() {
+        radio.addEventListener('change', function () {
             const section = document.getElementById('justificant_section');
             if (this.value === 'baixa_medica') {
                 section.classList.remove('d-none');
@@ -155,14 +160,14 @@
     });
 
     // 🔹 Mostrar nom de l'arxiu seleccionat
-    document.getElementById('justificante_file').addEventListener('change', function() {
+    document.getElementById('justificante_file').addEventListener('change', function () {
         const info = document.getElementById('file_info');
         if (this.files && this.files[0]) {
             const file = this.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                alert("❌ L'arxiu és massa gran. El màxim permès són 2MB.");
+                alert('{{ _("❌ L\'arxiu és massa gran. El màxim permès són 2MB.") }}');
                 this.value = '';
-                info.innerText = "Cap arxiu seleccionat (màx 2MB)";
+                info.innerText = '{{ _("Cap arxiu seleccionat (màx 2MB)") }}';
                 return;
             }
             info.innerText = `📂 ${file.name}`;
@@ -187,7 +192,7 @@
     select: async function(info) {
         const selected = document.querySelector('input[name="tipo_evento"]:checked');
         if (!selected) {
-            alert("⚠️ Selecciona primer un tipus d'absència.");
+            alert('{{ _("⚠️ Selecciona primer un tipus d\'absència.") }}');
             return;
         }
 
@@ -199,7 +204,7 @@
         const available = limit - used;
 
         if (limit !== null && available <= 0) {
-            alert(`❌ No tens dies disponibles de ${tipo_evento.replace('_', ' ')}.\nS'ha exhaurit el límit de ${limit} dies.`);
+            alert(`{{ _("❌ No tens dies disponibles de") }} ${tipo_evento.replace('_', ' ')}.\n{{ _("S\'ha exhaurit el límit de") }} ${limit} {{ _("dies.") }}`);
             return;
         }
 
@@ -211,7 +216,7 @@
             dates.push(d.toISOString().split('T')[0]);
         }
 
-        if (!confirm(`Vols marcar ${tipo_evento.replace('_', ' ')} (${dates.length} dies)?`)) return;
+        if (!confirm(`{{ _("Vols marcar") }} ${tipo_evento.replace('_', ' ')} (${dates.length} {{ _("dies") }})?`)) return;
 
         let errors = [];
         let successCount = 0;
@@ -220,13 +225,13 @@
             try {
                 let res;
                 const fileInput = document.getElementById('justificante_file');
-                
+
                 if (tipo_evento === 'baixa_medica' && fileInput.files.length > 0) {
                     const formData = new FormData();
                     formData.append('fecha', date);
                     formData.append('tipo_evento', tipo_evento);
                     formData.append('justificante', fileInput.files[0]);
-                    
+
                     res = await fetch('/api/absencia', {
                         method: 'POST',
                         body: formData
@@ -254,13 +259,13 @@
 
         if (errors.length > 0) {
             alert(
-                "❌ Algunes dates NO s'han pogut afegir:\n\n" +
+                '{{ _("❌ Algunes dates NO s\'han pogut afegir:") }}\n\n' +
                 errors.join("\n")
             );
         }
 
         if (successCount > 0) {
-            alert(`✔️ ${successCount} dia(es) demanats correctament`);
+            alert(`✔️ ${successCount} {{ _("dia(es) demanats correctament") }}`);
             window.location.reload();
         }
     },
@@ -299,7 +304,7 @@
                 });
             } else {
                 // Denegar
-                if (!confirm('Estàs segur que vols DENEGAR aquesta sol·licitud?')) return;
+                if (!confirm('{{ _("Estàs segur que vols DENEGAR aquesta sol·licitud?") }}')) return;
                 res = await fetch(`/api/absencia/${info.event.id}/denegar`, {
                     method: 'DELETE'
                 });
@@ -314,7 +319,7 @@
             }
         } catch (err) {
             console.error('Error:', err);
-            alert('S\'ha produït un error.');
+            alert('{{ _("S\'ha produït un error.") }}');
         }
         return;
     }
@@ -344,11 +349,11 @@
             // Reload per actualitzar els estadístics
             setTimeout(() => window.location.reload(), 500);
         } else {
-            alert("❌ Error: " + data.message);
+            alert("{{ _("❌ Error: ") }}" + data.message);
         }
     } catch (err) {
         console.error('Error al eliminar absencia:', err);
-        alert("S'ha produït un error al eliminar l'absència.");
+        alert('{{ _("S\'ha produït un error al eliminar l\'absència.") }}');
     }
         },
 

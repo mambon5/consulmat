@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask_babel import _
 from flask_login import login_required, current_user
 from app.models import EventoLaboral, HorarioLaboral, Treballador
 from sqlalchemy.orm import joinedload
@@ -267,14 +268,14 @@ def admin_solicitudes():
         return render_template('admin_solicitudes.html', solicitudes=solicitudes_agrupadas)
     except Exception as e:
         print(f"❌ Error a /admin/solicitudes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": _("Error interno del servidor")}), 500
 
 # 🔹 RUTA PER ALS ADMINS: Veure sol·licituds pendents d'aprovació
 @calendario_bp.route('/api/solicitudes-pendentes', methods=['GET'])
 @login_required
 def solicitudes_pendentes():
     if current_user.role != 'admin':
-        return jsonify({"error": "Només els admins poden veure aquest contingut"}), 403
+        return jsonify({"error": _("Només els admins poden veure aquest contingut")}), 403
     
     try:
         # Obtenir sol·licituds pendents d'aprovació de la MEVA empresa
@@ -297,7 +298,7 @@ def solicitudes_pendentes():
         return jsonify({"solicitudes": data}), 200
     except Exception as e:
         print(f"❌ Error a /api/solicitudes-pendentes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": _("Error interno del servidor")}), 500
 
 # 🔹 RUTA PER ALS ADMINS: Aprovar una sol·licitud (única)
 @calendario_bp.route('/api/absencia/<int:event_id>/aprobar', methods=['POST'])
@@ -311,7 +312,7 @@ def aprobar_absencia(event_id):
         
         # Verificar que el treballador pertany a la mateixa empresa que l'admin
         if evento.treballador.empresa_id != current_user.empresa_id:
-            return jsonify({"error": "No tens permís per aprovar aquesta sol·licitud"}), 403
+            return jsonify({"error": _("No tens permís per aprovar aquesta sol·licitud")}), 403
         
         # Marcar com aprovada
         # Llegir el nom del treballador abans de fer commit per evitar lazy-load després
@@ -322,7 +323,7 @@ def aprobar_absencia(event_id):
 
         return jsonify({
             "status": "ok",
-            "message": f"{evento.tipo_evento.replace('_', ' ').capitalize()} aprovat per {treballador_nom}"
+            "message": _("%(event)s aprovat per %(name)s", event=evento.tipo_evento.replace('_', ' ').capitalize(), name=treballador_nom)
         })
     except Exception as e:
         db.session.rollback()
@@ -366,7 +367,7 @@ def aprobar_absencias_grupo():
 
         return jsonify({
             "status": "ok",
-            "message": f"{tipo_evento} aprovat per {treballador_nom} ({len(eventos)} dies)"
+            "message": _("%(event)s aprovat per %(name)s (%(days)s dies)", event=tipo_evento, name=treballador_nom, days=len(eventos))
         })
     except Exception as e:
         db.session.rollback()
@@ -403,7 +404,7 @@ def denegar_absencia(event_id):
     except Exception as e:
         db.session.rollback()
         print(f"❌ Error a /api/absencia/denegar: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": _("Error interno del servidor")}), 500
 
 # 🔹 RUTA PER ALS ADMINS: Denegar múltiples sol·licituds (grup de dies consecutius)
 @calendario_bp.route('/api/absencias/denegar', methods=['DELETE'])
@@ -459,7 +460,7 @@ def denegar_absencias_grupo():
         print(f"❌ Error a /api/absencias/denegar: {e}")
         import traceback
         traceback.print_exc()
-        return jsonify({"status": "error", "error": str(e)}), 500
+        return jsonify({"status": "error", "error": _("Error interno del servidor")}), 500
 
 @calendario_bp.route('/api/absencia', methods=['POST'])
 @login_required
@@ -504,7 +505,7 @@ def crear_absencia():
                 fecha=fecha
             ).filter(EventoLaboral.tipo_evento != 'teletreball').first()
             if existent:
-                return jsonify({"error": "Ja existeix una absència per aquest dia"}), 400
+                return jsonify({"error": _("Ja existeix una absència per aquest dia")}), 400
         
         if tipo_evento == 'teletreball':
             existent = EventoLaboral.query.filter_by(
@@ -512,7 +513,7 @@ def crear_absencia():
                 fecha=fecha
             ).filter(EventoLaboral.tipo_evento == 'teletreball').first()
             if existent:
-                return jsonify({"error": "Ja existeix un teletreball per aquest dia"}), 400
+                return jsonify({"error": _("Ja existeix un teletreball per aquest dia")}), 400
 
         # 🔹 NOVA LÓGICA: crear absències com a pendents d'aprovació
         # Necessites aprovació per: absències i teletreball
@@ -529,12 +530,12 @@ def crear_absencia():
                 size = file.tell()
                 file.seek(0)
                 if size > 2 * 1024 * 1024:
-                    return jsonify({"error": "L'arxiu és massa gran (màxim 2MB)"}), 400
+                    return jsonify({"error": _("L'arxiu és massa gran (màxim 2MB)")}), 400
                 
                 # Check extension
                 ext = file.filename.rsplit('.', 1)[1].lower() if '.' in file.filename else ''
                 if ext not in ['pdf', 'jpg', 'jpeg', 'png']:
-                    return jsonify({"error": "Format no permès (només PDF, JPG, PNG)"}), 400
+                    return jsonify({"error": _("Format no permès (només PDF, JPG, PNG)")}), 400
 
                 filename = f"{current_user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
                 save_path = os.path.join('app/static/uploads/justificants', filename)

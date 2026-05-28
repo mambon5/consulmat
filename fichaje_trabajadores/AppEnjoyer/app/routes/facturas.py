@@ -32,17 +32,17 @@ def download_factura(factura_id):
     p = canvas.Canvas(buffer, pagesize=A4)
     y = 800
     p.setFont("Helvetica-Bold", 16)
-    p.drawString(100, y, f"Factura ID: {factura.id_factura}")
+    p.drawString(100, y, _("Factura ID: %(id)s", id=factura.id_factura))
 
     p.setFont("Helvetica", 12)
     y -= 30
-    p.drawString(100, y, f"Comunitat: {factura.comunitat.nombre}")
+    p.drawString(100, y, _("Comunitat: %(comunidad)s", comunidad=factura.comunitat.nombre))
     y -= 20
-    p.drawString(100, y, f"Tipus de feina: {factura.tipus_feina}")
+    p.drawString(100, y, _("Tipus de feina: %(trabajo)s", trabajo=factura.tipus_feina))
     y -= 20
-    p.drawString(100, y, f"Document de pagament: {factura.document_de_pago}")
+    p.drawString(100, y, _("Document de pagament: %(documento)s", documento=factura.document_de_pago))
     y -= 20
-    p.drawString(100, y, f"Règim d’impostos: {factura.regimen_impuestos or '-'}")
+    p.drawString(100, y, _("Règim d’impostos: %(impuestos)s", impuestos=factura.regimen_impuestos or '-'))
     # Afegeix més camps si cal
 
     p.showPage()

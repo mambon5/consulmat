@@ -38,7 +38,7 @@ def generate_pdf_report(records, user, report_type):
     )
     
     # Add company header
-    elements.append(Paragraph("INFORME DE REGISTRO HORARIO", title_style))
+    elements.append(Paragraph(_("INFORME DE REGISTRO HORARIO"), title_style))
     
     # Add report information
     period_text = {
@@ -47,9 +47,14 @@ def generate_pdf_report(records, user, report_type):
         'year': 'Último Año'
     }
     
-    elements.append(Paragraph(f"Empleado: {user.name}", header_style))
-    elements.append(Paragraph(f"Periodo: {period_text[report_type]}", header_style))
-    elements.append(Paragraph(f"Fecha de generación: {datetime.now().strftime('%d de %B de %Y')}", header_style))
+    elements.append(Paragraph(_("Empleado: %(name)s", name=user.name), header_style))
+    period_names = {
+        'week': _('Última Semana'),
+        'month': _('Último Mes'),
+        'year': _('Último Año')
+    }
+    elements.append(Paragraph(_("Periodo: %(period)s", period=period_names.get(report_type, report_type)), header_style))
+    elements.append(Paragraph(_("Fecha de generación: %(date)s", date=datetime.now().strftime('%d/%m/%Y')), header_style))
     elements.append(Spacer(1, 20))
     
     # Prepare table data
@@ -95,12 +100,12 @@ def generate_pdf_report(records, user, report_type):
     # Add summary
     if total_hours.total_seconds() > 0:
         total_hours_str = f"{int(total_hours.total_seconds()//3600)}:{int((total_hours.total_seconds()//60)%60):02d}"
-        elements.append(Paragraph(f"Total de horas trabajadas: {total_hours_str}", header_style))
+        elements.append(Paragraph(_("Total de horas trabajadas: %(hours)s", hours=total_hours_str), header_style))
     
     # Add footer
     elements.append(Spacer(1, 40))
-    footer_text = """Este informe ha sido generado automáticamente por el sistema de control horario.
-    Los datos mostrados están sujetos a la política de privacidad y protección de datos de la empresa."""
+    footer_text = _("""Este informe ha sido generado automáticamente por el sistema de control horario.
+    Los datos mostrados están sujetos a la política de privacidad y protección de datos de la empresa.""")
     elements.append(Paragraph(footer_text, styles['Normal']))
     
     # Build PDF
@@ -344,6 +349,6 @@ def manual_check_in():
         flash(_('Registre manual creat correctament.'), 'success')
     except Exception as e:
         db.session.rollback()
-        flash(f'Error al crear el registre: {str(e)}', 'danger')
+        flash(_('Error al crear el registre: %(error)s', error=str(e)), 'danger')
 
     return redirect(url_for('fichajes.index'))

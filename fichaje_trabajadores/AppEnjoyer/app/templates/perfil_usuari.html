@@ -4,65 +4,65 @@
 <div class="container mt-5">
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
-            <h4><i class="bi bi-person-circle me-2"></i> Perfil de {{ user.name }}</h4>
+            <h4><i class="bi bi-person-circle me-2"></i> {{ _("Perfil de") }} {{ user.name }}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Teléfono:</strong> {{ user.phone or '-' }}</p>
-            <p><strong>Nombre completo:</strong> {{ user.name }}</p>
-             <p><strong>Empresa:</strong> {{ user.empresa.nom if user.empresa else '-' }}</p>
-            <p><strong>Rol:</strong>
+            <p><strong>{{ _("Nombre de usuario:") }}</strong> {{ user.username }}</p>
+            <p><strong>{{ _("Email:") }}</strong> {{ user.email }}</p>
+            <p><strong>{{ _("Teléfono:") }}</strong> {{ user.phone or '-' }}</p>
+            <p><strong>{{ _("Nombre completo:") }}</strong> {{ user.name }}</p>
+            <p><strong>{{ _("Empresa:") }}</strong> {{ user.empresa.nom if user.empresa else '-' }}</p>
+            <p><strong>{{ _("Rol:") }}</strong>
                 {% if user.role == 'admin' %}
-                    <span class="badge bg-danger">{{ _("Administrador") }}</span>
+                <span class="badge bg-danger">{{ _("Administrador") }}</span>
                 {% else %}
-                    <span class="badge bg-secondary">{{ _("Empleat") }}</span>
+                <span class="badge bg-secondary">{{ _("Empleat") }}</span>
                 {% endif %}
             </p>
-             
-             {% if treballador %}
+
+            {% if treballador %}
             <hr>
             <h5>{{ _("Dades laborals") }}</h5>
-            <p><strong>Teléfono:</strong> {{ treballador.telefon or '-' }}</p>
-            <p><strong>Departament:</strong> {{ treballador.departament|capitalize }}</p>
-            <p><strong>Adreça:</strong> {{ treballador.adreca or '-' }}</p>
-            <p><strong>Ciutat:</strong> {{ treballador.ciutat or '-' }}</p>
-            <p><strong>Codi postal:</strong> {{ treballador.codi_postal or '-' }}</p>
-            <p><strong>Sexe:</strong>
+            <p><strong>{{ _("Teléfono:") }}</strong> {{ treballador.telefon or '-' }}</p>
+            <p><strong>{{ _("Departament:") }}</strong> {{ treballador.departament|capitalize }}</p>
+            <p><strong>{{ _("Adreça:") }}</strong> {{ treballador.adreca or '-' }}</p>
+            <p><strong>{{ _("Ciutat:") }}</strong> {{ treballador.ciutat or '-' }}</p>
+            <p><strong>{{ _("Codi postal:") }}</strong> {{ treballador.codi_postal or '-' }}</p>
+            <p><strong>{{ _("Sexe:") }}</strong>
                 {% if treballador.sexe == 'm' %}
-                    Home
+                {{ _("Home") }}
                 {% elif treballador.sexe == 'f' %}
-                    Dona
+                {{ _("Dona") }}
                 {% elif treballador.sexe == 'no' %}
-                    No ho vol dir
+                {{ _("No ho vol dir") }}
                 {% else %}
-                    -
+                -
                 {% endif %}
             </p>
-            <p><strong>Nacionalitat:</strong> {{ treballador.nacionalitat or '-' }}</p>
-            <p><strong>Edat:</strong>
+            <p><strong>{{ _("Nacionalitat:") }}</strong> {{ treballador.nacionalitat or '-' }}</p>
+            <p><strong>{{ _("Edat:") }}</strong>
                 {% if treballador.edat %}
-                    {{ treballador.edat }} anys
+                {{ treballador.edat }} {{ _("anys") }}
                 {% else %}
-                    -
+                -
                 {% endif %}
             </p>
-            <p><strong>Carnet de conduir:</strong>
+            <p><strong>{{ _("Carnet de conduir:") }}</strong>
                 {% if treballador.carnet_conduir == 'si' %}
-                    Sí
+                {{ _("Sí") }}
                 {% elif treballador.carnet_conduir == 'no' %}
-                    No
+                {{ _("No") }}
                 {% else %}
-                    -
+                -
                 {% endif %}
             </p>
-            <p><strong>Vehicle propi:</strong>
+            <p><strong>{{ _("Vehicle propi:") }}</strong>
                 {% if treballador.vehicle_propi == 'si' %}
-                    Sí
+                {{ _("Sí") }}
                 {% elif treballador.vehicle_propi == 'no' %}
-                    No
+                {{ _("No") }}
                 {% else %}
-                    -
+                -
                 {% endif %}
             </p>
             {% endif %}
@@ -70,7 +70,7 @@
         </div>
         <div class="card-footer text-end">
             <a href="{{ url_for('fichajes.index') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left-circle"></i> Tornar
+                <i class="bi bi-arrow-left-circle"></i> {{ _("Tornar") }}
             </a>
         </div>
     </div>

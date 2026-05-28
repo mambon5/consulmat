@@ -5,18 +5,18 @@
     <div id="checkInToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
         <div class="toast-header bg-warning text-dark">
             <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong class="me-auto">Recordatori</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Tanca"></button>
+            <strong class="me-auto">{{ _("Recordatori") }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="{{ _(" Tanca") }}"></button>
         </div>
         <div class="toast-body">
-            No has registrat la teva entrada avui.
+            {{ _("No has registrat la teva entrada avui.") }}
             <form id="checkInFormToast" method="POST" action="{{ url_for('fichajes.check_in') }}" class="mt-2">
                 <input type="hidden" name="latitude" id="latitudeToast">
                 <input type="hidden" name="longitude" id="longitudeToast">
                 <input type="hidden" name="accuracy" id="accuracyToast">
                 <button type="button" class="btn btn-success btn-sm"
                     onclick="enviarCheckIn(this, 'checkInFormToast', 'latitudeToast', 'longitudeToast', 'accuracyToast')">
-                    <i class="bi bi-box-arrow-in-right"></i> Registrar Entrada Ara
+                    <i class="bi bi-box-arrow-in-right"></i> {{ _("Registrar Entrada Ara") }}
                 </button>
             </form>
         </div>
@@ -27,14 +27,14 @@
     <div class="col-md-4 mb-4">
         <div id="checkInReminder" class="alert alert-warning d-none">
             <i class="bi bi-exclamation-triangle"></i>
-            <strong>Recordatori:</strong> No has registrat la teva entrada avui.
+            <strong>{{ _("Recordatori:") }}</strong> {{ _("No has registrat la teva entrada avui.") }}
             <form id="checkInFormReminder" method="POST" action="{{ url_for('fichajes.check_in') }}" class="mt-2">
                 <input type="hidden" name="latitude" id="latitudeReminder">
                 <input type="hidden" name="longitude" id="longitudeReminder">
                 <input type="hidden" name="accuracy" id="accuracyReminder">
                 <button type="button" class="btn btn-success btn-sm"
                     onclick="enviarCheckIn(this, 'checkInFormReminder', 'latitudeReminder', 'longitudeReminder', 'accuracyReminder')">
-                    <i class="bi bi-box-arrow-in-right"></i> Registrar Entrada Ara
+                    <i class="bi bi-box-arrow-in-right"></i> {{ _("Registrar Entrada Ara") }}
                 </button>
             </form>
         </div>
@@ -45,7 +45,7 @@
                 {% if active_record %}
                 <p class="text-success">
                     <i class="bi bi-clock-history"></i>
-                    Entrada registrada: {{ active_record.check_in.strftime('%H:%M:%S') }}
+                    {{ _("Entrada registrada:") }} {{ active_record.check_in.strftime('%H:%M:%S') }}
                 </p>
                 <form id="checkOutFormMain" method="POST" action="{{ url_for('fichajes.check_out') }}">
                     <input type="hidden" name="latitude" id="latitudeOutMain">
@@ -53,7 +53,7 @@
                     <input type="hidden" name="accuracy" id="accuracyOutMain">
                     <button type="button" class="btn btn-danger w-100"
                         onclick="enviarCheckIn(this, 'checkOutFormMain', 'latitudeOutMain', 'longitudeOutMain', 'accuracyOutMain')">
-                        <i class="bi bi-box-arrow-right"></i> Registrar Sortida
+                        <i class="bi bi-box-arrow-right"></i> {{ _("Registrar Sortida") }}
                     </button>
                 </form>
 
@@ -67,7 +67,7 @@
                     <input type="hidden" name="accuracy" id="accuracyPauseStart">
                     <button type="button" class="btn btn-warning w-100 mb-2"
                         onclick="enviarCheckIn(this, 'startPauseForm', 'latitudePauseStart', 'longitudePauseStart', 'accuracyPauseStart')">
-                        <i class="bi bi-pause-circle"></i> Començar Pausa
+                        <i class="bi bi-pause-circle"></i> {{ _("Començar Pausa") }}
                     </button>
                 </form>
                 {% else %}
@@ -78,7 +78,7 @@
                     <input type="hidden" name="accuracy" id="accuracyPauseEnd">
                     <button type="button" class="btn btn-success w-100 mb-2"
                         onclick="enviarCheckIn(this, 'endPauseForm', 'latitudePauseEnd', 'longitudePauseEnd', 'accuracyPauseEnd')">
-                        <i class="bi bi-play-circle"></i> Acabar Pausa
+                        <i class="bi bi-play-circle"></i> {{ _("Acabar Pausa") }}
                     </button>
                 </form>
                 {% endif %}
@@ -102,87 +102,87 @@
                 {% if current_user.role == 'admin' and current_user.empresa_id == 1 %}
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.generate_empresa_link') }}" class="btn btn-warning w-100">
-                        <i class="bi bi-building-add"></i> Generar Enllaç per Crear Empresa
+                        <i class="bi bi-building-add"></i> {{ _("Generar Enllaç per Crear Empresa") }}
                     </a>
                 </div>
                 {% endif %}
 
                 <div class="mt-3">
                     <a href="{{ url_for('fichajes.generate_report') }}" class="btn btn-info w-100">
-                        <i class="bi bi-file-earmark-pdf"></i> Generar Informe
+                        <i class="bi bi-file-earmark-pdf"></i> {{ _("Generar Informe") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('calendario.calendario_laboral') }}" class="btn btn-info w-100">
-                        <i class="bi bi-calendar-event"></i> Calendario Laboral
+                        <i class="bi bi-calendar-event"></i> {{ _("Calendario Laboral") }}
                     </a>
                 </div>
                 {% if current_user.role == 'admin' %}
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.usuaris') }}" class="btn btn-info w-100">
-                        <i class="bi bi-people"></i> Veure Usuaris
+                        <i class="bi bi-people"></i> {{ _("Veure Usuaris") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('auth.create_user', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100">
-                        <i class="bi bi-person-plus"></i> Afegir Usuari
+                        <i class="bi bi-person-plus"></i> {{ _("Afegir Usuari") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('auth.create_admin' , empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100">
-                        <i class="bi bi-star"></i> Afegir Administrador
+                        <i class="bi bi-star"></i> {{ _("Afegir Administrador") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.treballadors') }}" class="btn btn-success w-100">
-                        <i class="bi bi-people-fill"></i> Veure Treballadors
+                        <i class="bi bi-people-fill"></i> {{ _("Veure Treballadors") }}
                     </a>
                 </div>
                 <div class="mt-3">
                     <a href="{{ url_for('empresa.create_treballador', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-success w-100">
-                        <i class="bi bi-person-plus-fill"></i> Crear Treballador
+                        <i class="bi bi-person-plus-fill"></i> {{ _("Crear Treballador") }}
                     </a>
                 </div>
 
                 <div class="mt-3">
                     <button class="btn btn-secondary w-100" type="button" data-bs-toggle="collapse"
                         data-bs-target="#opcionsAvancades" aria-expanded="false" aria-controls="opcionsAvancades">
-                        <i class="bi bi-gear-fill"></i> Opcions Avançades
+                        <i class="bi bi-gear-fill"></i> {{ _("Opcions Avançades") }}
                     </button>
                 </div>
 
                 <div class="collapse" id="opcionsAvancades">
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.comunitats') }}" class="btn btn-primary w-100">
-                            <i class="bi bi-houses-fill"></i> Veure Comunitats
+                            <i class="bi bi-houses-fill"></i> {{ _("Veure Comunitats") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.create_comunitat') }}" class="btn btn-primary w-100">
-                            <i class="bi bi-house-add"></i> Afegir Comunitat
+                            <i class="bi bi-house-add"></i> {{ _("Afegir Comunitat") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.pagadors') }}" class="btn btn-outline-danger w-100">
-                            <i class="bi  bi-person-fill"></i> Veure Pagadors
+                            <i class="bi  bi-person-fill"></i> {{ _("Veure Pagadors") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('empresa.create_pagador') }}" class="btn  btn-outline-danger w-100">
-                            <i class="bi  bi-person-plus-fill"></i> Afegir Pagador
+                            <i class="bi  bi-person-plus-fill"></i> {{ _("Afegir Pagador") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('facturas.llistar_factures') }}" class="btn btn-warning w-100">
-                            <i class="bi bi-receipt-cutoff"></i> Veure Factures
+                            <i class="bi bi-receipt-cutoff"></i> {{ _("Veure Factures") }}
                         </a>
                     </div>
                     <div class="mt-3">
                         <a href="{{ url_for('facturas.create_factura') }}" class="btn btn-warning w-100">
-                            <i class="bi bi-file-earmark-plus"></i> Crear Factura
+                            <i class="bi bi-file-earmark-plus"></i> {{ _("Crear Factura") }}
                         </a>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                     <table class="table table-hover table-sm">
                         <thead>
                             <tr>
-                                <th>Tipus</th>
+                                <th>{{ _("Tipus") }}</th>
                                 <th>{{ _("Inici") }}</th>
                                 <th>{{ _("Fi") }}</th>
                                 <th>{{ _("Dies") }}</th>
@@ -227,7 +227,7 @@
                                     {% if not sol.aprovada %}
                                     <button class="btn btn-sm btn-outline-danger"
                                         onclick='cancelarSolicitud({{ sol.ids | tojson }})'>
-                                        <i class="bi bi-x-circle"></i> Cancel·lar
+                                        <i class="bi bi-x-circle"></i> {{ _("Cancel·lar") }}
                                     </button>
                                     {% else %}
                                     -
@@ -252,7 +252,7 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>Dia Inici</th>
+                                <th>{{ _("Dia Inici") }}</th>
                                 <th>{{ _("Hora Inici") }}</th>
                                 <th>{{ _("Fi") }}</th>
                                 <th>{{ _("Duració") }}</th>
@@ -317,7 +317,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>{{ _("Fecha") }}</th>
                                 <th>{{ _("Entrada") }}</th>
                                 <th>{{ _("Salida") }}</th>
                                 <th>{{ _("Duración") }}</th>
@@ -455,7 +455,7 @@
         {% endif %}
         {% if active_record %}
         <button class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#incidenciaModal">
-            <i class="bi bi-exclamation-diamond"></i> Registrar Incidència
+            <i class="bi bi-exclamation-diamond"></i> {{ _("Registrar Incidència") }}
         </button>
         {% endif %}
     </div>
@@ -498,7 +498,7 @@
                             </option>
                             {% endfor %}
                         </select>
-                        <small class="text-muted">Selecciona el temps total de pausa.</small>
+                        <small class="text-muted">{{ _("Selecciona el temps total de pausa.") }}</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -524,10 +524,10 @@
                     <div class="mb-3">
                         <label for="category" class="form-label">{{ _("Categoria") }}</label>
                         <select class="form-select" id="category" name="category" required>
-                            <option value="Retard">Retard</option>
-                            <option value="Problema tècnic">Problema tècnic</option>
-                            <option value="Incidència laboral">Incidència laboral</option>
-                            <option value="Altres">Altres</option>
+                            <option value="Retard">{{ _("Retard") }}</option>
+                            <option value="Problema tècnic">{{ _("Problema tècnic") }}</option>
+                            <option value="Incidència laboral">{{ _("Incidència laboral") }}</option>
+                            <option value="Altres">{{ _("Altres") }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -614,7 +614,7 @@
     }
 
     async function cancelarSolicitud(ids) {
-        if (!confirm('Estàs segur que vols cancel·lar aquesta sol·licitud?')) return;
+        if (!confirm('{{ _("Estàs segur que vols cancel·lar aquesta sol·licitud?") }}')) return;
 
         try {
             const res = await fetch(`/api/absencias/cancelar`, {
@@ -633,7 +633,7 @@
             }
         } catch (err) {
             console.error('Error al cancel·lar:', err);
-            alert('S\'ha produït un error al cancel·lar.');
+            alert('{{ _("S\'ha produït un error al cancel·lar.") }}');
         }
     }
 
@@ -663,7 +663,7 @@
             }
 
             var notificationOpts = {
-                body: "No has registrat la teva entrada avui.",
+                body: "{{ _("No has registrat la teva entrada avui.") }}",
                 icon: "{{ url_for('static', filename='clock-icon.png') }}",
                 tag: "check-in-reminder",
                 requireInteraction: true
@@ -671,11 +671,11 @@
 
             try {
                 if (Notification.permission === "granted") {
-                    new Notification("Recordatori de Fichatge", notificationOpts);
+                    new Notification('{{ _("Recordatori de Fichatge") }}', notificationOpts);
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission().then(function (permission) {
                         if (permission === "granted") {
-                            new Notification("Recordatori de Fichatge", notificationOpts);
+                            new Notification('{{ _("Recordatori de Fichatge") }}', notificationOpts);
                         }
                     });
                 }

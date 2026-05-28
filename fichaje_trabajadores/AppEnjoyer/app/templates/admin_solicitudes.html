@@ -45,7 +45,8 @@
                             <td>{{ sol.fecha_solicitud }}</td>
                             <td>
                                 {% if sol.justificante_path %}
-                                <a href="{{ url_for('static', filename=sol.justificante_path) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                <a href="{{ url_for('static', filename=sol.justificante_path) }}" target="_blank"
+                                    class="btn btn-sm btn-outline-info">
                                     <i class="bi bi-file-earmark-text"></i> Veure
                                 </a>
                                 {% else %}
@@ -53,8 +54,10 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-success" onclick='aprobar({{ sol.ids | tojson }})'>{{ _("✅ Aprovar") }}</button>
-                                <button class="btn btn-sm btn-danger" onclick='denegar({{ sol.ids | tojson }})'>{{ _("❌ Denegar") }}</button>
+                                <button class="btn btn-sm btn-success" onclick='aprobar({{ sol.ids | tojson }})'>{{ _("✅
+                                    Aprovar") }}</button>
+                                <button class="btn btn-sm btn-danger" onclick='denegar({{ sol.ids | tojson }})'>{{ _("❌
+                                    Denegar") }}</button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -102,7 +105,7 @@
 
 <script>
     async function aprobar(ids) {
-        if (!confirm('Estàs segur que vols aprovar aquesta sol·licitud?')) return;
+        if (!confirm('{{ _("Estàs segur que vols aprovar aquesta sol·licitud?") }}')) return;
 
         try {
             // Si és un sol ID (versió antiga) convertir a array
@@ -134,12 +137,12 @@
             }
         } catch (err) {
             console.error('Error al aprobar:', err);
-            alert('S\'ha produït un error al aprovar. Revisa la consola.');
+            alert('{{ _("S\'ha produït un error al aprovar. Revisa la consola.") }}');
         }
     }
 
     async function denegar(ids) {
-        if (!confirm('Estàs segur que vols DENEGAR aquesta sol·licitud?')) return;
+        if (!confirm('{{ _("Estàs segur que vols DENEGAR aquesta sol·licitud?") }}')) return;
 
         try {
             // Si és un sol ID (versió antiga) convertir a array
@@ -175,7 +178,7 @@
             }
         } catch (err) {
             console.error('Error al denegar:', err);
-            alert('S\'ha produït un error al denegar. Revisa la consola (F12).');
+            alert('{{ _("S\'ha produït un error al denegar. Revisa la consola (F12).") }}');
         }
     }
 </script>

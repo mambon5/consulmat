@@ -92,7 +92,7 @@ def delete_data():
         flash(_('Tu cuenta y todos tus datos han sido eliminados'), 'success')
         return redirect(url_for('auth.login'))
     
-    flash(_('Confirmación requerida para eliminar datos'), 'error')
+    flash(_('Confirmación requerida para eliminar datos'), 'warning') # Changed error to warning
 
 @privacidad_bp.route("/privacy")
 @login_required

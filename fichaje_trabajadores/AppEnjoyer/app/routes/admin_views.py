@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask_babel import _
 from flask_login import login_required, current_user
 from app.models import db, User, Treballador, TimeRecord, PauseRecord, Incidencia, EventoLaboral, Empresa, Calendari
 from datetime import datetime, timedelta
@@ -12,7 +13,7 @@ admin_bp = Blueprint("admin", __name__)
 @login_required
 def admin_panel():
     if current_user.role != "admin":
-        return "No autorizado", 403
+        return _("No autorizado"), 403
     return render_template("create_admin.html")
 
 @admin_bp.route("/admin/dashboard")
@@ -43,7 +44,7 @@ def dashboard():
         nom = ev.treballador.user.name or ev.treballador.user.username
         title = f"{nom} - {ev.tipo_evento.replace('_', ' ').title()}"
         if not ev.aprovada:
-            title += " (Pendent)"
+            title += _(" (Pendent)")
             
         color = '#28a745' if ev.aprovada else '#ffc107'
         if not ev.aprovada:
@@ -175,13 +176,13 @@ def api_stats():
 @login_required
 def worker_detail(id_treballador):
     if current_user.role != "admin":
-        return "No autorizado", 403
+        return _("No autorizado"), 403
         
     treballador = Treballador.query.get_or_404(id_treballador)
     
     # Check that is from the same company
     if treballador.empresa_id != current_user.empresa_id:
-        return "No autorizado", 403
+        return _("No autorizado"), 403
         
     # Get user details for this worker
     user = treballador.user

@@ -16,23 +16,21 @@ def send_empresa_registration_email(email, link):
     Envia l'enllaç de registre d'empresa amb token a l'email.
     """
     msg = Message(
-        subject='Enllaç per registrar la teva empresa',
+        subject=_('Enllaç per registrar la teva empresa'),
         sender=mail.sender,
         recipients=[email]
     )
-    msg.body = f"""
-Hola,
+    msg.body = _("""Hola,
 
 S'ha generat un enllaç únic per registrar la teva empresa.
 Pots utilitzar-lo per crear la teva empresa al sistema:
 
-{link}
+%(link)s
 
 Aquest enllaç caduca en 24 hores.
 
 Salutacions,
-L'equip de Consulmat
-"""
+L'equip de Consulmat""", link=link)
     mail.send(msg)
 
 def create_empresa_logic(template_name='create_empresa.html', page_title="Crear Empresa"):
@@ -141,7 +139,7 @@ def generate_empresa_link():
         # Enviar email amb el link
         send_empresa_registration_email(email_destinatari, link)
 
-        flash(f"S'ha enviat un enllaç de registre a {email_destinatari}", "success")
+        flash(_("S'ha enviat un enllaç de registre a %(email)s", email=email_destinatari), "success")
         return redirect(url_for('fichajes.index'))
 
     return render_template('generate_empresa_link.html')
@@ -235,7 +233,7 @@ def create_comunitat():
             return redirect(url_for('fichajes.index'))
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al crear la comunidad: {str(e)}', 'danger')
+            flash(_('Error al crear la comunidad: %(error)s', error=str(e)), 'danger')
             return redirect(url_for('empresa.create_comunitat'))
 
     # Si no és POST, renderitzem el formulari
@@ -276,7 +274,7 @@ def create_pagador():
             return redirect(url_for('empresa.pagadors'))
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al crear el pagador: {str(e)}', 'danger')
+            flash(_('Error al crear el pagador: %(error)s', error=str(e)), 'danger')
             return redirect(url_for('empresa.create_pagador'))
 
     return render_template('create_pagador.html')

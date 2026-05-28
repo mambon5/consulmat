@@ -14,13 +14,13 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 def send_verification_email(email, code):
-    msg = Message('Código de verificación', sender=mail.sender, recipients=[email])
-    msg.body = f'Tu código de verificación es: {code}'
+    msg = Message(_('Código de verificación'), sender=mail.sender, recipients=[email])
+    msg.body = _('Tu código de verificación es: %(code)s', code=code)
     mail.send(msg)
 
 def send_recovery_email(email, code):
-    msg = Message('Recuperación de contraseña', sender=mail.sender, recipients=[email])
-    msg.body = f'Tu código de recuperación es: {code}. Úsalo en la pantalla de recuperación para cambiar tu contraseña.'
+    msg = Message(_('Recuperación de contraseña'), sender=mail.sender, recipients=[email])
+    msg.body = _('Tu código de recuperación es: %(code)s. Úsalo en la pantalla de recuperación para cambiar tu contraseña.', code=code)
     mail.send(msg)
 
 def create_user_logic(role="employee", empresa_id=None, extra_fields=None,
@@ -164,7 +164,7 @@ def finalize_user_creation(reg_data, empresa_id, extra_fields):
     session.pop('admin_email_verified', None)
     session.pop('admin_prefill_email', None)
 
-    flash(f'Cuenta creada correctamente como {reg_data["role"]}.', 'success')
+    flash(_('Cuenta creada correctamente como %(role)s.', role=reg_data["role"]), 'success')
     return redirect(url_for('fichajes.index'))
 
 @auth_bp.route('/create_user/<int:empresa_id>', methods=['GET', 'POST'])
@@ -216,7 +216,7 @@ def login():
         
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            flash(f'Bienvenido/a, {user.name}', 'success')
+            flash(_('Bienvenido/a, %(name)s', name=user.name), 'success')
             return redirect(url_for('fichajes.index'))
         else:
             flash(_('Usuario o contraseña incorrectos.'), 'danger')
@@ -260,9 +260,9 @@ def verify_recovery_code():
     
     user = User.query.filter_by(email=email, email_code=code).first()
     if user:
-        return jsonify({"status": "ok", "message": "Codi correcte"})
+        return jsonify({"status": "ok", "message": _("Codi correcte")})
     else:
-        return jsonify({"status": "error", "message": "Codi incorrecte"}), 400
+        return jsonify({"status": "error", "message": _("Codi incorrecte")}), 400
 
 @auth_bp.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
