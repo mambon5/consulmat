@@ -18,8 +18,19 @@ bcrypt = Bcrypt()
 babel = Babel()
 
 def get_locale():
-    # If the user has set a language, use that
-    return session.get('language', 'es')
+    # 1. Comprova si hi ha una aplicació activa i si som dins un context de petició (request)
+    # Això evita errors quan s'executen comandes de terminal o s'inicialitza l'app
+    from flask import has_request_context
+    if not has_request_context():
+        return 'es'
+        
+    # 2. Si l'usuari ha triat un idioma manualment (desat a la sessió), el fem servir
+    if 'language' in session:
+        return session['language']
+        
+    # 3. Si no ha triat res, detecta l'idioma del seu navegador d'entre els teus 3 (ca, es, en)
+    # Si el navegador no té cap d'aquests, escollirà 'es' per defecte
+    return request.accept_languages.best_match(['ca', 'es', 'en']) or 'es'
 
 def create_app():
     app = Flask(__name__, 
@@ -28,6 +39,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
     app.jinja_env.globals['now'] = datetime.now()
+    app.jinja_env.globals['get_locale'] = get_locale
 
     # Database configuration
     if os.environ.get('DATABASE_URL'):

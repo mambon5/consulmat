@@ -1,3 +1,19 @@
+- [Tutorial d'ús de l'aplicació](#tutorial-dús-de-laplicació)
+  - [Accés a l'aplicació](#accés-a-laplicació)
+  - [Per a treballadors](#per-a-treballadors)
+    - [Fitxar entrada i sortida](#fitxar-entrada-i-sortida)
+    - [Gestionar pauses](#gestionar-pauses)
+    - [Sol·licitar absències i teletreball](#sollicitar-absències-i-teletreball)
+    - [Registrar incidències](#registrar-incidències)
+    - [Fitxatge manual (si has oblidat fitxar)](#fitxatge-manual-si-has-oblidat-fitxar)
+    - [Generar el teu informe en PDF](#generar-el-teu-informe-en-pdf)
+    - [Perfil d'usuari](#perfil-dusuari)
+  - [Per a administradors](#per-a-administradors)
+    - [Tauler d'administració](#tauler-dadministració)
+    - [Gestió de treballadors i usuaris](#gestió-de-treballadors-i-usuaris)
+    - [Aprovar o denegar sol·licituds d'absència](#aprovar-o-denegar-sollicituds-dabsència)
+    - [Calendari laboral](#calendari-laboral)
+    - [Comunitats, pagadors i factures](#comunitats-pagadors-i-factures)
 - [Employee Time Tracker](#employee-time-tracker)
   - [Características](#características)
   - [Tecnologías](#tecnologías)
@@ -11,6 +27,136 @@
   - [Crear base de dades i usuari mysql](#crear-base-de-dades-i-usuari-mysql)
   - [Gestió de la Base de Dades (Migracions)](#gestió-de-la-base-de-dades-migracions)
 - [Desenvolupament de la app](#desenvolupament-de-la-app)
+---
+
+# Tutorial d'ús de l'aplicació
+
+Aquest tutorial explica com fer servir l'aplicació **Employee Time Tracker** pas a pas. Està pensat per a qualsevol persona, sense necessitat de conèixer programació.
+
+L'aplicació és una eina web de **control de presència i gestió laboral**. Permet als treballadors fitxar l'entrada i la sortida, gestionar pauses, sol·licitar absències i registrar incidències. Els administradors poden supervisar l'activitat de tot l'equip i gestionar les sol·licituds.
+
+---
+
+## Accés a l'aplicació
+
+1. Obre el navegador web (Chrome, Firefox, Safari, etc.).
+2. Entra a l'adreça web que t'hagi facilitat la teva empresa (exemple: `https://maxilim.nescolam.com`).
+3. Apareixerà la pàgina d'**inici de sessió**. Introdueix el teu nom d'usuari i la teva contrasenya i clica **"Entrar"**.
+4. Si has oblidat la contrasenya, fes clic a **"He oblidat la contrasenya"** i segueix les instruccions que rebràs per correu electrònic.
+
+> **Nota:** Els comptes d'usuari els crea l'administrador de la teva empresa. No és possible registrar-se sol.
+
+---
+
+## Per a treballadors
+
+### Fitxar entrada i sortida
+
+Un cop has iniciat sessió, veuràs la pantalla principal amb el teu **estat actual**.
+
+- Per **registrar l'entrada**: clica el botó verd **"Registrar Entrada"**. L'aplicació demanarà permís per accedir a la teva ubicació (GPS) i enregistrarà l'hora i la posició automàticament.
+- Per **registrar la sortida**: quan acabis la jornada, clica el botó vermell **"Registrar Sortida"**. Igual que a l'entrada, es guardarà l'hora i la ubicació.
+- A la part inferior de la pantalla podràs veure l'**historial de registres** de dies anteriors, amb hora d'entrada, sortida, durada i ubicació.
+
+> Si han passat més de 5 minuts des que has entrat a l'aplicació i encara no has fitxat, apareixerà un recordatori automàtic perquè no t'oblidis.
+
+### Gestionar pauses
+
+Si durant la jornada fas una pausa (per dinar, descansar, etc.):
+
+- Clica **"Començar Pausa"** (botó groc) quan t'aturis.
+- Clica **"Acabar Pausa"** (botó verd) quan reprenguis la feina.
+- Pots fer tantes pauses com necessitis. L'historial de pauses del dia apareixerà a la pantalla principal amb l'hora d'inici, fi i durada de cada pausa.
+
+### Sol·licitar absències i teletreball
+
+Pots demanar dies d'absència (vacances, baixa, assumptes personals) o dies de teletreball directament des de la pantalla principal.
+
+1. A la secció **"Les meves Sol·licituds d'Absència"**, veuràs totes les teves sol·licituds actives i el seu estat (pendent o aprovada).
+2. Per fer una nova sol·licitud, accedeix al **Calendari Laboral** (botó blau "Calendari Laboral") i selecciona els dies que vols sol·licitar.
+3. Tria el tipus: **Vacances**, **Baixa mèdica**, **Assumptes personals** o **Teletreball**.
+4. Pots adjuntar un justificant si cal (per exemple, un justificant mèdic).
+5. La sol·licitud queda en estat **"Pendent"** fins que l'administrador l'aprovi o la denegui.
+6. Si vols **cancel·lar** una sol·licitud pendent, clica el botó **"Cancel·lar"** al costat de la sol·licitud.
+
+### Registrar incidències
+
+Si durant la jornada passes per alguna situació especial (retard, problema tècnic, incidència laboral, etc.), pots deixar-ne constància:
+
+1. Clica el botó vermell **"Registrar Incidència"** (disponible mentre tens una sessió de treball activa).
+2. Selecciona la **categoria** (Retard, Problema tècnic, Incidència laboral, Altres).
+3. Escriu una breu **descripció** del que ha passat.
+4. Confirma l'hora i clica **"Envia"**. L'aplicació guardarà la ubicació automàticament.
+5. Les incidències del dia apareixeran a la part inferior de la pantalla principal.
+
+### Fitxatge manual (si has oblidat fitxar)
+
+Si has oblidat registrar l'entrada (per exemple, perquè no tenies el mòbil a mà), pots introduir-la manualment:
+
+1. Clica el botó **"Has oblidat registrar la teva entrada?"**.
+2. S'obrirà un formulari on pots indicar la **data**, l'**hora d'entrada**, l'**hora de sortida** i les **hores de pausa** totals.
+3. Clica **"Crear Registre"** per desar-ho.
+
+> Tingues en compte que els registres manuals queden marcats com a tals i l'administrador pot veure'ls.
+
+### Generar el teu informe en PDF
+
+Pots descarregar un informe amb el teu historial de fitxatges:
+
+1. Clica el botó blau **"Generar Informe"** a la pantalla principal.
+2. L'aplicació generarà automàticament un fitxer **PDF** amb tots els teus registres horaris.
+3. Guarda el fitxer al teu dispositiu per tenir-ne una còpia.
+
+### Perfil d'usuari
+
+Pots consultar les teves dades personals (nom, correu, telèfon, departament, adreça, etc.) accedint al teu **perfil d'usuari** des del menú de navegació superior.
+
+---
+
+## Per a administradors
+
+Els administradors disposen de funcionalitats addicionals per gestionar l'empresa i els treballadors.
+
+### Tauler d'administració
+
+El **tauler d'administració** mostra un resum de l'activitat de tots els treballadors:
+
+- Pots veure quins treballadors estan **treballant ara** (verd), en **pausa** (groc) o **inactius** (vermell).
+- Fent clic sobre el nom d'un treballador accedeixes a la seva **fitxa detallada**, on pots veure les seves dades personals, l'historial complet de fitxatges i pauses, les sol·licituds d'absència i les incidències registrades.
+
+### Gestió de treballadors i usuaris
+
+Des de la pantalla principal (menú lateral dret), els administradors poden:
+
+- **Veure la llista de treballadors** i consultar-ne les dades.
+- **Crear nous treballadors** (amb dades com departament, adreça, nacionalitat, carnet de conduir, etc.).
+- **Veure la llista d'usuaris** (comptes d'accés a l'aplicació).
+- **Afegir nous usuaris** (empleats amb accés a l'app).
+- **Afegir nous administradors** (amb permisos de gestió).
+
+### Aprovar o denegar sol·licituds d'absència
+
+Quan un treballador fa una sol·licitud d'absència o teletreball, apareix a la pantalla de **"Sol·licituds Pendents"**:
+
+1. Accedeix a **"Sol·licituds d'Absència"** des del menú.
+2. Veuràs una taula amb totes les sol·licituds pendents: treballador, empresa, tipus (Vacances, Baixa, Assumptes, Teletreball), dates, dies i justificant (si n'hi ha).
+3. Clica **✅ Aprovar** per concedir la sol·licitud, o **❌ Denegar** per rebutjar-la.
+4. La fila desapareixerà de la llista i el treballador veurà l'estat actualitzat de la seva sol·licitud.
+
+### Calendari laboral
+
+El **Calendari Laboral** permet visualitzar de forma gràfica les absències i esdeveniments de tots els treballadors. Des d'aquí, l'administrador també pot afegir dies festius o marcar events especials.
+
+### Comunitats, pagadors i factures
+
+L'apartat d'**Opcions Avançades** (menú lateral) inclou funcionalitats addicionals orientades a la gestió administrativa:
+
+- **Comunitats**: gestió de les comunitats de propietaris o unitats de treball associades a l'empresa.
+- **Pagadors**: gestió de les persones o entitats responsables de pagaments.
+- **Factures**: creació i llistat de factures associades a l'activitat de l'empresa.
+
+---
+
 # Employee Time Tracker
 
 Una aplicación web desarrollada con Flask para el seguimiento del tiempo de los empleados.

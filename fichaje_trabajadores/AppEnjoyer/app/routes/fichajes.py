@@ -297,7 +297,13 @@ def manual_check_in():
     try:
         check_in_dt = datetime.strptime(f"{date_str} {check_in_str}", '%Y-%m-%d %H:%M')
         check_out_dt = datetime.strptime(f"{date_str} {check_out_str}", '%Y-%m-%d %H:%M')
-        
+
+        # No es permet fitxar en dates futures
+        today = datetime.now(ZoneInfo("Europe/Madrid")).date()
+        if check_in_dt.date() > today:
+            flash(_('No es pot crear un registre per a una data futura.'), 'danger')
+            return redirect(url_for('fichajes.index'))
+
         # Si la sortida és abans que l'entrada, assumim que és el dia següent (o error)
         if check_out_dt <= check_in_dt:
             # En un fichatge manual del mateix dia, l'usuari potser s'ha equivocat.
