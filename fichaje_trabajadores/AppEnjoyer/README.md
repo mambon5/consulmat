@@ -414,6 +414,31 @@ flask db downgrade
 ```
 
 
+## Gestió de les Traduccions (Internacionalització)
+
+L'aplicació suporta tres idiomes: **Català (ca)**, **Espanyol (es)** i **Anglès (en)** usant **Flask-Babel**.
+
+### 1. Extreure nous textos per traduir
+Si has afegit nous textos al codi (Python o HTML) amb la funció `_()`, has de regenerar el fitxer de plantilles:
+```bash
+source venv/bin/activate
+pybabel extract -F babel.cfg -k _ -o messages.pot .
+```
+
+### 2. Actualitzar els fitxers de traducció (.po)
+Un cop extrets, actualitza els catàlegs de cada idioma:
+```bash
+pybabel update -i messages.pot -d app/translations
+```
+Després d'això, hauràs d'editar els fitxers `app/translations/[idioma]/LC_MESSAGES/messages.po` per afegir les traduccions corresponents al camp `msgstr`.
+
+### 3. Compilar les traduccions (.mo)
+Perquè els canvis siguin visibles a l'aplicació, **cal compilar** els fitxers `.po` a format binari `.mo`:
+```bash
+pybabel compile -d app/translations
+```
+*Nota: Si l'aplicació s'està executant amb Apache/WSGI, és possible que calgui reiniciar el servei (`sudo systemctl restart apache2`) per veure els canvis.*
+
 # Desenvolupament de la app
 
 
