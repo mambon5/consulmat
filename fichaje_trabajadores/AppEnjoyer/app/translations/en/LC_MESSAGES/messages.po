@@ -10,12 +10,12 @@ msgstr ""
 "POT-Creation-Date: 2026-08-19 19:23+0200\n"
 "PO-Revision-Date: 2026-05-28 13:13+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.10.3\n"
 
 #: app/routes/admin_views.py:16 app/routes/admin_views.py:179
@@ -25,7 +25,7 @@ msgstr "Unauthorized"
 
 #: app/routes/admin_views.py:47
 msgid " (Pendent)"
-msgstr ""
+msgstr "(Pending)"
 
 #: app/routes/auth.py:17
 msgid "Código de verificación"
@@ -43,9 +43,11 @@ msgstr "Password recovery"
 #: app/routes/auth.py:23
 #, python-format
 msgid ""
-"Tu código de recuperación es: %(code)s. Úsalo en la pantalla de "
-"recuperación para cambiar tu contraseña."
+"Tu código de recuperación es: %(code)s. Úsalo en la pantalla de recuperación"
+" para cambiar tu contraseña."
 msgstr ""
+"Your recovery code is: %(code)s.Use it on the recovery screen to change your"
+" password."
 
 #: app/routes/auth.py:42 app/routes/empresa.py:44
 msgid "Sesión expirada. Por favor, regístrate de nuevo."
@@ -78,11 +80,11 @@ msgstr "Account successfully created as %(role)s."
 
 #: app/routes/auth.py:182
 msgid "No tienes permisos para crear administradores."
-msgstr ""
+msgstr "You do not have permissions to create administrators."
 
 #: app/routes/auth.py:212
 msgid "Por favor, introduce usuario y contraseña."
-msgstr ""
+msgstr "Please enter username and password."
 
 #: app/routes/auth.py:219
 #, python-format
@@ -95,31 +97,31 @@ msgstr "Incorrect username or password."
 
 #: app/routes/auth.py:248
 msgid "S'ha enviat un codi de recuperació al teu email."
-msgstr ""
+msgstr "A recovery code has been sent to your email."
 
 #: app/routes/auth.py:251
 msgid "No s'ha trobat cap usuari amb aquest email o nom d'usuari."
-msgstr ""
+msgstr "You cannot find the username of this email or username."
 
 #: app/routes/auth.py:263
 msgid "Codi correcte"
-msgstr ""
+msgstr "correct code"
 
 #: app/routes/auth.py:265
 msgid "Codi incorrecte"
-msgstr ""
+msgstr "incorrect code"
 
 #: app/routes/auth.py:277
 msgid "Les contrasenyes no coincideixen."
-msgstr ""
+msgstr "Passwords do not match."
 
 #: app/routes/auth.py:286
 msgid "Contrasenya actualitzada correctament. Ja pots iniciar sessió."
-msgstr ""
+msgstr "Password updated correctly.Ja pots login."
 
 #: app/routes/auth.py:289
 msgid "Codi de recuperació incorrecte o expirat."
-msgstr ""
+msgstr "Incorrect or expired recovery code."
 
 #: app/routes/calendario.py:273 app/routes/calendario.py:303
 #: app/routes/calendario.py:409 app/routes/calendario.py:465
@@ -128,21 +130,21 @@ msgstr "Internal server error"
 
 #: app/routes/calendario.py:280
 msgid "Només els admins poden veure aquest contingut"
-msgstr ""
+msgstr "Only the admins can see this contingut"
 
 #: app/routes/calendario.py:317
 msgid "No tens permís per aprovar aquesta sol·licitud"
-msgstr ""
+msgstr "You do not have permission to approve this request"
 
 #: app/routes/calendario.py:328
 #, python-format
 msgid "%(event)s aprovat per %(name)s"
-msgstr ""
+msgstr "%(event)s approved by %(name)s"
 
 #: app/routes/calendario.py:372
 #, python-format
 msgid "%(event)s aprovat per %(name)s (%(days)s dies)"
-msgstr ""
+msgstr "%(event)s approved by %(name)s (%(days)s dies)"
 
 #: app/routes/calendario.py:510
 msgid "Ja existeix una absència per aquest dia"
@@ -150,7 +152,7 @@ msgstr "An absence already exists for this day"
 
 #: app/routes/calendario.py:518
 msgid "Ja existeix un teletreball per aquest dia"
-msgstr ""
+msgstr "There is a teletreball for this day"
 
 #: app/routes/calendario.py:535
 msgid "L'arxiu és massa gran (màxim 2MB)"
@@ -162,7 +164,7 @@ msgstr "Format not allowed (only PDF, JPG, PNG)"
 
 #: app/routes/empresa.py:19
 msgid "Enllaç per registrar la teva empresa"
-msgstr ""
+msgstr "Enllaç to register your new company"
 
 #: app/routes/empresa.py:23
 #, python-format
@@ -179,254 +181,266 @@ msgid ""
 "Salutacions,\n"
 "L'equip de Consulmat"
 msgstr ""
+"Hello,\n"
+"\n"
+"A unique link is generated to register your new company.\n"
+"You can use it to create your new company in the system:\n"
+"\n"
+"%(link)s\n"
+"\n"
+"This link expires in 24 hours.\n"
+"\n"
+"Greetings,\n"
+"The Consulmat team"
 
 #: app/routes/empresa.py:65
 msgid ""
 "Empresa creada correctamente. Ahora puedes registrar el primer "
 "administrador."
-msgstr "Company created correctly. Now you can register the first administrator."
+msgstr ""
+"Company created correctly. Now you can register the first administrator."
 
 #: app/routes/empresa.py:87
 msgid "Ya existe una empresa con ese nombre."
-msgstr ""
+msgstr "There is already a company with that name."
 
 #: app/routes/empresa.py:89
 msgid "Ya existe una empresa con ese número fiscal."
-msgstr ""
+msgstr "There is already a company with that tax number."
 
 #: app/routes/empresa.py:111
 msgid "Se ha enviado un email de verificación al correo del gerente."
-msgstr ""
+msgstr "A verification email has been sent to the manager's email."
 
 #: app/routes/empresa.py:128
 msgid "No tens permisos per generar enllaços."
-msgstr ""
+msgstr "You do not have permission to generate links."
 
 #: app/routes/empresa.py:142
 #, python-format
 msgid "S'ha enviat un enllaç de registre a %(email)s"
-msgstr ""
+msgstr "You have sent a registration link to %(email)s"
 
 #: app/routes/empresa.py:153
 msgid "Enllaç invàlid."
-msgstr ""
+msgstr "Invalid entry."
 
 #: app/routes/empresa.py:156
 msgid "L'enllaç no és vàlid o ha caducat."
-msgstr ""
+msgstr "The enllaç is not valid or has expired."
 
 #: app/routes/empresa.py:166
 msgid "No tienes permisos para crear trabajadores."
-msgstr ""
+msgstr "You do not have permissions to create workers."
 
 #: app/routes/empresa.py:199
 msgid "No tienes permisos para crear comunidades."
-msgstr ""
+msgstr "You do not have permissions to create communities."
 
 #: app/routes/empresa.py:214
 msgid "Ya existe una comunidad con ese CIF."
-msgstr ""
+msgstr "There is already a community with that CIF."
 
 #: app/routes/empresa.py:232
 msgid "Comunidad creada exitosamente."
-msgstr ""
+msgstr "Successfully created community."
 
 #: app/routes/empresa.py:236
 #, python-format
 msgid "Error al crear la comunidad: %(error)s"
-msgstr ""
+msgstr "Error creating community: %(error)s"
 
 #: app/routes/empresa.py:246
 msgid "No tens permisos per crear pagadors."
-msgstr ""
+msgstr "You do not have permissions to create payers."
 
 #: app/routes/empresa.py:258
 msgid "Ja existeix un pagador amb aquest correu."
-msgstr ""
+msgstr "There is already a payer in both cases."
 
 #: app/routes/empresa.py:273
 msgid "Pagador creat correctament."
-msgstr ""
+msgstr "Payer created correctly."
 
 #: app/routes/empresa.py:277
 #, python-format
 msgid "Error al crear el pagador: %(error)s"
-msgstr ""
+msgstr "Error creating payer: %(error)s"
 
 #: app/routes/empresa.py:286
 msgid "No tens permisos per veure aquesta pàgina."
-msgstr ""
+msgstr "You do not have permissions to view this page."
 
 #: app/routes/empresa.py:296 app/routes/empresa.py:331
 #: app/routes/facturas.py:16
 msgid "No tens permisos per accedir a aquesta pàgina."
-msgstr ""
+msgstr "You do not have permission to access this page."
 
 #: app/routes/facturas.py:26
 msgid "No tens permisos per descarregar factures."
-msgstr ""
+msgstr "You do not have permission to download invoices."
 
 #: app/routes/facturas.py:35
 #, python-format
 msgid "Factura ID: %(id)s"
-msgstr ""
+msgstr "Invoice ID: %(id)s"
 
 #: app/routes/facturas.py:39
 #, python-format
 msgid "Comunitat: %(comunidad)s"
-msgstr ""
+msgstr "Community: %(community)s"
 
 #: app/routes/facturas.py:41
 #, python-format
 msgid "Tipus de feina: %(trabajo)s"
-msgstr ""
+msgstr "Feina type: %(work)s"
 
 #: app/routes/facturas.py:43
 #, python-format
 msgid "Document de pagament: %(documento)s"
-msgstr ""
+msgstr "Payment document: %(document)s"
 
 #: app/routes/facturas.py:45
 #, python-format
 msgid "Règim d’impostos: %(impuestos)s"
-msgstr ""
+msgstr "Tax regime: %(taxes)s"
 
 #: app/routes/facturas.py:63
 msgid "No tienes permisos para crear facturas."
-msgstr ""
+msgstr "You do not have permissions to create invoices."
 
 #: app/routes/facturas.py:82
 msgid "Factura creada exitosamente."
-msgstr ""
+msgstr "Invoice created successfully."
 
 #: app/routes/facturas.py:86
 msgid "Error al crear la factura."
-msgstr ""
+msgstr "Error creating invoice."
 
 #: app/routes/fichajes.py:41
 msgid "INFORME DE REGISTRO HORARIO"
-msgstr ""
+msgstr "TIME RECORD REPORT"
 
 #: app/routes/fichajes.py:50
 #, python-format
 msgid "Empleado: %(name)s"
-msgstr ""
+msgstr "Employee: %(name)s"
 
 #: app/routes/fichajes.py:52
 msgid "Última Semana"
-msgstr ""
+msgstr "Last Week"
 
 #: app/routes/fichajes.py:53
 msgid "Último Mes"
-msgstr ""
+msgstr "Last Month"
 
 #: app/routes/fichajes.py:54
 msgid "Último Año"
-msgstr ""
+msgstr "Last Year"
 
 #: app/routes/fichajes.py:56
 #, python-format
 msgid "Periodo: %(period)s"
-msgstr ""
+msgstr "Period: %(period)s"
 
 #: app/routes/fichajes.py:57
 #, python-format
 msgid "Fecha de generación: %(date)s"
-msgstr ""
+msgstr "Generation date: %(date)s"
 
 #: app/routes/fichajes.py:103
 #, python-format
 msgid "Total de horas trabajadas: %(hours)s"
-msgstr ""
+msgstr "Total hours worked: %(hours)s"
 
 #: app/routes/fichajes.py:107
 msgid ""
-"Este informe ha sido generado automáticamente por el sistema de control "
-"horario.\n"
-"    Los datos mostrados están sujetos a la política de privacidad y "
-"protección de datos de la empresa."
+"Este informe ha sido generado automáticamente por el sistema de control horario.\n"
+"    Los datos mostrados están sujetos a la política de privacidad y protección de datos de la empresa."
 msgstr ""
+"This report has been generated automatically by the time control system.\n"
+"The data shown is subject to the company's privacy and data protection policy."
 
 #: app/routes/fichajes.py:140
 msgid "Ya tienes un registro activo"
-msgstr ""
+msgstr "You already have an active registration"
 
 #: app/routes/fichajes.py:154
 msgid "Registro de entrada exitoso"
-msgstr ""
+msgstr "Successful check-in"
 
 #: app/routes/fichajes.py:170
 msgid "Registro de salida exitoso"
-msgstr ""
+msgstr "Successful check-out"
 
 #: app/routes/fichajes.py:172
 msgid "No tienes un registro activo"
-msgstr ""
+msgstr "You do not have an active registration"
 
 #: app/routes/fichajes.py:214
 msgid "No tienes un registro activo para pausar."
-msgstr ""
+msgstr "You do not have an active record to pause."
 
 #: app/routes/fichajes.py:218
 msgid "Ya tienes una pausa activa."
-msgstr ""
+msgstr "You now have an active pause."
 
 #: app/routes/fichajes.py:233
 msgid "Pausa iniciada."
-msgstr ""
+msgstr "Pause started."
 
 #: app/routes/fichajes.py:241
 msgid "No tienes un registro activo."
-msgstr ""
+msgstr "You do not have an active registration."
 
 #: app/routes/fichajes.py:245
 msgid "No tienes una pausa activa."
-msgstr ""
+msgstr "You don't have an active pause."
 
 #: app/routes/fichajes.py:255
 msgid "Pausa finalitzada."
-msgstr ""
+msgstr "Pause ended."
 
 #: app/routes/fichajes.py:263
 msgid "Has d'estar registrat per reportar una incidència."
-msgstr ""
+msgstr "You must be registered to report an incident."
 
 #: app/routes/fichajes.py:287
 msgid "Incidència registrada correctament."
-msgstr ""
+msgstr "Incident registered correctly."
 
 #: app/routes/fichajes.py:299
 msgid "Falten dades per al registre manual."
-msgstr ""
+msgstr "Missingnesses due to manual registration."
 
 #: app/routes/fichajes.py:309
 msgid "No es pot crear un registre per a una data futura."
-msgstr ""
+msgstr "It is not possible to create a record for future data."
 
 #: app/routes/fichajes.py:315
 msgid "L'hora de sortida ha de ser posterior a l'hora d'entrada."
-msgstr ""
+msgstr "The departure time must be after the entry time."
 
 #: app/routes/fichajes.py:349
 msgid "Registre manual creat correctament."
-msgstr ""
+msgstr "Register manual creat correctly."
 
 #: app/routes/fichajes.py:352
 #, python-format
 msgid "Error al crear el registre: %(error)s"
-msgstr ""
+msgstr "Error creating record: %(error)s"
 
 #: app/routes/privacidad.py:43
 msgid "Preferencias de privacidad actualizadas"
-msgstr ""
+msgstr "Updated privacy preferences"
 
 #: app/routes/privacidad.py:92
 msgid "Tu cuenta y todos tus datos han sido eliminados"
-msgstr ""
+msgstr "Your account and all your data have been deleted"
 
 #: app/routes/privacidad.py:95
 msgid "Confirmación requerida para eliminar datos"
-msgstr ""
+msgstr "Confirmation required to delete data"
 
 #: app/templates/admin_dashboard.html:9
 msgid "Menú Administrador"
@@ -434,7 +448,7 @@ msgstr "Admin Menu"
 
 #: app/templates/admin_dashboard.html:14
 msgid "Generar Enllaç Empresa"
-msgstr ""
+msgstr "Generate Enllaç Company"
 
 #: app/templates/admin_dashboard.html:21 app/templates/index.html:112
 #: app/templates/report.html:8
@@ -520,7 +534,7 @@ msgstr "View all"
 
 #: app/templates/admin_dashboard.html:159
 msgid "Tipus:"
-msgstr ""
+msgstr "Tips:"
 
 #: app/templates/admin_dashboard.html:163 app/templates/index.html:221
 msgid "Aprovada"
@@ -537,6 +551,9 @@ msgid ""
 "                                10\n"
 "                                més"
 msgstr ""
+"Show\n"
+"10\n"
+"more"
 
 #: app/templates/admin_dashboard.html:177
 msgid "No hi ha sol·licituds recents."
@@ -552,51 +569,51 @@ msgstr "Statistics Summary"
 
 #: app/templates/admin_dashboard.html:200
 msgid "Gener"
-msgstr ""
+msgstr "Gener"
 
 #: app/templates/admin_dashboard.html:201
 msgid "Febrer"
-msgstr ""
+msgstr "Febrer"
 
 #: app/templates/admin_dashboard.html:202
 msgid "Març"
-msgstr ""
+msgstr "Marc"
 
 #: app/templates/admin_dashboard.html:203
 msgid "Abril"
-msgstr ""
+msgstr "April"
 
 #: app/templates/admin_dashboard.html:204
 msgid "Maig"
-msgstr ""
+msgstr "Maig"
 
 #: app/templates/admin_dashboard.html:205
 msgid "Juny"
-msgstr ""
+msgstr "June"
 
 #: app/templates/admin_dashboard.html:206
 msgid "Juliol"
-msgstr ""
+msgstr "Juliol"
 
 #: app/templates/admin_dashboard.html:207
 msgid "Agost"
-msgstr ""
+msgstr "August"
 
 #: app/templates/admin_dashboard.html:208
 msgid "Setembre"
-msgstr ""
+msgstr "September"
 
 #: app/templates/admin_dashboard.html:209
 msgid "Octubre"
-msgstr ""
+msgstr "October"
 
 #: app/templates/admin_dashboard.html:210
 msgid "Novembre"
-msgstr ""
+msgstr "November"
 
 #: app/templates/admin_dashboard.html:211
 msgid "Desembre"
-msgstr ""
+msgstr "Sow"
 
 #: app/templates/admin_dashboard.html:217
 msgid "Actualitzar"
@@ -647,11 +664,11 @@ msgstr "Description"
 
 #: app/templates/admin_dashboard.html:273
 msgid "No hi ha incidències recents."
-msgstr ""
+msgstr "There are no recent incidents."
 
 #: app/templates/admin_solicitudes.html:7
 msgid "📋 Sol·licituds Pendents d'Absència i Teletreball"
-msgstr ""
+msgstr "📋 Sol·licitudes Pendents d'Absència i Teletreball"
 
 #: app/templates/admin_solicitudes.html:15
 #: app/templates/llistat_treballadors.html:11
@@ -667,56 +684,60 @@ msgstr "Type"
 
 #: app/templates/admin_solicitudes.html:17
 msgid "Data Inici"
-msgstr ""
+msgstr "Start Data"
 
 #: app/templates/admin_solicitudes.html:18
 msgid "Data Fi"
-msgstr ""
+msgstr "DataFi"
 
 #: app/templates/admin_solicitudes.html:19 app/templates/index.html:207
 msgid "Dies"
-msgstr ""
+msgstr "Dies"
 
 #: app/templates/admin_solicitudes.html:20
 msgid "Quan s'ha demanat?"
-msgstr ""
+msgstr "How has he demanded?"
 
 #: app/templates/admin_solicitudes.html:21
 msgid "Justificant"
-msgstr ""
+msgstr "Justificant"
 
 #: app/templates/admin_solicitudes.html:22
 #: app/templates/llistat_factures.html:13
 msgid "Accions"
-msgstr ""
+msgstr "Actions"
 
 #: app/templates/admin_solicitudes.html:57
 msgid ""
 "✅\n"
 "                                    Aprovar"
 msgstr ""
+"✅\n"
+"Approve"
 
 #: app/templates/admin_solicitudes.html:59
 msgid ""
 "❌\n"
 "                                    Denegar"
 msgstr ""
+"❌\n"
+"Deny"
 
 #: app/templates/admin_solicitudes.html:108
 msgid "Estàs segur que vols aprovar aquesta sol·licitud?"
-msgstr ""
+msgstr "Are you sure you will approve this request?"
 
 #: app/templates/admin_solicitudes.html:140
 msgid "S'ha produït un error al aprovar. Revisa la consola."
-msgstr ""
+msgstr "An error occurred when approving.Check the console."
 
 #: app/templates/admin_solicitudes.html:145 app/templates/calendari.html:306
 msgid "Estàs segur que vols DENEGAR aquesta sol·licitud?"
-msgstr ""
+msgstr "Are you sure you will DENY this request?"
 
 #: app/templates/admin_solicitudes.html:181
 msgid "S'ha produït un error al denegar. Revisa la consola (F12)."
-msgstr ""
+msgstr "There has been an error when denying.Check the console (F12)."
 
 #: app/templates/admin_worker_detail.html:11
 msgid "Detall del Treballador:"
@@ -783,7 +804,7 @@ msgstr "Granted"
 
 #: app/templates/admin_worker_detail.html:91
 msgid "No hi ha sol·licituds registrades."
-msgstr ""
+msgstr "There are no registered applications."
 
 #: app/templates/admin_worker_detail.html:103
 msgid "Historial de Fitxatges (Últims 50)"
@@ -803,11 +824,11 @@ msgstr "Total Worked"
 
 #: app/templates/admin_worker_detail.html:114
 msgid "Pausa Acumulada"
-msgstr ""
+msgstr "Accumulated Break"
 
 #: app/templates/admin_worker_detail.html:115
 msgid "Torns de Pausa"
-msgstr ""
+msgstr "Pause Torns"
 
 #: app/templates/admin_worker_detail.html:128
 msgid "En curs"
@@ -826,10 +847,12 @@ msgid ""
 "Incidències\n"
 "                    (Últimes)"
 msgstr ""
+"Incidents\n"
+"(Latest)"
 
 #: app/templates/admin_worker_detail.html:194
 msgid "Aquest treballador no té incidències."
-msgstr ""
+msgstr "This worker has no incidents."
 
 #: app/templates/aviso_legal.html:9 app/templates/base.html:81
 #: app/templates/privacy_settings.html:61
@@ -838,237 +861,328 @@ msgstr "Legal Notice"
 
 #: app/templates/aviso_legal.html:11
 msgid "LEY DE LOS SERVICIOS DE LA SOCIEDAD DE LA INFORMACIÓN (LSSI)"
-msgstr ""
+msgstr "LAW OF INFORMATION SOCIETY SERVICES (LSSI)"
 
 #: app/templates/aviso_legal.html:12
 msgid ""
-"El responsable del sitio web, en adelante RESPONSABLE, pone a disposición"
-" de los usuarios el presente documento, con el que pretende dar "
-"cumplimiento a las obligaciones dispuestas en la Ley 34/2002, de 11 de "
-"julio, de Servicios de la Sociedad de la Información y de Comercio "
-"Electrónico (LSSICE), BOE N.º 166, así como informar a todos los usuarios"
-" del sitio web respecto a cuáles son las condiciones de uso."
+"El responsable del sitio web, en adelante RESPONSABLE, pone a disposición de"
+" los usuarios el presente documento, con el que pretende dar cumplimiento a "
+"las obligaciones dispuestas en la Ley 34/2002, de 11 de julio, de Servicios "
+"de la Sociedad de la Información y de Comercio Electrónico (LSSICE), BOE N.º"
+" 166, así como informar a todos los usuarios del sitio web respecto a cuáles"
+" son las condiciones de uso."
 msgstr ""
+"The person responsible for the website, hereinafter RESPONSIBLE, makes this "
+"document available to users, with which it aims to comply with the "
+"obligations set forth in Law 34/2002, of July 11, on Information Society "
+"Services and Electronic Commerce (LSSICE), BOE No. 166, as well as inform "
+"all users of the website regarding the conditions of use."
 
 #: app/templates/aviso_legal.html:13
 msgid ""
-"Toda persona que acceda a este sitio web asume el papel de usuario, "
-"comprometiéndose a la observancia y cumplimiento riguroso de las "
-"disposiciones aquí dispuestas, así como a cualquier otra disposición "
-"legal que fuera de aplicación.\n"
-"                        El RESPONSABLE se reserva el derecho de modificar"
-" cualquier tipo de información que pudiera aparecer en el sitio web, sin "
-"que exista obligación de preavisar o poner en conocimiento de los "
-"usuarios dichas obligaciones, entendiéndose como suficiente la "
-"publicación en el sitio web del RESPONSABLE."
+"Toda persona que acceda a este sitio web asume el papel de usuario, comprometiéndose a la observancia y cumplimiento riguroso de las disposiciones aquí dispuestas, así como a cualquier otra disposición legal que fuera de aplicación.\n"
+"                        El RESPONSABLE se reserva el derecho de modificar cualquier tipo de información que pudiera aparecer en el sitio web, sin que exista obligación de preavisar o poner en conocimiento de los usuarios dichas obligaciones, entendiéndose como suficiente la publicación en el sitio web del RESPONSABLE."
 msgstr ""
+"Any person who accesses this website assumes the role of user, committing to strict observance and compliance with the provisions set forth herein, as well as any other legal provision that may be applicable.\n"
+"The CONTROLLER reserves the right to modify any type of information that may appear on the website, without there being any obligation to notify or inform users of said obligations, publication on the CONTROLLER's website being understood as sufficient."
 
 #: app/templates/aviso_legal.html:16
 msgid "1. DATOS IDENTIFICATIVOS"
-msgstr ""
+msgstr "1. IDENTIFICATION DATA"
 
 #: app/templates/aviso_legal.html:28
 msgid "2. DERECHOS DE PROPIEDAD INTELECTUAL E INDUSTRIAL"
-msgstr ""
+msgstr "2. INTELLECTUAL AND INDUSTRIAL PROPERTY RIGHTS"
 
 #: app/templates/aviso_legal.html:29
 msgid ""
 "El sitio web, incluyendo a título enunciativo pero no limitativo su "
 "programación, edición, compilación y demás elementos necesarios para su "
-"funcionamiento, los diseños, logotipos, texto y/o gráficos, son propiedad"
-" del RESPONSABLE o, si es el caso, dispone de licencia o autorización "
-"expresa por parte de los autores. Todos los contenidos del sitio web se "
-"encuentran debidamente protegidos por la normativa de propiedad "
-"intelectual e industrial, así como inscritos en los registros públicos "
-"correspondientes."
+"funcionamiento, los diseños, logotipos, texto y/o gráficos, son propiedad "
+"del RESPONSABLE o, si es el caso, dispone de licencia o autorización expresa"
+" por parte de los autores. Todos los contenidos del sitio web se encuentran "
+"debidamente protegidos por la normativa de propiedad intelectual e "
+"industrial, así como inscritos en los registros públicos correspondientes."
 msgstr ""
+"The website, including but not limited to its programming, editing, "
+"compilation and other elements necessary for its operation, the designs, "
+"logos, text and/or graphics, are the property of the CONTROLLER or, if "
+"applicable, have a license or express authorization from the authors.All "
+"contents of the website are duly protected by intellectual and industrial "
+"property regulations, as well as registered in the corresponding public "
+"registries."
 
 #: app/templates/aviso_legal.html:30
 msgid ""
 "Independientemente de la finalidad para la que fueran destinados, la "
 "reproducción total o parcial, uso, explotación, distribución y "
-"comercialización, requiere en todo caso la autorización escrita previa "
-"por parte del RESPONSABLE. Cualquier uso no autorizado previamente se "
-"considera un incumplimiento grave de los derechos de propiedad "
-"intelectual o industrial del autor."
+"comercialización, requiere en todo caso la autorización escrita previa por "
+"parte del RESPONSABLE. Cualquier uso no autorizado previamente se considera "
+"un incumplimiento grave de los derechos de propiedad intelectual o "
+"industrial del autor."
 msgstr ""
+"Regardless of the purpose for which they were intended, total or partial "
+"reproduction, use, exploitation, distribution and marketing, requires in all"
+" cases prior written authorization from the CONTROLLER.Any use not "
+"previously authorized is considered a serious breach of the author's "
+"intellectual or industrial property rights."
 
 #: app/templates/aviso_legal.html:31
 msgid ""
 "Los diseños, logotipos, texto y/o gráficos ajenos al RESPONSABLE y que "
 "pudieran aparecer en el sitio web, pertenecen a sus respectivos "
 "propietarios, siendo ellos mismos responsables de cualquier posible "
-"controversia que pudiera suscitarse respecto a los mismos. El RESPONSABLE"
-" autoriza expresamente a que terceros puedan redirigir directamente a los"
-" contenidos concretos del sitio web, y en todo caso redirigir al sitio "
-"web principal."
+"controversia que pudiera suscitarse respecto a los mismos. El RESPONSABLE "
+"autoriza expresamente a que terceros puedan redirigir directamente a los "
+"contenidos concretos del sitio web, y en todo caso redirigir al sitio web "
+"principal."
 msgstr ""
+"The designs, logos, text and/or graphics other than the CONTROLLER and that "
+"may appear on the website belong to their respective owners, who are "
+"themselves responsible for any possible controversy that may arise regarding"
+" them.The CONTROLLER expressly authorizes third parties to redirect directly"
+" to the specific contents of the website, and in any case redirect to the "
+"main website."
 
 #: app/templates/aviso_legal.html:32
 msgid ""
 "El RESPONSABLE reconoce a favor de sus titulares los correspondientes "
 "derechos de propiedad intelectual e industrial, no implicando su sola "
 "mención o aparición en el sitio web la existencia de derechos o "
-"responsabilidad alguna sobre los mismos, como tampoco respaldo, "
-"patrocinio o recomendación por parte del mismo."
+"responsabilidad alguna sobre los mismos, como tampoco respaldo, patrocinio o"
+" recomendación por parte del mismo."
 msgstr ""
+"The CONTROLLER recognizes the corresponding intellectual and industrial "
+"property rights in favor of their owners, and their mere mention or "
+"appearance on the website does not imply the existence of any rights or "
+"responsibility over them, nor does it imply endorsement, sponsorship or "
+"recommendation on their part."
 
 #: app/templates/aviso_legal.html:33
 msgid ""
 "Para realizar cualquier tipo de observación respecto a posibles "
-"incumplimientos de los derechos de propiedad intelectual o industrial, "
-"así como sobre cualquiera de los contenidos del sitio web, puede hacerlo "
-"a través del correo electrónico."
+"incumplimientos de los derechos de propiedad intelectual o industrial, así "
+"como sobre cualquiera de los contenidos del sitio web, puede hacerlo a "
+"través del correo electrónico."
 msgstr ""
+"To make any type of observation regarding possible breaches of intellectual "
+"or industrial property rights, as well as any of the contents of the "
+"website, you can do so via email."
 
 #: app/templates/aviso_legal.html:35
 msgid "3. EXENCIÓN DE RESPONSABILIDADES"
-msgstr ""
+msgstr "3. DISCLAIMER OF LIABILITY"
 
 #: app/templates/aviso_legal.html:36
 msgid ""
-"El RESPONSABLE se exime de cualquier tipo de responsabilidad derivada de "
-"la información publicada en su sitio web siempre que no tenga "
-"conocimiento efectivo de que esta información haya sido manipulada o "
-"introducida por un tercero ajeno al mismo o, si lo tiene, haya actuado "
-"con diligencia para retirar los datos o hacer imposible el acceso a "
-"ellos."
+"El RESPONSABLE se exime de cualquier tipo de responsabilidad derivada de la "
+"información publicada en su sitio web siempre que no tenga conocimiento "
+"efectivo de que esta información haya sido manipulada o introducida por un "
+"tercero ajeno al mismo o, si lo tiene, haya actuado con diligencia para "
+"retirar los datos o hacer imposible el acceso a ellos."
 msgstr ""
+"The CONTROLLER is exempt from any type of responsibility derived from the "
+"information published on its website as long as it has no effective "
+"knowledge that this information has been manipulated or introduced by a "
+"third party unrelated to it or, if it has knowledge, it has acted diligently"
+" to remove the data or make access to it impossible."
 
 #: app/templates/aviso_legal.html:37
 msgid "Uso de Cookies"
-msgstr ""
+msgstr "Use of Cookies"
 
 #: app/templates/aviso_legal.html:38
 msgid ""
 "Este sitio web puede utilizar cookies técnicas (pequeños archivos de "
-"información que el servidor envía al ordenador de quien accede a la "
-"página) para llevar a cabo determinadas funciones que son consideradas "
-"imprescindibles para el correcto funcionamiento y visualización del "
-"sitio. Las cookies utilizadas tienen, en todo caso, carácter temporal, "
-"con la única finalidad de hacer más eficaz la navegación, y desaparecen "
-"al terminar la sesión del usuario. En ningún caso, estas cookies "
-"proporcionan por sí mismas datos de carácter personal y no se utilizarán "
-"para la recogida de los mismos."
+"información que el servidor envía al ordenador de quien accede a la página) "
+"para llevar a cabo determinadas funciones que son consideradas "
+"imprescindibles para el correcto funcionamiento y visualización del sitio. "
+"Las cookies utilizadas tienen, en todo caso, carácter temporal, con la única"
+" finalidad de hacer más eficaz la navegación, y desaparecen al terminar la "
+"sesión del usuario. En ningún caso, estas cookies proporcionan por sí mismas"
+" datos de carácter personal y no se utilizarán para la recogida de los "
+"mismos."
 msgstr ""
+"This website may use technical cookies (small information files that the "
+"server sends to the computer of the person accessing the page) to carry out "
+"certain functions that are considered essential for the correct functioning "
+"and display of the site.The cookies used are, in any case, temporary in "
+"nature, with the sole purpose of making navigation more efficient, and "
+"disappear when the user's session ends.In no case do these cookies provide "
+"personal data by themselves and will not be used to collect them."
 
 #: app/templates/aviso_legal.html:39
 msgid ""
 "Mediante el uso de cookies también es posible que el servidor donde se "
 "encuentra la web reconozca el navegador utilizado por el usuario con la "
-"finalidad de que la navegación sea más sencilla, permitiendo, por "
-"ejemplo, el acceso de los usuarios que se hayan registrado previamente a "
-"las áreas, servicios, promociones o concursos reservados exclusivamente a"
-" ellos sin tener que registrarse en cada visita. También se pueden "
-"utilizar para medir la audiencia, parámetros de tráfico, controlar el "
-"progreso y número de entradas, etc., siendo en estos casos cookies "
-"prescindibles técnicamente, pero beneficiosas para el usuario. Este sitio"
-" web no instalará cookies prescindibles sin el consentimiento previo del "
-"usuario."
+"finalidad de que la navegación sea más sencilla, permitiendo, por ejemplo, "
+"el acceso de los usuarios que se hayan registrado previamente a las áreas, "
+"servicios, promociones o concursos reservados exclusivamente a ellos sin "
+"tener que registrarse en cada visita. También se pueden utilizar para medir "
+"la audiencia, parámetros de tráfico, controlar el progreso y número de "
+"entradas, etc., siendo en estos casos cookies prescindibles técnicamente, "
+"pero beneficiosas para el usuario. Este sitio web no instalará cookies "
+"prescindibles sin el consentimiento previo del usuario."
 msgstr ""
+"Through the use of cookies, it is also possible for the server where the "
+"website is located to recognize the browser used by the user in order to "
+"make navigation easier, allowing, for example, access by users who have "
+"previously registered to the areas, services, promotions or contests "
+"reserved exclusively for them without having to register for each visit.They"
+" can also be used to measure the audience, traffic parameters, control the "
+"progress and number of entries, etc., in these cases cookies being "
+"technically dispensable, but beneficial for the user.This website will not "
+"install dispensable cookies without the user's prior consent."
 
 #: app/templates/aviso_legal.html:40
 msgid ""
-"Este sitio web utiliza cookies propias y de terceros para fines "
-"analíticos y para mostrarle publicidad personalizada en base a un perfil "
-"elaborado a partir de sus hábitos de navegación (por ejemplo, páginas "
-"visitadas). A todo usuario que visita la web se le informa del uso de "
-"estas cookies mediante un banner flotante. En el caso de aceptar su uso, "
-"el banner desaparecerá, aunque en todo momento podrá revocar el "
-"consentimiento y obtener más información consultando nuestra Política de "
-"cookies."
+"Este sitio web utiliza cookies propias y de terceros para fines analíticos y"
+" para mostrarle publicidad personalizada en base a un perfil elaborado a "
+"partir de sus hábitos de navegación (por ejemplo, páginas visitadas). A todo"
+" usuario que visita la web se le informa del uso de estas cookies mediante "
+"un banner flotante. En el caso de aceptar su uso, el banner desaparecerá, "
+"aunque en todo momento podrá revocar el consentimiento y obtener más "
+"información consultando nuestra Política de cookies."
 msgstr ""
+"This website uses its own and third-party cookies for analytical purposes "
+"and to show you personalized advertising based on a profile created from "
+"your browsing habits (for example, pages visited).Every user who visits the "
+"website is informed of the use of these cookies through a floating banner.If"
+" you accept its use, the banner will disappear, although you can revoke your"
+" consent at any time and obtain more information by consulting our Cookies "
+"Policy."
 
 #: app/templates/aviso_legal.html:41
 msgid ""
-"El usuario tiene la posibilidad de configurar su navegador para ser "
-"alertado de la recepción de cookies y para impedir su instalación en su "
-"equipo. Por favor, consulte las instrucciones de su navegador para "
-"ampliar esta información."
+"El usuario tiene la posibilidad de configurar su navegador para ser alertado"
+" de la recepción de cookies y para impedir su instalación en su equipo. Por "
+"favor, consulte las instrucciones de su navegador para ampliar esta "
+"información."
 msgstr ""
+"The user has the possibility of configuring their browser to be alerted when"
+" cookies are received and to prevent their installation on their "
+"computer.Please consult your browser's instructions for more information."
 
 #: app/templates/aviso_legal.html:42
 msgid "Política de enlaces"
-msgstr ""
+msgstr "Link Policy"
 
 #: app/templates/aviso_legal.html:43
 msgid ""
 "Desde el sitio web, es posible que se redirija a contenidos de terceros "
 "sitios web. Dado que el RESPONSABLE no puede controlar siempre los "
-"contenidos introducidos por terceros en sus respectivos sitios web, no "
-"asume ningún tipo de responsabilidad respecto a dichos contenidos. En "
-"todo caso, procederá a la retirada inmediata de cualquier contenido que "
-"pudiera contravenir la legislación nacional o internacional, la moral o "
-"el orden público, procediendo a la retirada inmediata de la redirección a"
-" dicho sitio web, poniendo en conocimiento de las autoridades competentes"
-" el contenido en cuestión."
+"contenidos introducidos por terceros en sus respectivos sitios web, no asume"
+" ningún tipo de responsabilidad respecto a dichos contenidos. En todo caso, "
+"procederá a la retirada inmediata de cualquier contenido que pudiera "
+"contravenir la legislación nacional o internacional, la moral o el orden "
+"público, procediendo a la retirada inmediata de la redirección a dicho sitio"
+" web, poniendo en conocimiento de las autoridades competentes el contenido "
+"en cuestión."
 msgstr ""
+"From the website, you may be redirected to content on third-party "
+"websites.Given that the CONTROLLER cannot always control the contents "
+"introduced by third parties on their respective websites, it does not assume"
+" any type of responsibility regarding said contents.In any case, it will "
+"proceed to the immediate withdrawal of any content that could contravene "
+"national or international legislation, morality or public order, proceeding "
+"to the immediate withdrawal of the redirection to said website, informing "
+"the competent authorities of the content in question."
 
 #: app/templates/aviso_legal.html:44
 msgid ""
 "El RESPONSABLE no se hace responsable de la información y contenidos "
 "almacenados, a título enunciativo pero no limitativo, en foros, chats, "
-"generadores de blogs, comentarios, redes sociales o cualquier otro medio "
-"que permita a terceros publicar contenidos de forma independiente en la "
-"página web del RESPONSABLE. Sin embargo, y en cumplimiento de lo "
-"dispuesto en los artículos 11 y 16 de la LSSICE, se pone a disposición de"
-" todos los usuarios, autoridades y fuerzas de seguridad, colaborando de "
-"forma activa en la retirada o, en su caso, bloqueo de todos aquellos "
-"contenidos que puedan afectar o contravenir la legislación nacional o "
-"internacional, los derechos de terceros o la moral y el orden público. En"
-" caso de que el usuario considere que existe en el sitio web algún "
-"contenido que pudiera ser susceptible de esta clasificación, se ruega lo "
-"notifique de forma inmediata al administrador del sitio web."
+"generadores de blogs, comentarios, redes sociales o cualquier otro medio que"
+" permita a terceros publicar contenidos de forma independiente en la página "
+"web del RESPONSABLE. Sin embargo, y en cumplimiento de lo dispuesto en los "
+"artículos 11 y 16 de la LSSICE, se pone a disposición de todos los usuarios,"
+" autoridades y fuerzas de seguridad, colaborando de forma activa en la "
+"retirada o, en su caso, bloqueo de todos aquellos contenidos que puedan "
+"afectar o contravenir la legislación nacional o internacional, los derechos "
+"de terceros o la moral y el orden público. En caso de que el usuario "
+"considere que existe en el sitio web algún contenido que pudiera ser "
+"susceptible de esta clasificación, se ruega lo notifique de forma inmediata "
+"al administrador del sitio web."
 msgstr ""
+"The CONTROLLER is not responsible for the information and content stored, by"
+" way of example but not limited to, in forums, chats, blog generators, "
+"comments, social networks or any other means that allows third parties to "
+"publish content independently on the CONTROLLER's website.However, and in "
+"compliance with the provisions of articles 11 and 16 of the LSSICE, it is "
+"made available to all users, authorities and security forces, actively "
+"collaborating in the withdrawal or, where appropriate, blocking of all "
+"content that may affect or contravene national or international legislation,"
+" the rights of third parties or morality and public order.If the user "
+"considers that there is any content on the website that could be susceptible"
+" to this classification, please notify the website administrator "
+"immediately."
 
 #: app/templates/aviso_legal.html:45
 msgid ""
-"Este sitio web se ha revisado y probado para que funcione correctamente. "
-"En principio, puede garantizarse el correcto funcionamiento los 365 días "
-"del año, 24 horas al día. Sin embargo, el RESPONSABLE no descarta la "
-"posibilidad de que existan ciertos errores de programación, o que "
-"acontezcan causas de fuerza mayor, catástrofes naturales, huelgas o "
-"circunstancias semejantes que hagan imposible el acceso a la página web."
+"Este sitio web se ha revisado y probado para que funcione correctamente. En "
+"principio, puede garantizarse el correcto funcionamiento los 365 días del "
+"año, 24 horas al día. Sin embargo, el RESPONSABLE no descarta la posibilidad"
+" de que existan ciertos errores de programación, o que acontezcan causas de "
+"fuerza mayor, catástrofes naturales, huelgas o circunstancias semejantes que"
+" hagan imposible el acceso a la página web."
 msgstr ""
+"This website has been reviewed and tested to function properly.In principle,"
+" correct operation can be guaranteed 365 days a year, 24 hours a "
+"day.However, the CONTROLLER does not rule out the possibility that there may"
+" be certain programming errors, or that force majeure, natural disasters, "
+"strikes or similar circumstances may occur that make access to the website "
+"impossible."
 
 #: app/templates/aviso_legal.html:46
 msgid "Direcciones IP"
-msgstr ""
+msgstr "IP addresses"
 
 #: app/templates/aviso_legal.html:47
 msgid ""
 "Los servidores del sitio web podrán detectar de manera automática la "
-"dirección IP y el nombre de dominio utilizados por el usuario. Una "
-"dirección IP es un número asignado automáticamente a un ordenador cuando "
-"este se conecta a Internet. Toda esta información se registra en un "
-"fichero de actividad del servidor debidamente inscrito que permite el "
-"posterior procesamiento de los datos con el fin de obtener mediciones "
-"únicamente estadísticas que permitan conocer el número de impresiones de "
-"páginas, el número de visitas realizadas a los servidores web, el orden "
-"de visitas, el punto de acceso, etc."
+"dirección IP y el nombre de dominio utilizados por el usuario. Una dirección"
+" IP es un número asignado automáticamente a un ordenador cuando este se "
+"conecta a Internet. Toda esta información se registra en un fichero de "
+"actividad del servidor debidamente inscrito que permite el posterior "
+"procesamiento de los datos con el fin de obtener mediciones únicamente "
+"estadísticas que permitan conocer el número de impresiones de páginas, el "
+"número de visitas realizadas a los servidores web, el orden de visitas, el "
+"punto de acceso, etc."
 msgstr ""
+"The website servers may automatically detect the IP address and domain name "
+"used by the user.An IP address is a number automatically assigned to a "
+"computer when it connects to the Internet.All this information is recorded "
+"in a duly registered server activity file that allows the subsequent "
+"processing of the data in order to obtain only statistical measurements that"
+" allow knowing the number of page impressions, the number of visits made to "
+"the web servers, the order of visits, the access point, etc."
 
 #: app/templates/aviso_legal.html:49
 msgid "4. LEY APLICABLE Y JURISDICCIÓN"
-msgstr ""
+msgstr "4. APPLICABLE LAW AND JURISDICTION"
 
 #: app/templates/aviso_legal.html:50
 msgid ""
-"Para la resolución de todas las controversias o cuestiones relacionadas "
-"con el presente sitio web o de las actividades en él desarrolladas, será "
-"de aplicación la legislación española, a la que se someten expresamente "
-"las partes, siendo competentes para la resolución de todos los conflictos"
-" derivados o relacionados con su uso los Juzgados y Tribunales del "
-"domicilio del USUARIO o el lugar del cumplimiento de la obligación."
+"Para la resolución de todas las controversias o cuestiones relacionadas con "
+"el presente sitio web o de las actividades en él desarrolladas, será de "
+"aplicación la legislación española, a la que se someten expresamente las "
+"partes, siendo competentes para la resolución de todos los conflictos "
+"derivados o relacionados con su uso los Juzgados y Tribunales del domicilio "
+"del USUARIO o el lugar del cumplimiento de la obligación."
 msgstr ""
+"For the resolution of all controversies or issues related to this website or"
+" the activities carried out on it, Spanish legislation will apply, to which "
+"the parties expressly submit, with the Courts and Tribunals of the USER's "
+"domicile or the place of fulfillment of the obligation being competent to "
+"resolve all conflicts arising from or related to its use."
 
 #: app/templates/base.html:7
 msgid "Maxilim - Control Horario"
-msgstr ""
+msgstr "Maxilim - Time Control"
 
 #: app/templates/base.html:54
 msgid "Idioma"
-msgstr ""
+msgstr "Language"
 
 #: app/templates/base.html:58
 msgid "Català"
@@ -1092,11 +1206,11 @@ msgstr "Logout"
 
 #: app/templates/base.html:113
 msgid "Maxilim S.L. - Sistema de Control Horario"
-msgstr ""
+msgstr "Maxilim S.L.- Time Control System"
 
 #: app/templates/calendari.html:9
 msgid "Tipus d'absència:"
-msgstr ""
+msgstr "Tipus d'absència:"
 
 #: app/templates/calendari.html:13
 msgid "Vacances"
@@ -1128,7 +1242,7 @@ msgstr "Absences summary"
 
 #: app/templates/calendari.html:44
 msgid "Vacances:"
-msgstr ""
+msgstr "Vacation:"
 
 #: app/templates/calendari.html:45 app/templates/calendari.html:48
 #: app/templates/calendari.html:50
@@ -1137,11 +1251,11 @@ msgstr "remaining"
 
 #: app/templates/calendari.html:46
 msgid "Baixa mèdica:"
-msgstr ""
+msgstr "Medical Baixa:"
 
 #: app/templates/calendari.html:49
 msgid "Assumptes propis:"
-msgstr ""
+msgstr "Assumptes propis:"
 
 #: app/templates/calendari.html:59
 msgid "Calendari Laboral"
@@ -1157,8 +1271,7 @@ msgstr "Select worker:"
 
 #: app/templates/calendari.html:85
 msgid ""
-"🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-"
-"la."
+"🔹 Selecciona un tipus d'absència i després fes clic a un dia per marcar-la."
 msgstr "🔹 Select an absence type and then click on a day to mark it."
 
 #: app/templates/calendari.html:86
@@ -1174,6 +1287,8 @@ msgid ""
 "Fes clic en una sol·licitud pendent per\n"
 "                        aprovar-la o denegar-la."
 msgstr ""
+"Click on a request pending per\n"
+"approve-it or deny-it."
 
 #: app/templates/calendari.html:167
 msgid "❌ L'arxiu és massa gran. El màxim permès són 2MB."
@@ -1185,15 +1300,15 @@ msgstr "⚠️ Select an absence type first."
 
 #: app/templates/calendari.html:206
 msgid "❌ No tens dies disponibles de"
-msgstr ""
+msgstr "❌ You do not have dies available"
 
 #: app/templates/calendari.html:206
 msgid "S'ha exhaurit el límit de"
-msgstr ""
+msgstr "S'haurit the limit of"
 
 #: app/templates/calendari.html:206
 msgid "dies."
-msgstr ""
+msgstr "dies."
 
 #: app/templates/calendari.html:218
 msgid "Vols marcar"
@@ -1205,23 +1320,23 @@ msgstr "days"
 
 #: app/templates/calendari.html:261
 msgid "❌ Algunes dates NO s'han pogut afegir:"
-msgstr ""
+msgstr "❌ Some dates DO NOT include:"
 
 #: app/templates/calendari.html:267
 msgid "dia(es) demanats correctament"
-msgstr ""
+msgstr "day(s) demanats correctly"
 
 #: app/templates/calendari.html:321
 msgid "S'ha produït un error."
-msgstr ""
+msgstr "An error has occurred."
 
 #: app/templates/calendari.html:351
 msgid "❌ Error: "
-msgstr ""
+msgstr "❌ Error:"
 
 #: app/templates/calendari.html:355
 msgid "S'ha produït un error al eliminar l'absència."
-msgstr ""
+msgstr "An error occurred when deleting the absence."
 
 #: app/templates/create_comunitat.html:9
 msgid "Crear Nueva Comunidad"
@@ -1229,7 +1344,7 @@ msgstr "Create New Community"
 
 #: app/templates/create_comunitat.html:15
 msgid "Nombre de la Comunidad"
-msgstr ""
+msgstr "Community Name"
 
 #: app/templates/create_comunitat.html:19
 msgid "CIF: Código de Identificación Fiscal"
@@ -1237,71 +1352,71 @@ msgstr "CIF: Tax ID Number"
 
 #: app/templates/create_comunitat.html:23
 msgid "Código postal"
-msgstr ""
+msgstr "Zip code"
 
 #: app/templates/create_comunitat.html:27
 #: app/templates/llistat_comunitats.html:11
 #: app/templates/llistat_treballadors.html:13
 msgid "Ciudad"
-msgstr ""
+msgstr "City"
 
 #: app/templates/create_comunitat.html:31
 #: app/templates/llistat_comunitats.html:12
 msgid "Provincia"
-msgstr ""
+msgstr "Province"
 
 #: app/templates/create_comunitat.html:35
 msgid "Dirección: Calle, Número"
-msgstr ""
+msgstr "Address: Street, Number"
 
 #: app/templates/create_comunitat.html:36
 msgid "Roselló, 454"
-msgstr ""
+msgstr "Rosello, 454"
 
 #: app/templates/create_comunitat.html:39
 #: app/templates/llistat_comunitats.html:14
 #: app/templates/llistat_treballadors.html:20
 #: app/templates/llistat_usuaris.html:14
 msgid "Fecha de alta"
-msgstr ""
+msgstr "Registration date"
 
 #: app/templates/create_comunitat.html:40
 msgid "10/04/2025"
-msgstr ""
+msgstr "04/10/2025"
 
 #: app/templates/create_comunitat.html:43
 msgid "Latitud"
-msgstr ""
+msgstr "Latitude"
 
 #: app/templates/create_comunitat.html:44
 msgid "40.1"
-msgstr ""
+msgstr "40.1"
 
 #: app/templates/create_comunitat.html:47
 msgid "Longitud"
-msgstr ""
+msgstr "Length"
 
 #: app/templates/create_comunitat.html:48
 msgid "2.6"
-msgstr ""
+msgstr "2.6"
 
 #: app/templates/create_comunitat.html:51
 msgid "Crear Comunidad"
-msgstr ""
+msgstr "Create Community"
 
 #: app/templates/create_comunitat.html:52 app/templates/create_empleat.html:31
 #: app/templates/create_empresa.html:64 app/templates/create_user.html:70
 #: app/templates/privacy_settings.html:96
 msgid "Cancelar"
-msgstr ""
+msgstr "Cancel"
 
 #: app/templates/create_empleat.html:9
 msgid "Crear Nuevo Empleado"
-msgstr ""
+msgstr "Create New Employee"
 
 #: app/templates/create_empleat.html:14 app/templates/create_user.html:29
 msgid "Nombre de Usuario"
-msgstr ""
+msgstr "User name"
 
 #: app/templates/create_empleat.html:18 app/templates/create_user.html:34
 #: app/templates/login.html:30
@@ -1310,109 +1425,109 @@ msgstr "Password"
 
 #: app/templates/create_empleat.html:22 app/templates/create_user.html:38
 msgid "Nombre Completo"
-msgstr ""
+msgstr "Full Name"
 
 #: app/templates/create_empleat.html:26 app/templates/create_user.html:43
 msgid "Correo Electrónico"
-msgstr ""
+msgstr "Email"
 
 #: app/templates/create_empleat.html:30
 msgid "Crear Empleat"
-msgstr ""
+msgstr "Create Empleat"
 
 #: app/templates/create_empresa.html:21
 msgid "Código de Verificación"
-msgstr ""
+msgstr "Verification Code"
 
 #: app/templates/create_empresa.html:26
 msgid "Nombre de la Empresa"
-msgstr ""
+msgstr "Company Name"
 
 #: app/templates/create_empresa.html:31
 msgid "Número Fiscal"
-msgstr ""
+msgstr "Tax Number"
 
 #: app/templates/create_empresa.html:36
 msgid "Dirección Física / Sede Social"
-msgstr ""
+msgstr "Physical Address / Headquarters"
 
 #: app/templates/create_empresa.html:41
 msgid "Correo Electrónico del Gerente"
-msgstr ""
+msgstr "Manager Email"
 
 #: app/templates/create_empresa.html:46
 msgid "Teléfono del Gerente"
-msgstr ""
+msgstr "Manager Telephone"
 
 #: app/templates/create_empresa.html:51
 msgid "Contraseña de la Empresa (clave secreta)"
-msgstr ""
+msgstr "Company Password (secret key)"
 
 #: app/templates/create_factura.html:3 app/templates/llistat_factures.html:31
 msgid "Crear Nova Factura"
-msgstr ""
+msgstr "Create New Invoice"
 
 #: app/templates/create_factura.html:7 app/templates/llistar_calendari.html:11
 #: app/templates/llistat_factures.html:9
 msgid "Comunitat"
-msgstr ""
+msgstr "Community"
 
 #: app/templates/create_factura.html:16
 msgid "Tipus de Feina"
-msgstr ""
+msgstr "Tips of Feina"
 
 #: app/templates/create_factura.html:21
 msgid "Document de Pagament"
-msgstr ""
+msgstr "Payment Document"
 
 #: app/templates/create_factura.html:26
 msgid "Règim d’Impostos (opcional)"
-msgstr ""
+msgstr "Tax Regime (optional)"
 
 #: app/templates/create_pagador.html:4
 msgid "Crear nou pagador"
-msgstr ""
+msgstr "Create new payer"
 
 #: app/templates/create_pagador.html:8
 msgid "Nom del pagador"
-msgstr ""
+msgstr "Payer's name"
 
 #: app/templates/create_pagador.html:12 app/templates/llistat_pagadors.html:10
 #: app/templates/register_first_admin.html:23
 msgid "Telèfon"
-msgstr ""
+msgstr "Telephone"
 
 #: app/templates/create_pagador.html:16
 msgid "Correu electrònic"
-msgstr ""
+msgstr "Email"
 
 #: app/templates/create_pagador.html:20 app/templates/llistat_pagadors.html:12
 msgid "Direcció"
-msgstr ""
+msgstr "Address"
 
 #: app/templates/create_pagador.html:24
 #: app/templates/create_treballador.html:24
 #: app/templates/llistat_pagadors.html:13
 msgid "Ciutat"
-msgstr ""
+msgstr "City"
 
 #: app/templates/create_pagador.html:28
 #: app/templates/create_treballador.html:30
 #: app/templates/llistat_pagadors.html:14
 msgid "Codi Postal"
-msgstr ""
+msgstr "Postal Code"
 
 #: app/templates/create_pagador.html:32
 msgid "Crear pagador"
-msgstr ""
+msgstr "Create payer"
 
 #: app/templates/create_treballador.html:5
 msgid "Departament"
-msgstr ""
+msgstr "Department"
 
 #: app/templates/create_treballador.html:18
 msgid "Adreça"
-msgstr ""
+msgstr "Adreça"
 
 #: app/templates/create_treballador.html:36
 msgid "Sexe"
@@ -1428,52 +1543,56 @@ msgstr "Age"
 
 #: app/templates/create_treballador.html:62
 msgid "Carnet de Conduir"
-msgstr ""
+msgstr "Driving License"
 
 #: app/templates/create_treballador.html:71
 msgid "Vehicle propi"
-msgstr ""
+msgstr "Own vehicle"
 
 #: app/templates/create_user.html:11
 msgid "Verifica tu correo electrónico"
-msgstr ""
+msgstr "Check your email"
 
 #: app/templates/create_user.html:24
 msgid "Código email de Verificación"
-msgstr ""
+msgstr "Verification email code"
 
 #: app/templates/create_user.html:48 app/templates/llistat_usuaris.html:11
 msgid "Teléfono"
-msgstr ""
+msgstr "Phone"
 
 #: app/templates/create_user.html:55 app/templates/llistat_usuaris.html:13
 msgid "Rol"
-msgstr ""
+msgstr "Role"
 
 #: app/templates/create_user.html:69
 msgid "Registrarse"
-msgstr ""
+msgstr "Register"
 
 #: app/templates/data_consent.html:9
 msgid "Consentimiento de Tratamiento de Datos"
-msgstr ""
+msgstr "Data Processing Consent"
 
 #: app/templates/data_consent.html:21 app/templates/privacy_policy.html:9
 #: app/templates/privacy_settings.html:55
 msgid "Política de Privacidad"
-msgstr ""
+msgstr "Privacy Policy"
 
 #: app/templates/data_consent.html:30
 msgid ""
-"Acepto que mis datos de fichaje se conserven por un período de 4 años "
-"según la legislación laboral vigente."
+"Acepto que mis datos de fichaje se conserven por un período de 4 años según "
+"la legislación laboral vigente."
 msgstr ""
+"I accept that my signing data will be kept for a period of 4 years in "
+"accordance with current labor legislation."
 
 #: app/templates/data_consent.html:37
 msgid ""
-"Autorizo la generación de informes y análisis estadísticos con mis datos "
-"de fichaje."
+"Autorizo la generación de informes y análisis estadísticos con mis datos de "
+"fichaje."
 msgstr ""
+"I authorize the generation of reports and statistical analyzes with my "
+"transfer data."
 
 #: app/templates/forgot_password.html:8
 msgid "Recuperar Contraseña"
@@ -1481,91 +1600,92 @@ msgstr "Recover Password"
 
 #: app/templates/forgot_password.html:9
 msgid ""
-"Introduce tu email o nombre de usuario y te enviaremos un código de "
-"seguridad para\n"
+"Introduce tu email o nombre de usuario y te enviaremos un código de seguridad para\n"
 "                    restablecer tu contraseña."
 msgstr ""
+"Enter your email or username and we will send you a security code to\n"
+"reset your password."
 
 #: app/templates/forgot_password.html:14
 msgid "Email o Usuario"
-msgstr ""
+msgstr "Email or User"
 
 #: app/templates/forgot_password.html:27
 msgid "Volver al Inicio"
-msgstr ""
+msgstr "Return to Home"
 
 #: app/templates/generate_empresa_link.html:9
 msgid "Generar enllaç de registre d'empresa"
-msgstr ""
+msgstr "Generate company registration link"
 
 #: app/templates/generate_empresa_link.html:14
 msgid "Correu electrònic destinatari"
-msgstr ""
+msgstr "Recipient email"
 
 #: app/templates/generate_empresa_link.html:17
 msgid "Enviar enllaç"
-msgstr ""
+msgstr "Send link"
 
 #: app/templates/generate_empresa_link.html:18 app/templates/index.html:230
 msgid "Cancel·lar"
-msgstr ""
+msgstr "Cancel"
 
 #: app/templates/index.html:8
 msgid "Recordatori"
-msgstr ""
+msgstr "Reminder"
 
 #: app/templates/index.html:9
 msgid " Tanca"
-msgstr ""
+msgstr "Tanca"
 
 #: app/templates/index.html:12 app/templates/index.html:30
 #: app/templates/index.html:666
 msgid "No has registrat la teva entrada avui."
-msgstr ""
+msgstr "You have not registered your new entry."
 
 #: app/templates/index.html:19 app/templates/index.html:37
 msgid "Registrar Entrada Ara"
-msgstr ""
+msgstr "Register Entry Ara"
 
 #: app/templates/index.html:30
 msgid "Recordatori:"
-msgstr ""
+msgstr "Reminder:"
 
 #: app/templates/index.html:44
 msgid "Estat Actual"
-msgstr ""
+msgstr "Current Status"
 
 #: app/templates/index.html:48
 msgid "Entrada registrada:"
-msgstr ""
+msgstr "Registered entry:"
 
 #: app/templates/index.html:56
 msgid "Registrar Sortida"
-msgstr ""
+msgstr "Register Sortida"
 
 #: app/templates/index.html:70
 msgid "Començar Pausa"
-msgstr ""
+msgstr "Start Pause"
 
 #: app/templates/index.html:81
 msgid "Acabar Pausa"
-msgstr ""
+msgstr "End Pause"
 
 #: app/templates/index.html:86
 msgid "No hi ha registre actiu"
-msgstr ""
+msgstr "There is no active registration"
 
 #: app/templates/index.html:100
 msgid "¿Has olvidado registrar tu entrada?"
-msgstr ""
+msgstr "Have you forgotten to register your entry?"
 
 #: app/templates/index.html:105
 msgid "Generar Enllaç per Crear Empresa"
-msgstr ""
+msgstr "Generate Enllaç to Create Company"
 
 #: app/templates/index.html:198
 msgid "Les meves Sol·licituds d'Absència"
-msgstr ""
+msgstr "Les meves Sol·licitudes d'Absència"
 
 #: app/templates/index.html:205
 msgid "Inici"
@@ -1573,246 +1693,246 @@ msgstr "Home"
 
 #: app/templates/index.html:206 app/templates/index.html:257
 msgid "Fi"
-msgstr ""
+msgstr "Fi"
 
 #: app/templates/index.html:209
 msgid "Acció"
-msgstr ""
+msgstr "Action"
 
 #: app/templates/index.html:242
 msgid "No tens sol·licituds d'absència registrades."
-msgstr ""
+msgstr "You do not have registered requests for absence."
 
 #: app/templates/index.html:249
 msgid "Historial de Pauses"
-msgstr ""
+msgstr "Pause History"
 
 #: app/templates/index.html:255
 msgid "Dia Inici"
-msgstr ""
+msgstr "Start Day"
 
 #: app/templates/index.html:256 app/templates/llistar_calendari.html:12
 msgid "Hora Inici"
-msgstr ""
+msgstr "Start Time"
 
 #: app/templates/index.html:258
 msgid "Duració"
-msgstr ""
+msgstr "Duration"
 
 #: app/templates/index.html:259
 msgid "Lat/Lon Inici"
-msgstr ""
+msgstr "Lat/Lon Start"
 
 #: app/templates/index.html:260 app/templates/index.html:424
 msgid "Precisión (m)"
-msgstr ""
+msgstr "Accuracy (m)"
 
 #: app/templates/index.html:315
 msgid "Historial de Registros"
-msgstr ""
+msgstr "Record History"
 
 #: app/templates/index.html:320
 msgid "Fecha"
-msgstr ""
+msgstr "Date"
 
 #: app/templates/index.html:322
 msgid "Salida"
-msgstr ""
+msgstr "Exit"
 
 #: app/templates/index.html:323
 msgid "Duración"
-msgstr ""
+msgstr "Duration"
 
 #: app/templates/index.html:324
 msgid "Lat/Lon Entrada"
-msgstr ""
+msgstr "Lat/Lon Input"
 
 #: app/templates/index.html:325
 msgid "Precisión Entrada (m)"
-msgstr ""
+msgstr "Input Accuracy (m)"
 
 #: app/templates/index.html:326
 msgid "Lat/Lon Salida"
-msgstr ""
+msgstr "Lat/Lon Output"
 
 #: app/templates/index.html:327
 msgid "Precisión Salida (m)"
-msgstr ""
+msgstr "Output Accuracy (m)"
 
 #: app/templates/index.html:328
 msgid "Hores Pausa"
-msgstr ""
+msgstr "Hours Pause"
 
 #: app/templates/index.html:415
 msgid "Incidències registrades avui"
-msgstr ""
+msgstr "Incidències registered avui"
 
 #: app/templates/index.html:423
 msgid "Lat/Lon Incidència"
-msgstr ""
+msgstr "Lat/Lon Incidence"
 
 #: app/templates/index.html:454
 msgid "No s'ha registrat cap incidència avui."
-msgstr ""
+msgstr "No incident has been registered."
 
 #: app/templates/index.html:458 app/templates/index.html:520
 msgid "Registrar Incidència"
-msgstr ""
+msgstr "Register Incident"
 
 #: app/templates/index.html:470
 msgid "Fitxatge Manual (Retard)"
-msgstr ""
+msgstr "Manual Fitxatge (Retard)"
 
 #: app/templates/index.html:481
 msgid "Hora Entrada"
-msgstr ""
+msgstr "Entry Time"
 
 #: app/templates/index.html:485
 msgid "Hora Sortida"
-msgstr ""
+msgstr "Sorted Time"
 
 #: app/templates/index.html:490
 msgid "Hores de Pausa (total)"
-msgstr ""
+msgstr "Pause hours (total)"
 
 #: app/templates/index.html:501
 msgid "Selecciona el temps total de pausa."
-msgstr ""
+msgstr "Select the total pause temp."
 
 #: app/templates/index.html:505 app/templates/index.html:547
 msgid "Cancel·la"
-msgstr ""
+msgstr "Cancel the"
 
 #: app/templates/index.html:507
 msgid "Crear Registre"
-msgstr ""
+msgstr "Create Register"
 
 #: app/templates/index.html:527
 msgid "Retard"
-msgstr ""
+msgstr "Retard"
 
 #: app/templates/index.html:528
 msgid "Problema tècnic"
-msgstr ""
+msgstr "Technical problem"
 
 #: app/templates/index.html:529
 msgid "Incidència laboral"
-msgstr ""
+msgstr "Work incident"
 
 #: app/templates/index.html:530
 msgid "Altres"
-msgstr ""
+msgstr "Others"
 
 #: app/templates/index.html:549
 msgid "Envia"
-msgstr ""
+msgstr "Send"
 
 #: app/templates/index.html:617
 msgid "Estàs segur que vols cancel·lar aquesta sol·licitud?"
-msgstr ""
+msgstr "Are you sure you will cancel this request?"
 
 #: app/templates/index.html:636
 msgid "S'ha produït un error al cancel·lar."
-msgstr ""
+msgstr "An error occurred when canceling."
 
 #: app/templates/index.html:674 app/templates/index.html:678
 msgid "Recordatori de Fichatge"
-msgstr ""
+msgstr "Signing Reminder"
 
 #: app/templates/llistar_calendari.html:4
 msgid "Calendari de Treballadors"
-msgstr ""
+msgstr "Treballadors Calendar"
 
 #: app/templates/llistar_calendari.html:10
 msgid "Dia Setmana"
-msgstr ""
+msgstr "Day Setweek"
 
 #: app/templates/llistar_calendari.html:13
 msgid "Hora Fi"
-msgstr ""
+msgstr "Fi Time"
 
 #: app/templates/llistat_comunitats.html:4
 msgid "Listado de Comunidades registradas"
-msgstr ""
+msgstr "List of registered communities"
 
 #: app/templates/llistat_comunitats.html:10
 msgid "Cif"
-msgstr ""
+msgstr "Cif"
 
 #: app/templates/llistat_comunitats.html:13
 msgid "Dirección"
-msgstr ""
+msgstr "Address"
 
 #: app/templates/llistat_factures.html:3
 msgid "Llistat de Factures"
-msgstr ""
+msgstr "Invoice List"
 
 #: app/templates/llistat_factures.html:10
 msgid "Tipus de feina"
-msgstr ""
+msgstr "Types of feina"
 
 #: app/templates/llistat_factures.html:11
 msgid "Document de pagament"
-msgstr ""
+msgstr "Payment document"
 
 #: app/templates/llistat_factures.html:12
 msgid "Règim d’impostos"
-msgstr ""
+msgstr "Regim d'impostos"
 
 #: app/templates/llistat_factures.html:25
 msgid "Descarregar PDF"
-msgstr ""
+msgstr "Download PDF"
 
 #: app/templates/llistat_pagadors.html:4
 msgid "Llistat de pagadors"
-msgstr ""
+msgstr "List of payers"
 
 #: app/templates/llistat_pagadors.html:11
 #: app/templates/llistat_treballadors.html:10
 #: app/templates/llistat_usuaris.html:10
 #: app/templates/register_first_admin.html:19
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: app/templates/llistat_treballadors.html:4
 msgid "Listado de trabajadores registrados"
-msgstr ""
+msgstr "List of registered workers"
 
 #: app/templates/llistat_treballadors.html:12
 msgid "Departamento"
-msgstr ""
+msgstr "Department"
 
 #: app/templates/llistat_treballadors.html:14
 msgid "Código Postal"
-msgstr ""
+msgstr "Zip code"
 
 #: app/templates/llistat_treballadors.html:15
 msgid "Sexo"
-msgstr ""
+msgstr "Sex"
 
 #: app/templates/llistat_treballadors.html:16
 msgid "Edad"
-msgstr ""
+msgstr "Age"
 
 #: app/templates/llistat_treballadors.html:17
 msgid "Nacionalidad"
-msgstr ""
+msgstr "Nationality"
 
 #: app/templates/llistat_treballadors.html:18
 msgid "Vehículo Propio"
-msgstr ""
+msgstr "Own Vehicle"
 
 #: app/templates/llistat_treballadors.html:19
 msgid "Carnet de Conducir"
-msgstr ""
+msgstr "Driving license"
 
 #: app/templates/llistat_treballadors.html:21
 msgid "Acciones"
-msgstr ""
+msgstr "Actions"
 
 #: app/templates/llistat_usuaris.html:4
 msgid "Listado de usuarios registrados"
-msgstr ""
+msgstr "List of registered users"
 
 #: app/templates/login.html:11
 msgid "Sistema de Control Horario"
@@ -1840,31 +1960,31 @@ msgstr "Problems logging in? Contact your supervisor"
 
 #: app/templates/perfil_usuari.html:7
 msgid "Perfil de"
-msgstr ""
+msgstr "Profile of"
 
 #: app/templates/perfil_usuari.html:10
 msgid "Nombre de usuario:"
-msgstr ""
+msgstr "User name:"
 
 #: app/templates/perfil_usuari.html:11
 msgid "Email:"
-msgstr ""
+msgstr "E-mail:"
 
 #: app/templates/perfil_usuari.html:12 app/templates/perfil_usuari.html:26
 msgid "Teléfono:"
-msgstr ""
+msgstr "Phone:"
 
 #: app/templates/perfil_usuari.html:13
 msgid "Nombre completo:"
-msgstr ""
+msgstr "Full name:"
 
 #: app/templates/perfil_usuari.html:14
 msgid "Empresa:"
-msgstr ""
+msgstr "Company:"
 
 #: app/templates/perfil_usuari.html:15
 msgid "Rol:"
-msgstr ""
+msgstr "Role:"
 
 #: app/templates/perfil_usuari.html:17
 msgid "Administrador"
@@ -1876,7 +1996,7 @@ msgstr "Employee"
 
 #: app/templates/perfil_usuari.html:25
 msgid "Dades laborals"
-msgstr ""
+msgstr "Labor details"
 
 #: app/templates/perfil_usuari.html:29
 msgid "Ciutat:"
@@ -1932,61 +2052,72 @@ msgstr "Back"
 
 #: app/templates/privacy_policy.html:11
 msgid "1. INFORMACIÓN AL USUARIO"
-msgstr ""
+msgstr "1. INFORMATION TO THE USER"
 
 #: app/templates/privacy_policy.html:17
 msgid "¿Para qué tratamos tus datos personales?"
-msgstr ""
+msgstr "Why do we process your personal data?"
 
 #: app/templates/privacy_policy.html:26
 msgid "¿Por qué motivo podemos tratar tus datos personales?"
-msgstr ""
+msgstr "For what reason can we process your personal data?"
 
 #: app/templates/privacy_policy.html:33
 msgid "¿Durante cuánto tiempo guardaremos tus datos personales?"
-msgstr ""
+msgstr "How long will we keep your personal data?"
 
 #: app/templates/privacy_policy.html:34
 msgid ""
-"Se conservarán durante no más tiempo del necesario para mantener el fin "
-"del tratamiento o existan prescripciones legales que dictaminen su "
-"custodia y cuando ya no sea necesario para ello, se suprimirán con "
-"medidas de seguridad adecuadas para garantizar la anonimización de los "
-"datos o la destrucción total de los mismos."
+"Se conservarán durante no más tiempo del necesario para mantener el fin del "
+"tratamiento o existan prescripciones legales que dictaminen su custodia y "
+"cuando ya no sea necesario para ello, se suprimirán con medidas de seguridad"
+" adecuadas para garantizar la anonimización de los datos o la destrucción "
+"total de los mismos."
 msgstr ""
+"They will be kept for no longer than necessary to maintain the purpose of "
+"the treatment or there are legal requirements that dictate their custody and"
+" when it is no longer necessary for this, they will be deleted with "
+"appropriate security measures to guarantee the anonymization of the data or "
+"their total destruction."
 
 #: app/templates/privacy_policy.html:36
 msgid "¿A quién facilitamos tus datos personales?"
-msgstr ""
+msgstr "Who do we provide your personal data to?"
 
 #: app/templates/privacy_policy.html:37
 msgid ""
-"No está prevista ninguna comunicación de datos personales a terceros "
-"salvo, si fuese necesario para el desarrollo y ejecución de las "
-"finalidades del tratamiento, a nuestros proveedores de servicios "
-"relacionados con comunicaciones, con los cuales el responsable tiene "
-"suscritos los contratos de confidencialidad y de encargado de tratamiento"
-" exigidos por la normativa vigente de privacidad."
+"No está prevista ninguna comunicación de datos personales a terceros salvo, "
+"si fuese necesario para el desarrollo y ejecución de las finalidades del "
+"tratamiento, a nuestros proveedores de servicios relacionados con "
+"comunicaciones, con los cuales el responsable tiene suscritos los contratos "
+"de confidencialidad y de encargado de tratamiento exigidos por la normativa "
+"vigente de privacidad."
 msgstr ""
+"No communication of personal data to third parties is planned except, if "
+"necessary for the development and execution of the purposes of the "
+"treatment, to our service providers related to communications, with whom the"
+" controller has signed the confidentiality and data processor contracts "
+"required by current privacy regulations."
 
 #: app/templates/privacy_policy.html:39
 msgid "¿Cuáles son tus derechos?"
-msgstr ""
+msgstr "What are your rights?"
 
 #: app/templates/privacy_policy.html:46
 msgid "Datos de contacto para ejercer sus derechos:"
-msgstr ""
+msgstr "Contact information to exercise your rights:"
 
 #: app/templates/privacy_policy.html:51
 msgid ""
-"2. CARÁCTER OBLIGATORIO O FACULTATIVO DE LA INFORMACIÓN FACILITADA POR EL"
-" USUARIO"
+"2. CARÁCTER OBLIGATORIO O FACULTATIVO DE LA INFORMACIÓN FACILITADA POR EL "
+"USUARIO"
 msgstr ""
+"2. MANDATORY OR OPTIONAL NATURE OF THE INFORMATION PROVIDED BY THE USER"
 
 #: app/templates/privacy_policy.html:52
 msgid ""
-"Los usuarios, mediante la marcación de las casillas correspondientes y la"
-" entrada de datos en los campos, marcados con un asterisco (*) en el "
+"Los usuarios, mediante la marcación de las casillas correspondientes y la "
+"entrada de datos en los campos, marcados con un asterisco (*) en el "
 "formulario de contacto o presentados en formularios de descarga, aceptan "
 "expresamente y de forma libre e inequívoca, que sus datos son necesarios "
 "para atender su petición, por parte del prestador, siendo voluntaria la "
@@ -1994,139 +2125,162 @@ msgid ""
 "datos personales facilitados al responsable son veraces y se hace "
 "responsable de comunicar cualquier modificación de los mismos."
 msgstr ""
+"Users, by checking the corresponding boxes and entering data in the fields, "
+"marked with an asterisk (*) in the contact form or presented in download "
+"forms, expressly and freely and unequivocally accept that their data is "
+"necessary to respond to their request, by the provider, the inclusion of "
+"data in the remaining fields being voluntary.The user guarantees that the "
+"personal data provided to the person responsible is true and is responsible "
+"for communicating any changes thereto."
 
 #: app/templates/privacy_policy.html:53
 msgid ""
-"El responsable informa de que todos los datos solicitados a través del "
-"sitio web son obligatorios, ya que son necesarios para la prestación de "
-"un servicio óptimo al usuario. En caso de que no se faciliten todos los "
-"datos, no se garantiza que la información y servicios facilitados sean "
+"El responsable informa de que todos los datos solicitados a través del sitio"
+" web son obligatorios, ya que son necesarios para la prestación de un "
+"servicio óptimo al usuario. En caso de que no se faciliten todos los datos, "
+"no se garantiza que la información y servicios facilitados sean "
 "completamente ajustados a sus necesidades."
 msgstr ""
+"The person responsible informs that all data requested through the website "
+"are mandatory, since they are necessary to provide an optimal service to the"
+" user.If all data is not provided, it is not guaranteed that the information"
+" and services provided are completely tailored to your needs."
 
 #: app/templates/privacy_policy.html:55
 msgid "3. MEDIDAS DE SEGURIDAD"
-msgstr ""
+msgstr "3. SECURITY MEASURES"
 
 #: app/templates/privacy_policy.html:56
 msgid ""
-"Que de conformidad con lo dispuesto en las normativas vigentes en "
-"protección de datos personales, el responsable está cumpliendo con todas "
-"las disposiciones de las normativas GDPR y LOPDGDD para el tratamiento de"
-" los datos personales de su responsabilidad, y manifiestamente con los "
-"principios descritos en el artículo 5 del GDPR, por los cuales son "
-"tratados de manera lícita, leal y transparente en relación con el "
-"interesado y adecuados, pertinentes y limitados a lo necesario en "
-"relación con los fines para los que son tratados."
+"Que de conformidad con lo dispuesto en las normativas vigentes en protección"
+" de datos personales, el responsable está cumpliendo con todas las "
+"disposiciones de las normativas GDPR y LOPDGDD para el tratamiento de los "
+"datos personales de su responsabilidad, y manifiestamente con los principios"
+" descritos en el artículo 5 del GDPR, por los cuales son tratados de manera "
+"lícita, leal y transparente en relación con el interesado y adecuados, "
+"pertinentes y limitados a lo necesario en relación con los fines para los "
+"que son tratados."
 msgstr ""
+"That in accordance with the provisions of current regulations on the "
+"protection of personal data, the person responsible is complying with all "
+"the provisions of the GDPR and LOPDGDD regulations for the processing of "
+"personal data under his responsibility, and manifestly with the principles "
+"described in article 5 of the GDPR, by which they are treated in a lawful, "
+"loyal and transparent manner in relation to the interested party and "
+"adequate, relevant and limited to what is necessary in relation to the "
+"purposes for which they are processed."
 
 #: app/templates/privacy_policy.html:57
 msgid ""
 "El responsable garantiza que ha implementado políticas técnicas y "
 "organizativas apropiadas para aplicar las medidas de seguridad que "
 "establecen el GDPR y la LOPDGDD con el fin de proteger los derechos y "
-"libertades de los usuarios y les ha comunicado la información adecuada "
-"para que puedan ejercerlos."
+"libertades de los usuarios y les ha comunicado la información adecuada para "
+"que puedan ejercerlos."
 msgstr ""
+"The person responsible guarantees that it has implemented appropriate "
+"technical and organizational policies to apply the security measures "
+"established by the GDPR and the LOPDGDD in order to protect the rights and "
+"freedoms of users and has communicated appropriate information to them so "
+"that they can exercise them."
 
 #: app/templates/privacy_settings.html:9
 msgid "Configuración de Privacidad"
-msgstr ""
+msgstr "Privacy Settings"
 
 #: app/templates/privacy_settings.html:12
 msgid "Estado de Consentimientos"
-msgstr ""
+msgstr "Consent Status"
 
 #: app/templates/privacy_settings.html:17
 msgid "Aceptado"
-msgstr ""
+msgstr "Accepted"
 
 #: app/templates/privacy_settings.html:19
 msgid "No Aceptado"
-msgstr ""
+msgstr "Not Accepted"
 
 #: app/templates/privacy_settings.html:30
 msgid "Ejercer sus Derechos RGPD"
-msgstr ""
+msgstr "Exercise your GDPR Rights"
 
 #: app/templates/privacy_settings.html:34
 msgid "Descargar mis Datos"
-msgstr ""
+msgstr "Download my Data"
 
 #: app/templates/privacy_settings.html:37
 msgid "Exportar todos sus datos personales en formato JSON"
-msgstr ""
+msgstr "Export all your personal data in JSON format"
 
 #: app/templates/privacy_settings.html:42
 #: app/templates/privacy_settings.html:99
 msgid "Eliminar mi Cuenta"
-msgstr ""
+msgstr "Delete my Account"
 
 #: app/templates/privacy_settings.html:45
 msgid "Eliminar permanentemente su cuenta y todos sus datos"
-msgstr ""
+msgstr "Permanently delete your account and all your data"
 
 #: app/templates/privacy_settings.html:51
 msgid "Enlaces Útiles"
-msgstr ""
+msgstr "Useful Links"
 
 #: app/templates/privacy_settings.html:67
 msgid "Actualizar Consentimientos"
-msgstr ""
+msgstr "Update Consents"
 
 #: app/templates/privacy_settings.html:84
 msgid "Confirmar Eliminación"
-msgstr ""
+msgstr "Confirm Deletion"
 
 #: app/templates/privacy_settings.html:92
 msgid "Por favor, escriba \"ELIMINAR\" para confirmar:"
-msgstr ""
+msgstr "Please type \"DELETE\" to confirm:"
 
 #: app/templates/privacy_settings.html:93
 msgid "ELIMINAR"
-msgstr ""
+msgstr "ELIMINATE"
 
 #: app/templates/register_first_admin.html:11
 msgid "Nom d'usuari"
-msgstr ""
+msgstr "Username"
 
 #: app/templates/register_first_admin.html:15
 msgid "Nom complet"
-msgstr ""
+msgstr "Complete name"
 
 #: app/templates/register_first_admin.html:27
 msgid "Contrasenya d’accés (usuari)"
-msgstr ""
+msgstr "Access password (user)"
 
 #: app/templates/register_first_admin.html:31
 msgid "Contrasenya de l’empresa"
-msgstr ""
+msgstr "Company password"
 
 #: app/templates/register_first_admin.html:34
 msgid "Crear administrador"
-msgstr ""
+msgstr "Create administrator"
 
 #: app/templates/report.html:11
 msgid "Seleccione el periodo del informe:"
-msgstr ""
+msgstr "Select the reporting period:"
 
 #: app/templates/reset_password.html:8 app/templates/reset_password.html:37
 msgid "Nova Contrasenya"
-msgstr ""
+msgstr "New Password"
 
 #: app/templates/reset_password.html:9
 msgid "Verifica el codi rebut i posa la teva nova contrasenya."
-msgstr ""
+msgstr "Verify the rebut code and enter the new password."
 
 #: app/templates/reset_password.html:18
 msgid "Codi d'Activació"
-msgstr ""
+msgstr "Activation Code"
 
 #: app/templates/reset_password.html:24
 msgid "######"
-msgstr ""
+msgstr "######"
 
 #: app/templates/reset_password.html:50
 msgid "Repeteix la Contrasenya"
-msgstr ""
-
+msgstr "Repeat the Password"
