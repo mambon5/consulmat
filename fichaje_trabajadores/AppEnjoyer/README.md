@@ -26,7 +26,16 @@
     - [Esquema de branques per maxilim i organitzar el codi](#esquema-de-branques-per-maxilim-i-organitzar-el-codi)
   - [Crear base de dades i usuari mysql](#crear-base-de-dades-i-usuari-mysql)
   - [Gestió de la Base de Dades (Migracions)](#gestió-de-la-base-de-dades-migracions)
+    - [1. Inicialitzar el repositori de migracions](#1-inicialitzar-el-repositori-de-migracions)
+    - [2. Generar una migració](#2-generar-una-migració)
+    - [3. Aplicar els canvis a la base de dades](#3-aplicar-els-canvis-a-la-base-de-dades)
+    - [4. Desfer canvis (opcional)](#4-desfer-canvis-opcional)
+  - [Gestió de les Traduccions (Internacionalització)](#gestió-de-les-traduccions-internacionalització)
+    - [1. Extreure nous textos per traduir](#1-extreure-nous-textos-per-traduir)
+    - [2. Actualitzar els fitxers de traducció (.po)](#2-actualitzar-els-fitxers-de-traducció-po)
+    - [3. Compilar les traduccions (.mo)](#3-compilar-les-traduccions-mo)
 - [Desenvolupament de la app](#desenvolupament-de-la-app)
+  - [Executar la app](#executar-la-app)
 ---
 
 # Tutorial d'ús de l'aplicació
@@ -497,3 +506,10 @@ Idea del sistema d'arxius en arbre:
     ├── init_db.py
     ├── run.py
     └── .env
+
+
+## Executar la app
+
+```
+flask run
+```

@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-28 13:05+0200\n"
+"POT-Creation-Date: 2026-08-19 19:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
+"Generated-By: Babel 2.10.3\n"
 
 #: app/routes/admin_views.py:16 app/routes/admin_views.py:179
 #: app/routes/admin_views.py:185
@@ -120,42 +120,42 @@ msgstr ""
 msgid "Codi de recuperació incorrecte o expirat."
 msgstr ""
 
-#: app/routes/calendario.py:271 app/routes/calendario.py:301
-#: app/routes/calendario.py:407 app/routes/calendario.py:463
+#: app/routes/calendario.py:273 app/routes/calendario.py:303
+#: app/routes/calendario.py:409 app/routes/calendario.py:465
 msgid "Error interno del servidor"
 msgstr ""
 
-#: app/routes/calendario.py:278
+#: app/routes/calendario.py:280
 msgid "Només els admins poden veure aquest contingut"
 msgstr ""
 
-#: app/routes/calendario.py:315
+#: app/routes/calendario.py:317
 msgid "No tens permís per aprovar aquesta sol·licitud"
 msgstr ""
 
-#: app/routes/calendario.py:326
+#: app/routes/calendario.py:328
 #, python-format
 msgid "%(event)s aprovat per %(name)s"
 msgstr ""
 
-#: app/routes/calendario.py:370
+#: app/routes/calendario.py:372
 #, python-format
 msgid "%(event)s aprovat per %(name)s (%(days)s dies)"
 msgstr ""
 
-#: app/routes/calendario.py:508
+#: app/routes/calendario.py:510
 msgid "Ja existeix una absència per aquest dia"
 msgstr ""
 
-#: app/routes/calendario.py:516
+#: app/routes/calendario.py:518
 msgid "Ja existeix un teletreball per aquest dia"
 msgstr ""
 
-#: app/routes/calendario.py:533
+#: app/routes/calendario.py:535
 msgid "L'arxiu és massa gran (màxim 2MB)"
 msgstr ""
 
-#: app/routes/calendario.py:538
+#: app/routes/calendario.py:540
 msgid "Format no permès (només PDF, JPG, PNG)"
 msgstr ""
 
@@ -709,7 +709,7 @@ msgstr ""
 msgid "S'ha produït un error al aprovar. Revisa la consola."
 msgstr ""
 
-#: app/templates/admin_solicitudes.html:145 app/templates/calendari.html:307
+#: app/templates/admin_solicitudes.html:145 app/templates/calendari.html:306
 msgid "Estàs segur que vols DENEGAR aquesta sol·licitud?"
 msgstr ""
 
@@ -1117,7 +1117,7 @@ msgstr ""
 msgid "Afegir justificant"
 msgstr ""
 
-#: app/templates/calendari.html:37 app/templates/calendari.html:170
+#: app/templates/calendari.html:37 app/templates/calendari.html:169
 msgid "Cap arxiu seleccionat (màx 2MB)"
 msgstr ""
 
@@ -1174,51 +1174,51 @@ msgid ""
 "                        aprovar-la o denegar-la."
 msgstr ""
 
-#: app/templates/calendari.html:168
+#: app/templates/calendari.html:167
 msgid "❌ L'arxiu és massa gran. El màxim permès són 2MB."
 msgstr ""
 
-#: app/templates/calendari.html:195
+#: app/templates/calendari.html:194
 msgid "⚠️ Selecciona primer un tipus d'absència."
 msgstr ""
 
-#: app/templates/calendari.html:207
+#: app/templates/calendari.html:206
 msgid "❌ No tens dies disponibles de"
 msgstr ""
 
-#: app/templates/calendari.html:207
+#: app/templates/calendari.html:206
 msgid "S'ha exhaurit el límit de"
 msgstr ""
 
-#: app/templates/calendari.html:207
+#: app/templates/calendari.html:206
 msgid "dies."
 msgstr ""
 
-#: app/templates/calendari.html:219
+#: app/templates/calendari.html:218
 msgid "Vols marcar"
 msgstr ""
 
-#: app/templates/calendari.html:219
+#: app/templates/calendari.html:218
 msgid "dies"
 msgstr ""
 
-#: app/templates/calendari.html:262
+#: app/templates/calendari.html:261
 msgid "❌ Algunes dates NO s'han pogut afegir:"
 msgstr ""
 
-#: app/templates/calendari.html:268
+#: app/templates/calendari.html:267
 msgid "dia(es) demanats correctament"
 msgstr ""
 
-#: app/templates/calendari.html:322
+#: app/templates/calendari.html:321
 msgid "S'ha produït un error."
 msgstr ""
 
-#: app/templates/calendari.html:352
+#: app/templates/calendari.html:351
 msgid "❌ Error: "
 msgstr ""
 
-#: app/templates/calendari.html:356
+#: app/templates/calendari.html:355
 msgid "S'ha produït un error al eliminar l'absència."
 msgstr ""
 

@@ -32,12 +32,12 @@
                         <i class="bi bi-people"></i> {{ _("Veure Usuaris") }}
                     </a>
                 </div>
-                <div class="mt-3">
+                <!-- <div class="mt-3">
                     <a href="{{ url_for('auth.create_user', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100 text-start">
                         <i class="bi bi-person-plus"></i> {{ _("Afegir Usuari") }}
                     </a>
-                </div>
+                </div> -->
                 <div class="mt-3">
                     <a href="{{ url_for('auth.create_admin', empresa_id=current_user.empresa_id) }}"
                         class="btn btn-info w-100 text-start">
@@ -280,8 +280,7 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- FullCalendar CSS & JS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>

@@ -174,8 +174,10 @@ def calendario_laboral():
         lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
         restants = {t: lim[t] - stats[t] for t in stats}
     else:
-        stats = {}
-        restants = {}
+        tipus_abs = ['vacances', 'baixa_medica', 'assumptes_propis']
+        stats = {t: 0 for t in tipus_abs}
+        lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
+        restants = {t: lim[t] for t in stats}
 
     return render_template(
         'calendari.html',
@@ -727,8 +729,10 @@ def calendari():
         lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
         restants = {t: lim[t] - stats[t] for t in stats}
     else:
-        stats = {}
-        restants = {}
+        tipus_abs = ['vacances', 'baixa_medica', 'assumptes_propis']
+        stats = {t: 0 for t in tipus_abs}
+        lim = {'vacances': 30, 'baixa_medica': 90, 'assumptes_propis': 3}
+        restants = {t: lim[t] for t in stats}
 
     return render_template(
         'calendari.html',

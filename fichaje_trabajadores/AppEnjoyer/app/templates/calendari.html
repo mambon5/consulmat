@@ -95,8 +95,7 @@
     </div>
 </div>
 
-<!-- FullCalendar CSS & JS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
@@ -165,9 +164,9 @@
         if (this.files && this.files[0]) {
             const file = this.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                alert('{{ _("❌ L\'arxiu és massa gran. El màxim permès són 2MB.") }}');
+                alert(`{{ _("❌ L\'arxiu és massa gran. El màxim permès són 2MB.") }}`);
                 this.value = '';
-                info.innerText = '{{ _("Cap arxiu seleccionat (màx 2MB)") }}';
+                info.innerText = `{{ _("Cap arxiu seleccionat (màx 2MB)") }}`;
                 return;
             }
             info.innerText = `📂 ${file.name}`;
@@ -192,7 +191,7 @@
     select: async function(info) {
         const selected = document.querySelector('input[name="tipo_evento"]:checked');
         if (!selected) {
-            alert('{{ _("⚠️ Selecciona primer un tipus d\'absència.") }}');
+            alert(`{{ _("⚠️ Selecciona primer un tipus d\'absència.") }}`);
             return;
         }
 
@@ -259,7 +258,7 @@
 
         if (errors.length > 0) {
             alert(
-                '{{ _("❌ Algunes dates NO s\'han pogut afegir:") }}\n\n' +
+                `{{ _("❌ Algunes dates NO s\'han pogut afegir:") }}\n\n` +
                 errors.join("\n")
             );
         }
@@ -304,7 +303,7 @@
                 });
             } else {
                 // Denegar
-                if (!confirm('{{ _("Estàs segur que vols DENEGAR aquesta sol·licitud?") }}')) return;
+                if (!confirm(`{{ _("Estàs segur que vols DENEGAR aquesta sol·licitud?") }}`)) return;
                 res = await fetch(`/api/absencia/${info.event.id}/denegar`, {
                     method: 'DELETE'
                 });
@@ -319,7 +318,7 @@
             }
         } catch (err) {
             console.error('Error:', err);
-            alert('{{ _("S\'ha produït un error.") }}');
+            alert(`{{ _("S\'ha produït un error.") }}`);
         }
         return;
     }
@@ -349,11 +348,11 @@
             // Reload per actualitzar els estadístics
             setTimeout(() => window.location.reload(), 500);
         } else {
-            alert("{{ _("❌ Error: ") }}" + data.message);
+            alert(`{{ _("❌ Error: ") }}` + data.message);
         }
     } catch (err) {
         console.error('Error al eliminar absencia:', err);
-        alert('{{ _("S\'ha produït un error al eliminar l\'absència.") }}');
+        alert(`{{ _("S\'ha produït un error al eliminar l\'absència.") }}`);
     }
         },
 
